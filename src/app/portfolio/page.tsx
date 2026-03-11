@@ -36,26 +36,31 @@ export default function PortfolioPage() {
                         >
                             {/* Card Container */}
                             <div className="relative aspect-[4/5] md:aspect-square w-full overflow-hidden bg-[#111] isolate">
-                                {/* Thumbnail Image */}
                                 <Image
                                     src={item.thumbnailUrl}
                                     alt={item.title}
                                     fill
-                                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105 opacity-80 group-hover:opacity-50"
+                                    className="object-cover transition-transform duration-1000 ease-out group-hover:scale-110 opacity-60 group-hover:opacity-40"
                                     sizes="(max-width: 768px) 100vw, 50vw"
                                 />
 
-                                {/* Overlay Content (Always visible to some extent, distinct on hover) */}
-                                <div className="absolute inset-0 p-8 md:p-12 flex flex-col justify-between mix-blend-difference z-10 transition-opacity duration-500">
+                                {/* Gradient Overlay for Readability */}
+                                <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black via-black/40 to-transparent z-10 transition-opacity duration-500 group-hover:opacity-0" />
+
+                                {/* Overlay Content */}
+                                <div className="absolute inset-0 p-8 md:p-12 flex flex-col justify-between z-20 transition-all duration-500 group-hover:translate-y-4">
                                     <div className="flex justify-between items-start">
-                                        <span className="text-xl md:text-2xl font-bold tracking-tighter">
+                                        <span className="text-xl md:text-2xl font-bold tracking-tighter text-white/90">
                                             {item.client}
                                         </span>
-                                        <span className="text-lg md:text-xl font-medium tracking-tight">
-                                            {item.year}
-                                        </span>
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                                            <span className="text-lg md:text-xl font-medium tracking-tight text-white/60">
+                                                {item.year}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <h3 className="text-4xl md:text-5xl font-bold tracking-tighter leading-tight max-w-[80%]">
+                                    <h3 className="text-4xl md:text-[3.5rem] font-bold tracking-tighter leading-[0.95] max-w-[90%] text-white drop-shadow-2xl">
                                         {item.title}
                                     </h3>
                                 </div>

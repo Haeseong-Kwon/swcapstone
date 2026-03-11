@@ -67,11 +67,11 @@ body {
   color: #ffffff;
 }
 
-/* Base Transition - Snappier 400ms for better responsiveness */
+/* Base Transition - Snappier for better perceived responsiveness */
 .premium-transition {
   transition-property: opacity, transform, background-color, border-color, box-shadow, color;
-  transition-duration: 220ms;
-  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Institutional Sharp Card */
@@ -135,7 +135,20 @@ body {
   }
 
   .max-w-8xl {
-    max-width: 1400px;
+    max-width: 1440px;
+  }
+
+  /* Responsive Container Padding */
+  .section-padding {
+    padding-top: clamp(40px, 8vw, 120px);
+    padding-bottom: clamp(40px, 8vw, 120px);
+  }
+
+  /* Fluid Title Scaling */
+  .fluid-title {
+    font-size: clamp(2rem, 6vw, 4.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.04em;
   }
 
   @keyframes slow-zoom {
@@ -159,6 +172,16 @@ body {
     will-change: transform, opacity;
     backface-visibility: hidden;
     perspective: 1000px;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+  }
+
+  .animate-blob {
+    animation: float 20s infinite alternate cubic-bezier(0.45, 0, 0.55, 1);
   }
 
   .content-auto {

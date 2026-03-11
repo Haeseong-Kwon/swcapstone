@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/common/Button";
 import { Search, ChevronRight, Presentation, Rocket, Users, Briefcase } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
   const featureCards = [
@@ -25,6 +26,10 @@ export default function Home() {
             sizes="(max-width: 768px) 100vw, 100vw"
           />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,197,94,0.15),_transparent_34%),linear-gradient(180deg,rgba(2,6,23,0.16)_0%,rgba(2,6,23,0.72)_60%,rgba(2,6,23,0.94)_100%)]"></div>
+          
+          {/* Dynamic Background Blobs */}
+          <div className="absolute top-1/4 -left-20 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-blob"></div>
+          <div className="absolute bottom-1/4 -right-20 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[150px] animate-blob [animation-delay:2s]"></div>
         </div>
 
         <div className="relative z-10 mx-auto w-full max-w-8xl px-5 pb-16 pt-16 sm:px-6 lg:px-8 lg:pb-24 lg:pt-24">
@@ -35,12 +40,12 @@ export default function Home() {
                 <span className="text-[13px] font-bold tracking-[0.3em] uppercase">Gateway to SW Innovation</span>
               </div>
 
-              <h1 className="max-w-4xl text-[clamp(2.8rem,8vw,5.4rem)] font-bold leading-[0.98] tracking-[-0.05em] text-white">
+              <h1 className="fluid-title max-w-4xl font-bold text-white">
                 Your Gateway to <br className="hidden sm:block" />
                 <span className="text-white italic opacity-90">Entrepreneurship.</span>
               </h1>
 
-              <p className="max-w-2xl text-[17px] font-medium leading-relaxed text-white/78 sm:text-[19px] lg:text-[21px]">
+              <p className="max-w-2xl text-[16px] font-medium leading-relaxed text-white/78 sm:text-[18px] lg:text-[20px]">
                 한양대학교 ERICA SW창업캡스톤디자인 통합 플랫폼.
                 <br className="hidden sm:block" />
                 아이디어에서 기술 구현까지, 데이터 기반의 정교한 매칭으로
@@ -49,23 +54,23 @@ export default function Home() {
               </p>
 
               <div className="relative max-w-2xl animate-slide-up [animation-delay:0.18s]">
-                <div className="group flex flex-col gap-4 rounded-[2rem] border border-white/12 bg-slate-950/42 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-xl sm:flex-row sm:items-center sm:gap-0 sm:rounded-full sm:p-2">
-                  <div className="flex min-w-0 flex-1 items-center px-3 sm:px-6">
-                    <Search className="mr-4 text-white/70" size={20} />
+                <div className="group flex flex-col gap-3 rounded-[2rem] border border-white/12 bg-slate-950/42 p-3 shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-xl sm:flex-row sm:items-center sm:gap-0 sm:rounded-full sm:p-2">
+                  <div className="flex min-w-0 flex-1 items-center px-4 sm:px-6">
+                    <Search className="mr-3 text-white/70 sm:mr-4" size={20} />
                     <input
                       type="text"
-                      placeholder="Search for projects, teams or opportunities..."
-                      className="h-12 w-full bg-transparent text-[15px] font-medium text-white outline-none placeholder:text-white/38 sm:h-16 sm:text-[16px]"
+                      placeholder="Search for projects, teams..."
+                      className="h-10 w-full bg-transparent text-[14px] font-medium text-white outline-none placeholder:text-white/38 sm:h-16 sm:text-[16px]"
                     />
                   </div>
                   <div className="hidden h-10 w-px bg-white/12 sm:block"></div>
-                  <button className="flex h-12 items-center justify-center gap-2 rounded-full bg-white px-5 text-[12px] font-bold uppercase tracking-[0.22em] text-slate-950 premium-transition hover:scale-[1.01] hover:bg-slate-100 sm:mx-2 sm:h-14 sm:px-7">
+                  <button className="flex h-10 items-center justify-center gap-2 rounded-full bg-white px-5 text-[11px] font-bold uppercase tracking-[0.22em] text-slate-950 premium-transition hover:bg-primary hover:text-white active:scale-95 sm:mx-2 sm:h-14 sm:px-7">
                     Search <ChevronRight size={16} />
                   </button>
                 </div>
-                <div className="mt-4 flex flex-wrap gap-3 px-2 sm:px-6">
+                <div className="mt-4 flex flex-wrap gap-2 px-2 sm:gap-3 sm:px-6">
                   {["#LMS", "#TeamBuilding", "#Capstone", "#Startup"].map((tag) => (
-                    <span key={tag} className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-[11px] font-bold text-white/55 premium-transition hover:border-white/20 hover:text-white">
+                    <span key={tag} className="rounded-full border border-white/10 bg-white/[0.06] px-2 py-0.5 text-[10px] font-bold text-white/55 premium-transition hover:border-white/20 hover:text-white sm:px-3 sm:py-1 sm:text-[11px]">
                       {tag}
                     </span>
                   ))}
@@ -87,24 +92,27 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 content-auto">
+            {/* Original 2-Column Grid Reverted & Polished */}
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5 content-auto">
               {featureCards.map((card, i) => (
                 <Link
                   key={card.title}
                   href={card.href}
-                  className="group relative flex min-h-[180px] flex-col justify-between overflow-hidden rounded-[2rem] border border-white/12 bg-white/8 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.28)] backdrop-blur-xl premium-transition hover:-translate-y-1 hover:border-white/20 hover:bg-white/10 sm:min-h-[210px] sm:p-7"
+                  className="group relative flex flex-col justify-between overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/8 p-4 shadow-xl backdrop-blur-xl premium-transition hover:-translate-y-1 hover:border-white/30 hover:bg-white/12 sm:rounded-[2.5rem] sm:p-7 md:h-[220px] lg:h-[240px]"
                   style={{ animationDelay: `${0.24 + i * 0.08}s` }}
                 >
                   <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-70"></div>
                   <div className="flex items-start justify-between">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-white premium-transition group-hover:bg-white group-hover:text-slate-950">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white premium-transition group-hover:bg-white group-hover:text-slate-950 sm:h-12 sm:w-12 sm:rounded-2xl">
                       {card.icon}
                     </div>
-                    <ChevronRight className="translate-x-0 text-white/35 premium-transition group-hover:translate-x-1 group-hover:text-white" size={20} />
+                    <div className="hidden h-8 w-8 items-center justify-center rounded-full bg-white/5 premium-transition group-hover:opacity-100 sm:flex sm:h-10 sm:w-10">
+                      <ChevronRight className="text-white" size={18} />
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-white/42">{card.title}</p>
-                    <h4 className="text-[22px] font-bold tracking-tight text-white sm:text-[24px]">
+                  <div className="space-y-1 mt-3 sm:space-y-2 sm:mt-4">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/42 sm:text-[11px] sm:tracking-[0.24em]">{card.title}</p>
+                    <h4 className="text-[18px] font-bold tracking-tight text-white sm:text-[22px] md:text-[24px]">
                       {card.label}
                     </h4>
                   </div>
@@ -115,11 +123,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-white py-20 dark:bg-slate-900 sm:py-28 lg:py-36">
+      <section className="bg-white section-padding dark:bg-slate-900">
         <div className="mx-auto max-w-8xl px-5 sm:px-6 lg:px-8">
-          <div className="section-accent-bar mb-14 sm:mb-18 lg:mb-24">
-            <h2 className="mb-4 text-[34px] font-black uppercase tracking-[-0.04em] text-slate-900 dark:text-slate-50 sm:text-[42px] lg:text-[48px]">Core Ecosystem</h2>
-            <p className="max-w-2xl text-[17px] font-medium text-slate-600 dark:text-slate-400 sm:text-[19px]">기획부터 기술 구현, 팀매칭까지 창업의 전 과정을 지원합니다.</p>
+          <div className="section-accent-bar mb-10 sm:mb-14 lg:mb-20">
+            <h2 className="fluid-title mb-4 font-black uppercase text-slate-900 dark:text-slate-50">Core Ecosystem</h2>
+            <p className="max-w-2xl text-[16px] font-medium text-slate-600 dark:text-slate-400 sm:text-[18px]">기획부터 기술 구현, 팀매칭까지 창업의 전 과정을 지원합니다.</p>
           </div>
 
           <div className="grid grid-cols-1 border-l border-t border-slate-200 dark:border-slate-700 md:grid-cols-2 lg:grid-cols-3 content-auto">

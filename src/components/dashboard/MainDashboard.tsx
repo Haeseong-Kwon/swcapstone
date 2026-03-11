@@ -40,7 +40,7 @@ export function MainDashboard() {
               {activeTab === tab.id && (
                 <m.div
                   layoutId="activeTabDashboard"
-                  className="absolute inset-0 -z-10 rounded-2xl bg-primary/10 dark:bg-blue-400/12"
+                  className="absolute inset-0 -z-10 rounded-2xl bg-white dark:bg-slate-800 shadow-[0_4px_12px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_12px_rgba(0,0,0,0.3)] border border-slate-200/50 dark:border-white/10"
                   transition={{ type: "spring", stiffness: 320, damping: 32, mass: 0.6 }}
                 />
               )}
