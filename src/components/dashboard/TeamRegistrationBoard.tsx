@@ -1,8 +1,9 @@
-import { memo } from "react";
+import { useState, memo } from "react";
 import { RegisteredTeam } from "@/types";
 import { Badge } from "@/components/common/Badge";
 import { motion } from "framer-motion";
 import { Plus, Users, Mail, ArrowRight } from "lucide-react";
+import { TeamRegistrationModal } from "./TeamRegistrationModal";
 
 const RegisteredTeamItem = memo(({ team, index }: { team: RegisteredTeam; index: number }) => (
   <motion.div
@@ -61,12 +62,29 @@ interface TeamRegistrationBoardProps {
   teams: RegisteredTeam[];
 }
 
-export function TeamRegistrationBoard({ teams }: TeamRegistrationBoardProps) {
+export function TeamRegistrationBoard({ teams: initialTeams }: TeamRegistrationBoardProps) {
+  const [teams, setTeams] = useState<RegisteredTeam[]>(initialTeams);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleRegisterTeam = (newTeam: RegisteredTeam) => {
+    setTeams([newTeam, ...teams]);
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="flex flex-col gap-6">
+      <TeamRegistrationModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onSubmit={handleRegisterTeam} 
+      />
+
       {/* Registration Button Header */}
       <div className="flex justify-end mb-2">
-        <button className="flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-xl font-bold text-sm hover:bg-primary dark:hover:bg-blue-400 hover:text-white premium-transition shadow-md hover:shadow-lg hover:-translate-y-0.5">
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-xl font-bold text-sm hover:bg-primary dark:hover:bg-blue-400 hover:text-white premium-transition shadow-md hover:shadow-lg hover:-translate-y-0.5"
+        >
           <Plus size={18} />
           팀 등록하기
         </button>
