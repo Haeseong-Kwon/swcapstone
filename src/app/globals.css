@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted);
+  --color-border: var(--border);
+  --color-surface: var(--surface);
+  --color-card: var(--card);
+  --color-accent: var(--accent);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --font-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+
+  --radius-none: 0px;
+}
+
+:root {
+  --background: #FFFFFF;
+  --background-rgb: 255, 255, 255;
+  --foreground: #1E293B;
+  --card: #FFFFFF;
+  --muted: #64748B;
+  --accent: #1A365D;
+  --primary: #1A365D;
+  --border: #E2E8F0;
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.05);
+  --glass-text: #1E293B;
+}
+
+.dark {
+  --background: #0F172A;
+  --background-rgb: 15, 23, 42;
+  --foreground: #F8FAFC;
+  --card: #1E293B;
+  --muted: #94A3B8;
+  --accent: #60A5FA;
+  --primary: #60A5FA;
+  --border: #334155;
+  --glass-bg: rgba(15, 23, 42, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-text: #F8FAFC;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--primary);
+  color: #ffffff;
+}
+
+.dark ::selection {
+  background-color: var(--primary);
+  color: #ffffff;
+}
+
+/* Base Transition - Snappier 400ms for better responsiveness */
+.premium-transition {
+  transition-property: opacity, transform, background-color, border-color, box-shadow, color;
+  transition-duration: 400ms;
+  transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Institutional Sharp Card */
+.institutional-card {
+  background: var(--background);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+/* Vertical Accent Bar (10px) */
+.section-accent-bar {
+  border-left: 10px solid var(--primary);
+  padding-left: 30px;
+}
+
+/* Unified Translucent Styles (Theme-Aware) */
+.glass-header {
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border);
+  color: var(--glass-text);
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.glass-search {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+}
+
+/* Staggered Slide Up */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .max-w-8xl {
+    max-width: 1400px;
+  }
+
+  @keyframes slow-zoom {
+    from {
+      transform: scale(1.0) translateZ(0);
+    }
+
+    to {
+      transform: scale(1.1) translateZ(0);
+    }
+  }
+
+  .animate-slow-zoom {
+    animation: slow-zoom 30s ease-in-out infinite alternate;
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  .gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+}
