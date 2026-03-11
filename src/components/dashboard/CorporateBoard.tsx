@@ -1,8 +1,9 @@
 import { memo } from "react";
+import Image from "next/image";
 import { Proposal } from "@/types";
 import { Badge } from "@/components/common/Badge";
 import { motion } from "framer-motion";
-import { Briefcase, Award, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Briefcase, ArrowRight } from "lucide-react";
 
 const ProposalListItem = memo(({ proposal, index }: { proposal: Proposal; index: number }) => (
   <motion.div
@@ -15,7 +16,13 @@ const ProposalListItem = memo(({ proposal, index }: { proposal: Proposal; index:
     <div className="flex items-center gap-4 min-w-[200px]">
       <div className="w-12 h-12 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 shrink-0">
         {proposal.companyLogo ? (
-          <img src={proposal.companyLogo} alt={proposal.companyName} className="w-8 h-8 object-contain" loading="lazy" />
+          <Image
+            src={proposal.companyLogo}
+            alt={proposal.companyName}
+            width={32}
+            height={32}
+            className="w-8 h-8 object-contain"
+          />
         ) : (
           <Briefcase size={20} />
         )}

@@ -36,24 +36,19 @@ export function Navbar() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    // Close mobile menu on path change
-    useEffect(() => {
-        setIsMobileMenuOpen(false);
-    }, [pathname]);
-
     return (
         <>
             <nav className={cn(
-                "fixed top-0 left-0 right-0 z-50 premium-transition border-b h-[95px]",
+                "fixed top-0 left-0 right-0 z-50 border-b premium-transition will-change-transform",
                 isScrolled
-                    ? "glass-header shadow-lg h-[85px] border-white/5"
-                    : "bg-gradient-to-b from-black/80 via-black/40 to-transparent border-transparent"
+                    ? "glass-header shadow-[0_10px_30px_rgba(15,23,42,0.10)] border-white/5"
+                    : "bg-gradient-to-b from-black/72 via-black/24 to-transparent border-transparent"
             )}>
-                <div className="max-w-8xl mx-auto px-10 h-full flex items-center justify-between">
-                    <div className="flex items-center gap-16">
+                <div className="max-w-8xl mx-auto flex h-[78px] items-center justify-between px-5 sm:px-6 lg:px-8">
+                    <div className="flex items-center gap-6 lg:gap-12">
                         <Link href="/" className="flex items-center gap-3 group">
                             <span className={cn(
-                                "text-3xl font-black tracking-tighter premium-transition",
+                                "text-2xl sm:text-3xl font-black tracking-tighter premium-transition",
                                 isScrolled ? "text-foreground" : "text-white"
                             )}>AOP</span>
                             <div className={cn(
@@ -66,15 +61,16 @@ export function Navbar() {
                             )}>Entrepreneurship</span>
                         </Link>
 
-                        <div className="hidden lg:flex items-center gap-10">
+                        <div className="hidden lg:flex items-center gap-7 xl:gap-10">
                             {NAV_ITEMS.map((item) => {
                                 const isActive = !!(pathname && item.href && pathname.startsWith(item.href));
                                 return (
                                     <Link
                                         key={item.href}
                                         href={item.href}
+                                        onClick={() => setIsMobileMenuOpen(false)}
                                         className={cn(
-                                            "relative h-[95px] flex items-center text-[15px] font-black uppercase tracking-widest premium-transition",
+                                            "relative flex h-[78px] items-center text-[13px] xl:text-[14px] font-black uppercase tracking-[0.18em] premium-transition",
                                             isScrolled
                                                 ? (isActive ? "text-primary dark:text-blue-400 border-b-4 border-primary dark:border-blue-400" : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-50")
                                                 : (isActive ? "text-white border-b-4 border-white" : "text-white/70 hover:text-white")
@@ -87,7 +83,7 @@ export function Navbar() {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-3 sm:gap-4 lg:gap-5">
                         <button
                             onClick={toggleTheme}
                             className={cn(
@@ -98,7 +94,7 @@ export function Navbar() {
                             {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
                         </button>
                         <div className={cn(
-                            "hidden md:flex items-center gap-4 border-r pr-8 mr-4 premium-transition",
+                            "hidden md:flex items-center gap-3 border-r pr-5 mr-2 premium-transition lg:pr-7 lg:mr-3",
                             isScrolled ? "border-border" : "border-white/20"
                         )}>
                             <button className={cn(
@@ -128,7 +124,7 @@ export function Navbar() {
                                 )}>KIM CHULSU</p>
                             </div>
                             <div className={cn(
-                                "h-11 w-11 flex items-center justify-center premium-transition group-hover:scale-105",
+                                "flex h-10 w-10 items-center justify-center premium-transition group-hover:scale-105 sm:h-11 sm:w-11",
                                 isScrolled ? "bg-foreground text-background" : "bg-white text-black"
                             )}>
                                 <UserIcon size={20} />
@@ -150,10 +146,10 @@ export function Navbar() {
 
             {/* Premium Full-Screen Overlay Menu */}
             <div className={cn(
-                "fixed inset-0 z-[100] bg-black premium-transition overflow-hidden flex flex-col",
+                "fixed inset-0 z-[100] flex flex-col overflow-hidden bg-black/96 premium-transition will-change-transform",
                 isMobileMenuOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
             )}>
-                <div className="flex items-center justify-between px-10 h-[95px] border-b border-white/10">
+                <div className="flex h-[78px] items-center justify-between border-b border-white/10 px-5 sm:px-6">
                     <span className="text-3xl font-black text-white tracking-tighter">AOP</span>
                     <button
                         onClick={() => setIsMobileMenuOpen(false)}
@@ -163,7 +159,7 @@ export function Navbar() {
                     </button>
                 </div>
 
-                <div className="flex-grow flex flex-col justify-center px-10 space-y-12">
+                <div className="flex flex-grow flex-col justify-center space-y-8 px-5 py-8 sm:px-6 sm:space-y-10">
                     {NAV_ITEMS.map((item, i) => (
                         <Link
                             key={item.href}
@@ -171,21 +167,21 @@ export function Navbar() {
                             className="group block"
                         >
                             <span className="text-white/30 text-[14px] font-black uppercase tracking-[0.3em] mb-4 block">0{i + 1}.</span>
-                            <div className="flex items-center justify-between border-b border-white/10 pb-6">
+                            <div className="flex items-center justify-between border-b border-white/10 pb-5">
                                 <div>
-                                    <h2 className="text-white text-[48px] font-black uppercase tracking-tightest group-hover:text-primary premium-transition">
+                                    <h2 className="text-white text-[32px] sm:text-[42px] lg:text-[48px] font-black uppercase tracking-tight group-hover:text-primary premium-transition">
                                         {item.name}
                                     </h2>
-                                    <p className="text-white/40 font-bold uppercase tracking-widest mt-2">{item.desc}</p>
+                                    <p className="mt-2 text-[11px] sm:text-[12px] text-white/40 font-bold uppercase tracking-[0.18em]">{item.desc}</p>
                                 </div>
-                                <ChevronRight size={48} className="text-white/10 group-hover:text-primary group-hover:translate-x-4 premium-transition" />
+                                <ChevronRight size={36} className="text-white/10 group-hover:text-primary group-hover:translate-x-2 premium-transition sm:size-12" />
                             </div>
                         </Link>
                     ))}
                 </div>
 
-                <div className="p-10 border-t border-white/10 bg-white/5">
-                    <div className="flex justify-between items-center text-white/40 text-[12px] font-bold uppercase tracking-widest">
+                <div className="border-t border-white/10 bg-white/5 p-5 sm:p-6">
+                    <div className="flex flex-col gap-2 text-[11px] font-bold uppercase tracking-[0.18em] text-white/40 sm:flex-row sm:items-center sm:justify-between">
                         <span>Hanyang Univ ERICA</span>
                         <span>© 2024 Innovate Ahead</span>
                     </div>

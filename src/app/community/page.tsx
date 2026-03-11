@@ -1,16 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { Card } from "@/components/common/Card";
 import { Button } from "@/components/common/Button";
 import { Badge } from "@/components/common/Badge";
 import { MOCK_TEAM_POSTS } from "@/constants/mockData";
-import { Search, Plus, Clock, User } from "lucide-react";
+import { Search, Plus, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SubPageHero } from "@/components/common/SubPageHero";
 
+const TABS = ['ALL', 'IDEA', 'MVP'] as const;
+type ActiveTab = typeof TABS[number];
+
 export default function CommunityPage() {
-    const [activeTab, setActiveTab] = useState<'ALL' | 'IDEA' | 'MVP'>('ALL');
+    const [activeTab, setActiveTab] = useState<ActiveTab>('ALL');
 
     const filteredPosts = activeTab === 'ALL'
         ? MOCK_TEAM_POSTS
@@ -29,15 +31,15 @@ export default function CommunityPage() {
                 </Button>
             </SubPageHero>
 
-            <div className="max-w-8xl mx-auto px-10 py-24 animate-slide-up [animation-delay:0.1s]">
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between glass-header p-10 mb-20 gap-12 border border-slate-200 dark:border-slate-700">
-                    <div className="flex bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 p-1.5 overflow-hidden rounded-md">
-                        {['ALL', 'IDEA', 'MVP'].map((tab) => (
+            <div className="mx-auto max-w-8xl px-5 py-16 animate-slide-up sm:px-6 sm:py-20 lg:px-8 lg:py-24 [animation-delay:0.1s]">
+                <div className="mb-14 flex flex-col gap-6 border border-slate-200 bg-white/80 p-4 shadow-sm backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/70 sm:p-6 lg:mb-20 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
+                    <div className="flex flex-wrap overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-1.5 dark:border-slate-700 dark:bg-slate-800/50">
+                        {TABS.map((tab) => (
                             <button
                                 key={tab}
-                                onClick={() => setActiveTab(tab as any)}
+                                onClick={() => setActiveTab(tab)}
                                 className={cn(
-                                    "px-10 py-3 text-[11px] font-black tracking-[0.2em] uppercase premium-transition",
+                                    "px-5 py-3 text-[11px] font-black tracking-[0.2em] uppercase premium-transition sm:px-8",
                                     activeTab === tab
                                         ? "bg-white dark:bg-slate-700 text-primary dark:text-blue-400 shadow-lg"
                                         : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50"
@@ -48,24 +50,24 @@ export default function CommunityPage() {
                         ))}
                     </div>
 
-                    <div className="relative w-full lg:w-[500px] group">
-                        <Search className="absolute left-8 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 group-focus-within:text-slate-900 dark:group-focus-within:text-slate-50 premium-transition" size={24} />
+                    <div className="relative w-full lg:max-w-[460px] group">
+                        <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 group-focus-within:text-slate-900 dark:group-focus-within:text-slate-50 premium-transition" size={20} />
                         <input
                             type="text"
                             placeholder="Search by tech stack, role, or vision..."
-                            className="w-full pl-20 pr-10 h-18 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 focus:border-primary dark:focus:border-blue-400 focus:bg-white dark:focus:bg-slate-800 outline-none font-bold text-[17px] tracking-tight text-slate-900 dark:text-slate-50 placeholder:text-slate-500 premium-transition shadow-lg rounded-none"
+                            className="h-14 w-full rounded-2xl border border-slate-200 bg-slate-50 pl-14 pr-5 text-[15px] font-semibold tracking-tight text-slate-900 outline-none shadow-sm premium-transition placeholder:text-slate-500 focus:border-primary focus:bg-white dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-50 dark:focus:border-blue-400 dark:focus:bg-slate-800 sm:h-16 sm:text-[16px]"
                         />
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 xl:grid-cols-3 content-auto">
                     {filteredPosts.map((post, i) => (
                         <div
                             key={post.id}
-                            className="p-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 group hover:border-primary dark:hover:border-blue-400 premium-transition relative overflow-hidden animate-slide-up"
-                            style={{ animationDelay: `${0.3 + i * 0.1}s` }}
+                            className="group relative overflow-hidden border border-slate-200 bg-white p-7 premium-transition hover:-translate-y-1 hover:border-primary dark:border-slate-700 dark:bg-slate-900 dark:hover:border-blue-400 sm:p-8 lg:p-10 animate-slide-up contain-layout-paint"
+                            style={{ animationDelay: `${0.18 + i * 0.05}s` }}
                         >
-                            <div className="relative z-10 space-y-10">
+                            <div className="relative z-10 space-y-7 sm:space-y-8">
                                 <div className="flex items-center justify-between">
                                     <Badge variant={post.projectPhase === 'IDEA' ? 'primary' : 'success'} className="bg-transparent border-current text-[10px] px-4 py-1">
                                         {post.projectPhase} Phase
@@ -77,20 +79,20 @@ export default function CommunityPage() {
                                 </div>
 
                                 <div className="space-y-4">
-                                    <h3 className="text-[28px] font-black tracking-tightest uppercase group-hover:text-primary dark:group-hover:text-blue-400 premium-transition line-clamp-2 leading-[1.1] text-slate-900 dark:text-slate-50">
+                                    <h3 className="line-clamp-2 text-[24px] font-black uppercase leading-[1.08] tracking-[-0.04em] text-slate-900 premium-transition group-hover:text-primary dark:text-slate-50 dark:group-hover:text-blue-400 sm:text-[26px]">
                                         {post.title}
                                     </h3>
-                                    <p className="text-[17px] text-slate-700 dark:text-slate-300 font-bold line-clamp-3 min-h-[75px] leading-relaxed tracking-tight group-hover:text-slate-900 dark:group-hover:text-slate-50 premium-transition">
+                                    <p className="min-h-[72px] line-clamp-3 text-[15px] font-medium leading-relaxed tracking-tight text-slate-700 premium-transition group-hover:text-slate-900 dark:text-slate-300 dark:group-hover:text-slate-50 sm:text-[16px]">
                                         {post.content}
                                     </p>
                                 </div>
 
-                                <div className="space-y-10 pt-10 border-t border-slate-200 dark:border-slate-700">
+                                <div className="space-y-7 border-t border-slate-200 pt-7 dark:border-slate-700 sm:space-y-8 sm:pt-8">
                                     <div className="section-accent-bar">
                                         <p className="text-[10px] font-black text-primary dark:text-blue-400 tracking-[0.3em] uppercase mb-4">Required Stack</p>
                                         <div className="flex flex-wrap gap-2">
                                             {post.recruitingRoles.map((role) => (
-                                                <span key={role.role} className="px-4 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[9px] font-black uppercase tracking-widest group-hover:bg-slate-900 dark:group-hover:bg-slate-50 group-hover:text-white dark:group-hover:text-slate-900 premium-transition text-slate-700 dark:text-slate-300">
+                                                <span key={role.role} className="border border-slate-200 bg-slate-50 px-4 py-1.5 text-[9px] font-black uppercase tracking-widest text-slate-700 premium-transition group-hover:bg-slate-900 group-hover:text-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:group-hover:bg-slate-50 dark:group-hover:text-slate-900">
                                                     {role.role} ({role.current}/{role.total})
                                                 </span>
                                             ))}

@@ -1,4 +1,4 @@
-import { Project, Proposal, TeamBuildingPost, User, VideoContent, InsightArticle, RegisteredTeam, PortfolioItem } from "@/types";
+import { Proposal, TeamBuildingPost, User, VideoContent, InsightArticle, RegisteredTeam, PortfolioItem } from "@/types";
 
 export const MOCK_USERS: User[] = [
     {

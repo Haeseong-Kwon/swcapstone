@@ -5,16 +5,13 @@ import { Badge } from "@/components/common/Badge";
 import { Card } from "@/components/common/Card";
 import { Button } from "@/components/common/Button";
 import {
-    User,
     Mail,
-    Link as LinkIcon,
     Award,
     Rocket,
     Shield,
     Github,
     Settings,
     ChevronRight,
-    MessageSquare,
     CheckCircle2
 } from "lucide-react";
 

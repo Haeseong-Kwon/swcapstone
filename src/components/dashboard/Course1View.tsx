@@ -1,10 +1,7 @@
 "use client";
 
-import { Card } from "@/components/common/Card";
 import { Button } from "@/components/common/Button";
 import { Badge } from "@/components/common/Badge";
-import { FileText, Presentation, MessageSquare, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 export function Course1View() {
     return (
@@ -87,7 +84,7 @@ export function Course1View() {
                             <div className="bg-muted/5 p-8 border-l-2 border-primary">
                                 <p className="text-[11px] font-black text-primary tracking-[0.2em] uppercase mb-4 italic">Strategic Advice</p>
                                 <p className="text-[17px] text-foreground font-bold leading-relaxed mb-6">
-                                    "수익 모델에 대한 구체적인 시뮬레이션이 추가되면 좋을 것 같습니다. 이전 소셜 벤처 성공 사례를 벤치마킹해보세요."
+                                    &quot;수익 모델에 대한 구체적인 시뮬레이션이 추가되면 좋을 것 같습니다. 이전 소셜 벤처 성공 사례를 벤치마킹해보세요.&quot;
                                 </p>
                                 <div className="flex items-center gap-4">
                                     <div className="w-10 h-10 bg-foreground text-background flex items-center justify-center font-black rounded-sm group-hover:bg-primary premium-transition">K</div>

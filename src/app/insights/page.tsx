@@ -6,10 +6,11 @@ import { SubPageHero } from "@/components/common/SubPageHero";
 import { MOCK_INSIGHTS } from "@/constants/mockData";
 import { Calendar, Clock, ChevronRight, Search } from "lucide-react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+
+type InsightArticle = typeof MOCK_INSIGHTS[number];
 
 // Reusable Article Card Component
-const ArticleCard = ({ article, index }: { article: any, index: number }) => (
+const ArticleCard = ({ article, index }: { article: InsightArticle, index: number }) => (
     <Link
         href="#"
         className="group flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-blue-400 premium-transition relative overflow-hidden animate-slide-up h-full"
@@ -63,8 +64,6 @@ const ArticleCard = ({ article, index }: { article: any, index: number }) => (
 );
 
 export default function InsightsPage() {
-    const categories = ["전체", "지원사업 공고", "지원사업 교육", "창업 지원금", "창업투자", "판로개척", "창업노하우"];
-
     return (
         <main className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50">
             <SubPageHero
@@ -155,7 +154,7 @@ export default function InsightsPage() {
                                 </button>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                {[...MOCK_INSIGHTS].slice(0, 2).map((article, i) => (
+                                {[...MOCK_INSIGHTS].slice(0, 2).map((article) => (
                                     <Link
                                         href="#"
                                         key={`media-${article.id}`}

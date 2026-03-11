@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { LazyMotion, domAnimation, m } from "framer-motion";
 import { ProfileBoard } from "./ProfileBoard";
 import { TeamBoard } from "./TeamBoard";
 import { CorporateBoard } from "./CorporateBoard";
@@ -24,48 +24,45 @@ export function MainDashboard() {
   const [activeTab, setActiveTab] = useState<TabType>('SELF_INTRO');
 
   return (
-    <div className="w-full">
-      {/* Unified Translucent Tabs Navigation (Dark Centric) */}
-      <div className="flex glass-header px-2 mb-12 rounded-none border-border/10">
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={cn(
-              "px-8 py-6 text-sm font-black tracking-widest relative transition-all uppercase",
-              activeTab === tab.id ? "text-slate-900 dark:text-slate-50" : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50"
-            )}
-          >
-            {tab.label}
-            {activeTab === tab.id && (
-              <motion.div
-                layoutId="activeTabDashboard"
-                className="absolute bottom-0 left-0 right-0 h-1 bg-primary"
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              />
-            )}
-          </button>
-        ))}
-      </div>
+    <LazyMotion features={domAnimation}>
+      <div className="w-full">
+        <div className="mb-8 flex flex-wrap gap-2 rounded-[1.75rem] border border-border bg-background/88 p-2 shadow-sm backdrop-blur-md sm:mb-10 lg:mb-12">
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={cn(
+                "relative rounded-2xl px-5 py-3 text-[11px] font-black uppercase tracking-[0.18em] premium-transition sm:px-6 sm:py-4 sm:text-xs lg:px-8",
+                activeTab === tab.id ? "text-slate-900 dark:text-slate-50" : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50"
+              )}
+            >
+              {tab.label}
+              {activeTab === tab.id && (
+                <m.div
+                  layoutId="activeTabDashboard"
+                  className="absolute inset-0 -z-10 rounded-2xl bg-primary/10 dark:bg-blue-400/12"
+                  transition={{ type: "spring", stiffness: 320, damping: 32, mass: 0.6 }}
+                />
+              )}
+            </button>
+          ))}
+        </div>
 
-      {/* Tab Content with Smooth Transitions */}
-      <div className="min-h-[600px]">
-        <AnimatePresence mode="wait">
-          <motion.div
+        <div className="min-h-[600px] content-auto">
+          <m.div
             key={activeTab}
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.16, ease: "easeOut" }}
           >
             {activeTab === 'SELF_INTRO' && <ProfileBoard users={MOCK_USERS} />}
             {activeTab === 'TEAM_BUILDING' && <TeamBoard posts={MOCK_TEAM_POSTS} />}
             {activeTab === 'TEAM_REGISTRATION' && <TeamRegistrationBoard teams={MOCK_REGISTERED_TEAMS} />}
             {activeTab === 'CORPORATE' && <CorporateBoard proposals={MOCK_PROPOSALS} />}
             {activeTab === 'EDUCATIONAL_VIDEO' && <VideoBoard videos={MOCK_VIDEOS} />}
-          </motion.div>
-        </AnimatePresence>
+          </m.div>
+        </div>
       </div>
-    </div>
+    </LazyMotion>
   );
 }

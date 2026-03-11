@@ -1,4 +1,5 @@
 import { memo } from "react";
+import Image from "next/image";
 import { User } from "@/types";
 import { Badge } from "@/components/common/Badge";
 import { motion } from "framer-motion";
@@ -21,7 +22,13 @@ const ProfileCard = memo(({ user, index }: { user: User; index: number }) => (
     <div className="flex items-start gap-4 mb-6">
       <div className="w-16 h-16 rounded-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-xl overflow-hidden">
         {user.avatar ? (
-          <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" loading="lazy" />
+          <Image
+            src={user.avatar}
+            alt={user.name}
+            width={64}
+            height={64}
+            className="w-full h-full object-cover"
+          />
         ) : (
           user.name.charAt(0)
         )}

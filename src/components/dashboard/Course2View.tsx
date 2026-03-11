@@ -1,10 +1,8 @@
 "use client";
 
-import { Card } from "@/components/common/Card";
 import { Button } from "@/components/common/Button";
 import { Badge } from "@/components/common/Badge";
-import { Github, PlayCircle, Code, ExternalLink, Link as LinkIcon, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Github, PlayCircle, Code, ExternalLink, Link as LinkIcon } from "lucide-react";
 
 interface Course2ViewProps {
     onOpenImport: () => void;
@@ -36,7 +34,7 @@ export function Course2View({ onOpenImport, hasImportedData }: Course2ViewProps)
                 <div className="p-6 bg-foreground text-background flex items-center justify-between rounded-sm">
                     <div className="flex items-center gap-6">
                         <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-                        <span className="text-[13px] font-black uppercase tracking-[0.3em]">'Eco Connect' Data Linked</span>
+                        <span className="text-[13px] font-black uppercase tracking-[0.3em]">&apos;Eco Connect&apos; Data Linked</span>
                     </div>
                     <Badge variant="success" className="bg-primary text-white border-none px-6 text-[9px]">Active Sync</Badge>
                 </div>
@@ -105,7 +103,7 @@ export function Course2View({ onOpenImport, hasImportedData }: Course2ViewProps)
                                 <Code className="absolute -top-4 -right-4 w-10 h-10 bg-primary/10 text-primary p-2.5 rounded-full" />
                                 <p className="text-[10px] font-black text-primary tracking-[0.3em] uppercase mb-4 italic">Architecture Pattern</p>
                                 <p className="text-[17px] text-foreground font-bold leading-relaxed mb-6">
-                                    "현재 프로젝트 규모에서는 복잡한 상태 관리 라이브러리 없이 React Context만으로 충분해 보입니다. 오버엔지니어링을 경계하세요."
+                                    &quot;현재 프로젝트 규모에서는 복잡한 상태 관리 라이브러리 없이 React Context만으로 충분해 보입니다. 오버엔지니어링을 경계하세요.&quot;
                                 </p>
                                 <div className="flex items-center gap-4">
                                     <div className="w-10 h-10 bg-foreground text-background flex items-center justify-center font-black rounded-sm group-hover:bg-primary premium-transition">M</div>

@@ -18,32 +18,31 @@ export function SubPageHero({
     className
 }: SubPageHeroProps) {
     return (
-        <section className={cn("relative h-[80vh] min-h-[850px] flex items-center overflow-hidden bg-black", className)}>
-            {/* Cinematic Background with Overlay */}
+        <section className={cn("relative flex min-h-[72svh] items-center overflow-hidden bg-black pt-20 sm:min-h-[78svh]", className)}>
             <div className="absolute inset-0 z-0 gpu-accelerated">
                 <Image
                     src={backgroundImage}
                     alt={title}
                     fill
                     priority
-                    className="object-cover opacity-60 scale-100 animate-slow-zoom"
-                    sizes="100vw"
+                    quality={76}
+                    className="object-cover opacity-56 animate-slow-zoom"
+                    sizes="(max-width: 768px) 100vw, 100vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,23,0.28)_0%,rgba(2,6,23,0.58)_42%,rgba(2,6,23,0.92)_100%)]"></div>
             </div>
 
-            {/* Content Container */}
-            <div className="container max-w-8xl mx-auto px-10 relative z-10 animate-slide-up pt-[95px]">
+            <div className="relative z-10 mx-auto w-full max-w-8xl px-5 py-18 animate-slide-up sm:px-6 lg:px-8 lg:py-24">
                 <div className="max-w-4xl">
-                    <div className="flex items-center gap-4 mb-8">
-                        <div className="w-12 h-[2px] bg-primary"></div>
-                        <span className="text-white/70 text-[12px] font-black uppercase tracking-[0.4em]">Institutional Platform</span>
+                    <div className="mb-6 flex items-center gap-4 sm:mb-8">
+                        <div className="h-[2px] w-10 bg-primary sm:w-12"></div>
+                        <span className="text-[11px] font-black uppercase tracking-[0.32em] text-white/68 sm:text-[12px] sm:tracking-[0.4em]">Institutional Platform</span>
                     </div>
-                    <h1 className="text-white text-[64px] md:text-[80px] font-black tracking-tightest uppercase leading-[0.9] mb-10 drop-shadow-2xl">
+                    <h1 className="mb-6 text-[clamp(2.7rem,8vw,5rem)] font-black uppercase leading-[0.92] tracking-[-0.05em] text-white drop-shadow-2xl sm:mb-8">
                         {title}
                     </h1>
                     {description && (
-                        <p className="text-white/80 text-[20px] md:text-[24px] font-bold leading-relaxed max-w-2xl tracking-tight mb-12">
+                        <p className="mb-8 max-w-2xl text-[17px] font-semibold leading-relaxed tracking-tight text-white/78 sm:mb-10 sm:text-[20px] lg:text-[22px]">
                             {description}
                         </p>
                     )}
@@ -51,7 +50,6 @@ export function SubPageHero({
                 </div>
             </div>
 
-            {/* Bottom Accent Line */}
             <div className="absolute bottom-0 left-0 w-full h-[1px] bg-white/20"></div>
         </section>
     );

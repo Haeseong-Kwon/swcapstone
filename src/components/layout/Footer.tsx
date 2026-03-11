@@ -2,14 +2,14 @@ import Link from "next/link";
 
 export function Footer() {
     return (
-        <footer className="bg-black text-white pt-24 pb-12">
-            <div className="max-w-8xl mx-auto px-8">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-20 mb-20">
+        <footer className="bg-black pt-20 pb-10 text-white sm:pt-24 sm:pb-12">
+            <div className="max-w-8xl mx-auto px-5 sm:px-6 lg:px-8">
+                <div className="mb-16 grid grid-cols-1 gap-12 md:grid-cols-4 md:gap-10 lg:mb-20 lg:gap-16 xl:gap-20">
                     <div className="col-span-1 md:col-span-2 space-y-8">
                         <div className="flex items-center gap-2">
                             <span className="text-4xl font-black tracking-tighter">AOP</span>
                         </div>
-                        <p className="text-gray-400 text-[18px] leading-relaxed max-w-md font-medium">
+                        <p className="max-w-md text-[16px] font-medium leading-relaxed text-gray-400 sm:text-[18px]">
                             한양대학교 ERICA SW창업캡스톤디자인 통합 플랫폼. <br />
                             All-in-One Platform for Campus Entrepreneurs.
                         </p>
@@ -34,11 +34,11 @@ export function Footer() {
                     </div>
                 </div>
 
-                <div className="border-t border-gray-800 pt-12 flex flex-col md:flex-row justify-between items-center gap-8">
+                <div className="flex flex-col items-start justify-between gap-5 border-t border-gray-800 pt-8 sm:pt-10 md:flex-row md:items-center lg:pt-12">
                     <p className="text-[12px] font-bold text-gray-600 uppercase tracking-widest">
                         © 2024 Hanyang University ERICA. All rights reserved.
                     </p>
-                    <div className="flex items-center gap-10 text-[12px] font-bold text-gray-600 uppercase tracking-widest">
+                    <div className="flex items-center gap-6 text-[12px] font-bold uppercase tracking-widest text-gray-600 sm:gap-10">
                         <Link href="#" className="hover:text-white transition-colors">Terms</Link>
                         <Link href="#" className="hover:text-white transition-colors">Privacy</Link>
                     </div>

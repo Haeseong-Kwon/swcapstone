@@ -54,6 +54,7 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 ::selection {
@@ -69,8 +70,8 @@ body {
 /* Base Transition - Snappier 400ms for better responsiveness */
 .premium-transition {
   transition-property: opacity, transform, background-color, border-color, box-shadow, color;
-  transition-duration: 400ms;
-  transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  transition-duration: 220ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Institutional Sharp Card */
@@ -90,24 +91,24 @@ body {
 /* Unified Translucent Styles (Theme-Aware) */
 .glass-header {
   background-color: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--glass-border);
   color: var(--glass-text);
 }
 
 .glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--glass-border);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .glass-search {
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--glass-border);
 }
 
@@ -148,7 +149,7 @@ body {
   }
 
   .animate-slow-zoom {
-    animation: slow-zoom 30s ease-in-out infinite alternate;
+    animation: slow-zoom 24s ease-out infinite alternate;
     will-change: transform;
     backface-visibility: hidden;
   }
@@ -158,5 +159,54 @@ body {
     will-change: transform, opacity;
     backface-visibility: hidden;
     perspective: 1000px;
+  }
+
+  .content-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 900px;
+  }
+
+  .contain-layout-paint {
+    contain: layout paint style;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body,
+[data-scroll-root] {
+  overscroll-behavior-y: none;
+}
+
+img {
+  image-rendering: auto;
+}
+
+@media (max-width: 1024px) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-slow-zoom,
+  .animate-slide-up {
+    animation: none !important;
+    transform: none !important;
   }
 }

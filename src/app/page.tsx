@@ -1,117 +1,128 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/common/Button";
-import { Search, ChevronRight, Menu, Presentation, Rocket, Users, Briefcase } from "lucide-react";
+import { Search, ChevronRight, Presentation, Rocket, Users, Briefcase } from "lucide-react";
 
 export default function Home() {
+  const featureCards = [
+    { title: "Course 01", label: "Business Strategy", icon: <Presentation size={28} />, href: "/community" },
+    { title: "Course 02", label: "Tech Build", icon: <Rocket size={28} />, href: "/community" },
+    { title: "팀빌딩", label: "Team Matching", icon: <Users size={28} />, href: "/community" },
+    { title: "SW창업캡스톤디자인", label: "Dashboard", icon: <Briefcase size={28} />, href: "/dashboard" },
+  ];
+
   return (
     <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50">
-      {/* High-Fidelity Hero Section */}
-      <section className="relative min-h-[900px] flex items-center pt-24 overflow-hidden bg-black">
-        {/* Background Layer with IT/Startup Theme */}
+      <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-black pt-20">
         <div className="absolute inset-0 z-0 gpu-accelerated">
           <Image
             src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop"
             alt="Hero Background"
             fill
             priority
-            quality={90}
-            className="object-cover animate-slow-zoom opacity-60"
-            sizes="100vw"
+            quality={78}
+            className="object-cover animate-slow-zoom opacity-52"
+            sizes="(max-width: 768px) 100vw, 100vw"
           />
-          {/* Deep Blue Atmospheric Overlay */}
-          <div className="absolute inset-0 bg-[#001A2C]/40 backdrop-blur-[1px]"></div>
-          {/* Bottom Gradient for Content Transition (Always Dark) */}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent opacity-80"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,197,94,0.15),_transparent_34%),linear-gradient(180deg,rgba(2,6,23,0.16)_0%,rgba(2,6,23,0.72)_60%,rgba(2,6,23,0.94)_100%)]"></div>
         </div>
 
-        <div className="max-w-8xl mx-auto px-10 relative z-10 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-20 items-center">
-
-            {/* Left Side: Main Content */}
-            <div className="space-y-12 animate-slide-up [animation-delay:0.1s]">
+        <div className="relative z-10 mx-auto w-full max-w-8xl px-5 pb-16 pt-16 sm:px-6 lg:px-8 lg:pb-24 lg:pt-24">
+          <div className="grid items-end gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] lg:gap-12 xl:gap-16">
+            <div className="animate-slide-up space-y-8 sm:space-y-10 [animation-delay:0.08s]">
               <div className="inline-flex items-center gap-4 text-white/60">
-                <span className="w-10 h-[1px] bg-white/40"></span>
+                <span className="h-[1px] w-8 bg-white/40 sm:w-10"></span>
                 <span className="text-[13px] font-bold tracking-[0.3em] uppercase">Gateway to SW Innovation</span>
               </div>
 
-              <h1 className="text-[64px] md:text-[82px] font-bold text-white tracking-tighter leading-[1.1]">
-                Your Gateway to <br />
+              <h1 className="max-w-4xl text-[clamp(2.8rem,8vw,5.4rem)] font-bold leading-[0.98] tracking-[-0.05em] text-white">
+                Your Gateway to <br className="hidden sm:block" />
                 <span className="text-white italic opacity-90">Entrepreneurship.</span>
               </h1>
 
-              <p className="text-[22px] text-white/80 max-w-2xl leading-relaxed font-medium">
-                한양대학교 ERICA SW창업캡스톤디자인 통합 플랫폼. <br />
-                아이디어에서 기술 구현까지, 데이터 기반의 정교한 매칭으로 <br />
+              <p className="max-w-2xl text-[17px] font-medium leading-relaxed text-white/78 sm:text-[19px] lg:text-[21px]">
+                한양대학교 ERICA SW창업캡스톤디자인 통합 플랫폼.
+                <br className="hidden sm:block" />
+                아이디어에서 기술 구현까지, 데이터 기반의 정교한 매칭으로
+                <br className="hidden lg:block" />
                 넥스트 유니콘으로의 여정을 함께합니다.
               </p>
 
-              {/* Glassmorphism Search Bar */}
-              <div className="relative max-w-xl group animate-slide-up [animation-delay:0.3s]">
-                <div className="bg-slate-900/40 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-full h-20 flex items-center px-10 group-focus-within:border-white/20 group-focus-within:bg-slate-900/60 premium-transition">
-                  <Search className="text-white/80 mr-6" size={24} />
-                  <input
-                    type="text"
-                    placeholder="Search for projects, teams or opportunities..."
-                    className="bg-transparent border-none outline-none text-white w-full text-[17px] placeholder:text-white/40 font-medium"
-                  />
-                  <div className="h-10 w-[1px] bg-white/20 mx-6"></div>
-                  <button className="text-white/80 hover:text-white flex items-center gap-2 text-[14px] font-bold uppercase tracking-widest premium-transition">
-                    Search <ChevronRight size={18} />
+              <div className="relative max-w-2xl animate-slide-up [animation-delay:0.18s]">
+                <div className="group flex flex-col gap-4 rounded-[2rem] border border-white/12 bg-slate-950/42 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-xl sm:flex-row sm:items-center sm:gap-0 sm:rounded-full sm:p-2">
+                  <div className="flex min-w-0 flex-1 items-center px-3 sm:px-6">
+                    <Search className="mr-4 text-white/70" size={20} />
+                    <input
+                      type="text"
+                      placeholder="Search for projects, teams or opportunities..."
+                      className="h-12 w-full bg-transparent text-[15px] font-medium text-white outline-none placeholder:text-white/38 sm:h-16 sm:text-[16px]"
+                    />
+                  </div>
+                  <div className="hidden h-10 w-px bg-white/12 sm:block"></div>
+                  <button className="flex h-12 items-center justify-center gap-2 rounded-full bg-white px-5 text-[12px] font-bold uppercase tracking-[0.22em] text-slate-950 premium-transition hover:scale-[1.01] hover:bg-slate-100 sm:mx-2 sm:h-14 sm:px-7">
+                    Search <ChevronRight size={16} />
                   </button>
                 </div>
-                {/* Popular Keywords */}
-                <div className="flex gap-4 mt-6 px-10">
-                  {["#LMS", "#TeamBuilding", "#Capstone", "#Startup"].map(tag => (
-                    <span key={tag} className="text-[12px] font-bold text-white/50 hover:text-white cursor-pointer premium-transition">
+                <div className="mt-4 flex flex-wrap gap-3 px-2 sm:px-6">
+                  {["#LMS", "#TeamBuilding", "#Capstone", "#Startup"].map((tag) => (
+                    <span key={tag} className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-[11px] font-bold text-white/55 premium-transition hover:border-white/20 hover:text-white">
                       {tag}
                     </span>
                   ))}
                 </div>
               </div>
+
+              <div className="grid max-w-2xl grid-cols-2 gap-3 pt-2 text-white/68 sm:flex sm:flex-wrap sm:gap-6">
+                {[
+                  ["팀 빌딩", "데이터 기반 매칭"],
+                  ["프로젝트 관리", "교육 흐름 통합"],
+                  ["지원사업", "기회 탐색 최적화"],
+                  ["포트폴리오", "성과 아카이빙"],
+                ].map(([title, desc]) => (
+                  <div key={title} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-md sm:min-w-[180px] sm:flex-1">
+                    <p className="text-[11px] font-black uppercase tracking-[0.24em] text-white/44">{title}</p>
+                    <p className="mt-2 text-[14px] font-semibold text-white/82">{desc}</p>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Right Side: Glassmorphism Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 animate-slide-up [animation-delay:0.5s]">
-              {[
-                { title: "Course 01", label: "Business Strategy", icon: <Presentation size={32} />, delay: "0.6s" },
-                { title: "Course 02", label: "Tech Build", icon: <Rocket size={32} />, delay: "0.7s" },
-                { title: "팀빌딩", label: "Team Matching", icon: <Users size={32} />, delay: "0.8s" },
-                { title: "SW창업캡스톤디자인", label: "Dashboard", icon: <Briefcase size={32} />, delay: "0.9s" }
-              ].map((card, i) => (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 content-auto">
+              {featureCards.map((card, i) => (
                 <Link
-                  key={i}
-                  href={card.title === "SW창업캡스톤디자인" ? "/dashboard" : "/community"}
-                  className="bg-slate-900/40 backdrop-blur-2xl border border-white/10 shadow-lg p-8 md:p-10 h-[200px] md:h-[240px] flex flex-col justify-between hover:bg-slate-900/60 hover:border-white/30 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)] transition-all duration-500 ease-out group relative animate-slide-up"
-                  style={{ animationDelay: card.delay }}
+                  key={card.title}
+                  href={card.href}
+                  className="group relative flex min-h-[180px] flex-col justify-between overflow-hidden rounded-[2rem] border border-white/12 bg-white/8 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.28)] backdrop-blur-xl premium-transition hover:-translate-y-1 hover:border-white/20 hover:bg-white/10 sm:min-h-[210px] sm:p-7"
+                  style={{ animationDelay: `${0.24 + i * 0.08}s` }}
                 >
-                  <div className="text-white/80 group-hover:text-white group-hover:scale-110 premium-transition transform origin-left">
-                    {card.icon}
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-70"></div>
+                  <div className="flex items-start justify-between">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-white premium-transition group-hover:bg-white group-hover:text-slate-950">
+                      {card.icon}
+                    </div>
+                    <ChevronRight className="translate-x-0 text-white/35 premium-transition group-hover:translate-x-1 group-hover:text-white" size={20} />
                   </div>
                   <div className="space-y-2">
-                    <p className="text-[11px] font-bold text-white/40 uppercase tracking-[0.2em]">{card.title}</p>
-                    <h4 className="text-[22px] font-bold text-white tracking-tight flex items-center justify-between">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-white/42">{card.title}</p>
+                    <h4 className="text-[22px] font-bold tracking-tight text-white sm:text-[24px]">
                       {card.label}
-                      <ChevronRight className="opacity-30 group-hover:opacity-100 group-hover:translate-x-2 premium-transition" size={20} />
                     </h4>
                   </div>
                 </Link>
               ))}
             </div>
-
           </div>
         </div>
       </section>
 
-      {/* Intro Section - Standard Clean White */}
-      <section className="py-40 bg-white dark:bg-slate-900">
-        <div className="max-w-8xl mx-auto px-10">
-          <div className="section-accent-bar mb-24">
-            <h2 className="text-[48px] font-black text-slate-900 dark:text-slate-50 tracking-tighter uppercase mb-4">Core Ecosystem</h2>
-            <p className="text-[20px] text-slate-600 dark:text-slate-400 max-w-2xl font-medium">기획부터 기술 구현, 팀매칭까지 창업의 전 과정을 지원합니다.</p>
+      <section className="bg-white py-20 dark:bg-slate-900 sm:py-28 lg:py-36">
+        <div className="mx-auto max-w-8xl px-5 sm:px-6 lg:px-8">
+          <div className="section-accent-bar mb-14 sm:mb-18 lg:mb-24">
+            <h2 className="mb-4 text-[34px] font-black uppercase tracking-[-0.04em] text-slate-900 dark:text-slate-50 sm:text-[42px] lg:text-[48px]">Core Ecosystem</h2>
+            <p className="max-w-2xl text-[17px] font-medium text-slate-600 dark:text-slate-400 sm:text-[19px]">기획부터 기술 구현, 팀매칭까지 창업의 전 과정을 지원합니다.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border-t border-l border-slate-200 dark:border-slate-700">
+          <div className="grid grid-cols-1 border-l border-t border-slate-200 dark:border-slate-700 md:grid-cols-2 lg:grid-cols-3 content-auto">
             {[
               {
                 title: "Business Model",
@@ -128,12 +139,12 @@ export default function Home() {
                 desc: "데이터 기반의 적합한 팀원을 찾고 열정적인 프로젝트를 시작하세요.",
                 category: "Network"
               }
-            ].map((item, i) => (
-              <div key={i} className="group relative overflow-hidden border-r border-b border-slate-200 dark:border-slate-700 p-16 premium-transition hover:bg-slate-50 dark:hover:bg-slate-800">
-                <span className="text-[12px] font-bold text-primary dark:text-blue-400 tracking-[0.2em] uppercase mb-6 block">{item.category}</span>
-                <h4 className="text-[32px] font-black text-slate-900 dark:text-slate-50 tracking-tighter uppercase mb-4 group-hover:text-primary dark:group-hover:text-blue-400 premium-transition">{item.title}</h4>
-                <p className="text-slate-600 dark:text-slate-400 font-medium mb-12 text-[18px] leading-relaxed">{item.desc}</p>
-                <Button variant="ghost" className="p-0 hover:bg-transparent text-slate-900 dark:text-slate-50 gap-2">
+            ].map((item) => (
+              <div key={item.title} className="group relative overflow-hidden border-b border-r border-slate-200 p-8 premium-transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800/70 sm:p-10 lg:p-12 xl:p-14">
+                <span className="mb-5 block text-[11px] font-bold uppercase tracking-[0.22em] text-primary dark:text-blue-400">{item.category}</span>
+                <h4 className="mb-4 text-[28px] font-black uppercase tracking-[-0.05em] text-slate-900 premium-transition group-hover:text-primary dark:text-slate-50 dark:group-hover:text-blue-400 lg:text-[32px]">{item.title}</h4>
+                <p className="mb-10 text-[16px] font-medium leading-relaxed text-slate-600 dark:text-slate-400 sm:text-[17px] lg:min-h-[96px]">{item.desc}</p>
+                <Button variant="ghost" className="p-0 text-slate-900 hover:bg-transparent dark:text-slate-50 gap-2">
                   View Details <ChevronRight size={18} />
                 </Button>
               </div>

@@ -1,8 +1,9 @@
 import { memo } from "react";
+import Image from "next/image";
 import { VideoContent } from "@/types";
 import { Badge } from "@/components/common/Badge";
 import { motion } from "framer-motion";
-import { Play, Clock, User, Eye, Calendar } from "lucide-react";
+import { Play, User, Eye, Calendar } from "lucide-react";
 
 const VideoCard = memo(({ video, index }: { video: VideoContent; index: number }) => (
   <motion.div
@@ -13,11 +14,12 @@ const VideoCard = memo(({ video, index }: { video: VideoContent; index: number }
   >
     {/* Thumbnail Container */}
     <div className="relative aspect-video overflow-hidden bg-slate-100 dark:bg-slate-800">
-      <img 
-        src={video.thumbnailUrl} 
-        alt={video.title} 
-        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-        loading="lazy"
+      <Image
+        src={video.thumbnailUrl}
+        alt={video.title}
+        fill
+        className="object-cover group-hover:scale-110 transition-transform duration-700"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       />
       <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
         <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center opacity-40 group-hover:opacity-100 transition-all scale-90 group-hover:scale-100">

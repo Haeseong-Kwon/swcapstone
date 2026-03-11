@@ -13,8 +13,8 @@ export default function DashboardPage() {
                 backgroundImage="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop"
             />
 
-            <div className="max-w-8xl mx-auto px-10 py-24">
-                <div className="flex items-center justify-between border-b border-border pb-12 mb-16">
+            <div className="mx-auto max-w-8xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+                <div className="mb-10 flex items-center justify-between border-b border-border pb-8 sm:mb-12 sm:pb-10 lg:mb-16 lg:pb-12">
                     <SectionHeader
                         title="Comprehensive Dashboard"
                         description="분절된 정보를 통합하여 창업 생태계의 모든 과정을 한눈에 파악하고 관리합니다."

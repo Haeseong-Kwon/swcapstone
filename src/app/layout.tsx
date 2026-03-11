@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
 import { ThemeProvider } from "@/context/ThemeContext";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "AOP | All-in-One Platform",
@@ -20,10 +17,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" suppressHydrationWarning>
-      <body className={`${inter.className} antialiased bg-background text-foreground transition-colors duration-300`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(() => {
+              try {
+                const savedTheme = localStorage.getItem("theme");
+                const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+                const resolvedTheme = savedTheme === "dark" || (!savedTheme && prefersDark) ? "dark" : "light";
+                document.documentElement.classList.toggle("dark", resolvedTheme === "dark");
+              } catch {}
+            })();`,
+          }}
+        />
+      </head>
+      <body className="antialiased bg-background text-foreground transition-colors duration-300">
         <ThemeProvider>
           <Navbar />
-          <main className="min-h-screen">
+          <main className="min-h-screen overflow-x-clip" data-scroll-root>
             {children}
           </main>
           <Footer />
