@@ -33,7 +33,7 @@ export function MainDashboard() {
               onClick={() => setActiveTab(tab.id)}
               className={cn(
                 "relative rounded-2xl px-5 py-3 text-[11px] font-black uppercase tracking-[0.18em] premium-transition sm:px-6 sm:py-4 sm:text-xs lg:px-8",
-                activeTab === tab.id ? "text-slate-900 dark:text-slate-50" : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50"
+                activeTab === tab.id ? "text-slate-900 dark:text-slate-50" : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50"
               )}
             >
               {tab.label}

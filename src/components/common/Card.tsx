@@ -9,6 +9,13 @@ interface CardProps {
 }
 
 export function Card({ children, className, onClick, noPadding = false }: CardProps) {
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            onClick();
+        }
+    };
+
     return (
         <div
             className={cn(
@@ -18,6 +25,9 @@ export function Card({ children, className, onClick, noPadding = false }: CardPr
                 className
             )}
             onClick={onClick}
+            onKeyDown={handleKeyDown}
+            role={onClick ? "button" : undefined}
+            tabIndex={onClick ? 0 : undefined}
         >
             {children}
         </div>

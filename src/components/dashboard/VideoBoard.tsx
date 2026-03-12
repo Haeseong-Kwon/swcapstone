@@ -22,7 +22,7 @@ const VideoCard = memo(({ video, index }: { video: VideoContent; index: number }
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       />
       <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
-        <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center opacity-40 group-hover:opacity-100 transition-all scale-90 group-hover:scale-100">
+        <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center opacity-60 group-hover:opacity-100 transition-all scale-90 group-hover:scale-100">
           <Play className="text-white fill-white" size={20} />
         </div>
       </div>

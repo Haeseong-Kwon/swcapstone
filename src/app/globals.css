@@ -75,11 +75,16 @@ body {
 }
 
 /* Institutional Sharp Card */
-.institutional-card {
-  background: var(--background);
+.institutional-card, .sharp-card {
+  background: var(--card);
   border: 1px solid var(--border);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark .institutional-card, .dark .sharp-card {
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
 }
 
 /* Vertical Accent Bar (10px) */

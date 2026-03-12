@@ -85,7 +85,9 @@ export function Navbar() {
 
                     <div className="flex items-center gap-3 sm:gap-4 lg:gap-5">
                         <button
+                            type="button"
                             onClick={toggleTheme}
+                            aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
                             className={cn(
                                 "p-2 rounded-full premium-transition",
                                 isScrolled ? "text-muted-foreground hover:bg-muted/10 hover:text-foreground" : "text-white/80 hover:bg-white/10 hover:text-white"
@@ -97,16 +99,24 @@ export function Navbar() {
                             "hidden md:flex items-center gap-3 border-r pr-5 mr-2 premium-transition lg:pr-7 lg:mr-3",
                             isScrolled ? "border-border" : "border-white/20"
                         )}>
-                            <button className={cn(
-                                "premium-transition hover:scale-110",
-                                isScrolled ? "text-muted-foreground hover:text-foreground" : "text-white/80 hover:text-white"
-                            )}>
+                            <button 
+                                type="button"
+                                aria-label="Search"
+                                className={cn(
+                                    "premium-transition hover:scale-110",
+                                    isScrolled ? "text-muted-foreground hover:text-foreground" : "text-white/80 hover:text-white"
+                                )}
+                            >
                                 <Search size={22} />
                             </button>
-                            <button className={cn(
-                                "premium-transition hover:scale-110 relative",
-                                isScrolled ? "text-muted-foreground hover:text-foreground" : "text-white/80 hover:text-white"
-                            )}>
+                            <button 
+                                type="button"
+                                aria-label="Notifications"
+                                className={cn(
+                                    "premium-transition hover:scale-110 relative",
+                                    isScrolled ? "text-muted-foreground hover:text-foreground" : "text-white/80 hover:text-white"
+                                )}
+                            >
                                 <Bell size={22} />
                                 <span className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
                             </button>
@@ -132,7 +142,9 @@ export function Navbar() {
                         </Link>
 
                         <button
+                            type="button"
                             onClick={() => setIsMobileMenuOpen(true)}
+                            aria-label="Open menu"
                             className={cn(
                                 "lg:hidden premium-transition hover:scale-110",
                                 isScrolled ? "text-foreground" : "text-white"

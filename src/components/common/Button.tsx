@@ -16,10 +16,10 @@ export function Button({
 }: ButtonProps) {
     const variants = {
         primary: 'bg-primary text-white hover:opacity-90',
-        secondary: 'bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-50 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700',
-        outline: 'border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-50 hover:bg-slate-50 dark:hover:bg-slate-800',
-        ghost: 'hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-50',
-        black: 'bg-slate-900 dark:bg-slate-50 text-white dark:text-slate-900 hover:opacity-90',
+        secondary: 'bg-muted/10 text-foreground border border-border hover:bg-muted/20',
+        outline: 'border border-border text-foreground hover:bg-muted/10',
+        ghost: 'hover:bg-muted/10 text-muted-foreground hover:text-foreground',
+        black: 'bg-foreground text-background hover:opacity-90',
     };
 
     const sizes = {

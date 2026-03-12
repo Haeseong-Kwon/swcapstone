@@ -45,11 +45,11 @@ const RegisteredTeamItem = memo(({ team, index }: { team: RegisteredTeam; index:
 
     {/* Right: Contact & Action */}
     <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center w-full md:w-auto gap-4 md:gap-3 shrink-0 border-t md:border-t-0 md:border-l border-slate-200 dark:border-slate-700 pt-4 md:pt-0 md:pl-6">
-      <div className="flex items-center gap-2 text-xs font-medium text-slate-500 hover:text-primary transition-colors cursor-pointer">
+      <div className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-blue-400 transition-colors cursor-pointer">
         <Mail size={14} />
         {team.contactEmail}
       </div>
-      <button className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-800 text-slate-400 group-hover:bg-primary group-hover:text-white transition-all shrink-0">
+      <button className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:bg-primary dark:group-hover:bg-blue-500 group-hover:text-white transition-all shrink-0">
         <ArrowRight size={18} />
       </button>
     </div>

@@ -78,7 +78,7 @@ export function TeamRegistrationModal({ isOpen, onClose, onSubmit }: TeamRegistr
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="bg-white dark:bg-slate-900 w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800"
+            className="bg-white dark:bg-slate-900 w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800"
           >
             <div className="sticky top-0 z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-8 py-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
               <h2 className="text-2xl font-black text-slate-900 dark:text-slate-50">팀 등록하기</h2>
