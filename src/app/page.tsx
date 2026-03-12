@@ -98,10 +98,12 @@ export default function Home() {
                 <Link
                   key={card.title}
                   href={card.href}
-                  className="group relative flex flex-col justify-between overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/8 p-4 shadow-xl backdrop-blur-xl premium-transition hover:-translate-y-1 hover:border-white/30 hover:bg-white/12 sm:rounded-[2.5rem] sm:p-7 md:h-[220px] lg:h-[240px]"
+                  className="group relative flex flex-col justify-between overflow-visible rounded-[1.5rem] border border-white/12 bg-white/8 p-4 shadow-xl backdrop-blur-xl premium-transition hover:-translate-y-2 hover:border-white/30 hover:bg-white/12 sm:rounded-[2.5rem] sm:p-7 md:h-[220px] lg:h-[240px]"
                   style={{ animationDelay: `${0.24 + i * 0.08}s` }}
                 >
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-70"></div>
+                  <div className="absolute inset-0 rounded-[inherit] overflow-hidden pointer-events-none z-0">
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-70"></div>
+                  </div>
                   <div className="flex items-start justify-between">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white premium-transition group-hover:bg-white group-hover:text-slate-950 sm:h-12 sm:w-12 sm:rounded-2xl">
                       {card.icon}
@@ -148,7 +150,7 @@ export default function Home() {
                 category: "Network"
               }
             ].map((item) => (
-              <div key={item.title} className="group relative overflow-hidden border-b border-r border-slate-200 p-8 premium-transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800/70 sm:p-10 lg:p-12 xl:p-14">
+              <div key={item.title} className="group relative overflow-visible border-b border-r border-slate-200 p-8 premium-transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800/70 sm:p-10 lg:p-12 xl:p-14">
                 <span className="mb-5 block text-[11px] font-bold uppercase tracking-[0.22em] text-primary dark:text-blue-400">{item.category}</span>
                 <h4 className="mb-4 text-[28px] font-black uppercase tracking-[-0.05em] text-slate-900 premium-transition group-hover:text-primary dark:text-slate-50 dark:group-hover:text-blue-400 lg:text-[32px]">{item.title}</h4>
                 <p className="mb-10 text-[16px] font-medium leading-relaxed text-slate-600 dark:text-slate-400 sm:text-[17px] lg:min-h-[96px]">{item.desc}</p>

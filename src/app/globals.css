@@ -67,11 +67,21 @@ body {
   color: #ffffff;
 }
 
-/* Base Transition - Snappier for better perceived responsiveness */
+/* Base Transition - Refined for "Premium" feel */
 .premium-transition {
-  transition-property: opacity, transform, background-color, border-color, box-shadow, color;
-  transition-duration: 200ms;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-property: transform, opacity, background-color, border-color, box-shadow, filter;
+  transition-duration: 400ms;
+  transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.hover-lift {
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
 }
 
 /* Institutional Sharp Card */
@@ -132,6 +142,7 @@ body {
 
 .animate-slide-up {
   animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  will-change: transform, opacity;
 }
 
 @layer utilities {
@@ -174,9 +185,8 @@ body {
 
   .gpu-accelerated {
     transform: translateZ(0);
-    will-change: transform, opacity;
+    will-change: transform;
     backface-visibility: hidden;
-    perspective: 1000px;
   }
 
   @keyframes float {

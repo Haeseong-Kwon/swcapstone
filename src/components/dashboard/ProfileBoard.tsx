@@ -9,11 +9,11 @@ import { ProfileUploadModal } from "./ProfileUploadModal";
 
 const ProfileCard = memo(({ user, index }: { user: User; index: number }) => (
   <motion.div
-    initial={{ opacity: 0, y: 15 }}
+    initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.3, delay: index * 0.05, ease: "easeOut" }}
+    transition={{ duration: 0.5, delay: index * 0.08, ease: [0.2, 0.8, 0.2, 1] }}
   >
-    <Card className="p-6 h-full border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group gpu-accelerated bg-white dark:bg-slate-900 rounded-2xl">
+    <Card className="p-6 h-full border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all relative overflow-visible group gpu-accelerated bg-white dark:bg-slate-900 rounded-2xl hover:-translate-y-2">
       {/* Status Badge */}
       <div className="absolute top-4 right-4 focus-within:z-10">
         <Badge variant={user.status === 'LOOKING' ? 'primary' : 'default'}>

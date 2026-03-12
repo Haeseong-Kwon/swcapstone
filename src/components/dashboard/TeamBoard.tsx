@@ -8,11 +8,11 @@ import { RecruitmentUploadModal } from "./RecruitmentUploadModal";
 
 const TeamCard = memo(({ post, index }: { post: TeamBuildingPost; index: number }) => (
   <motion.div
-    initial={{ opacity: 0, x: -15 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ duration: 0.3, delay: index * 0.05, ease: "easeOut" }}
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5, delay: index * 0.08, ease: [0.2, 0.8, 0.2, 1] }}
   >
-    <Card className="p-8 h-full border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all group gpu-accelerated bg-white dark:bg-slate-900 rounded-2xl">
+    <Card className="p-8 h-full border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all group gpu-accelerated bg-white dark:bg-slate-900 rounded-2xl overflow-visible hover:-translate-y-2">
       <div className="flex justify-between items-start mb-6">
         <Badge variant={post.courseBadge === 'CAPSTONE_1' ? 'info' : 'warning'}>
           {post.courseBadge === 'CAPSTONE_1' ? '캡스톤 1' : '캡스톤 2'}

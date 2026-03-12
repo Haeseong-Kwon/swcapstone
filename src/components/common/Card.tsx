@@ -19,7 +19,8 @@ export function Card({ children, className, onClick, noPadding = false }: CardPr
     return (
         <div
             className={cn(
-                "sharp-card premium-transition group relative",
+                "institutional-card premium-transition group relative hover-lift",
+                "overflow-visible", // allow shadows to bleed
                 !noPadding && "p-8 md:p-12",
                 onClick && "cursor-pointer hover:bg-muted/5",
                 className
