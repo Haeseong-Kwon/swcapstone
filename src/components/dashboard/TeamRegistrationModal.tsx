@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Plus, Trash2 } from "lucide-react";
+import { X, Plus, Trash2, Users } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { RegisteredTeam } from "@/types";
 
