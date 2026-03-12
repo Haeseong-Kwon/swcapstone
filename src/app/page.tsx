@@ -46,11 +46,7 @@ export default function Home() {
               </h1>
 
               <p className="max-w-2xl text-[16px] font-medium leading-relaxed text-white/78 sm:text-[18px] lg:text-[20px]">
-                한양대학교 ERICA SW창업캡스톤디자인 통합 플랫폼.
-                <br className="hidden sm:block" />
-                아이디어에서 기술 구현까지, 데이터 기반의 정교한 매칭으로
-                <br className="hidden lg:block" />
-                넥스트 유니콘으로의 여정을 함께합니다.
+                한양대학교 ERICA SW창업캡스톤디자인 통합 플랫폼. 아이디어에서 기술 구현까지, 데이터 기반의 정교한 매칭으로 넥스트 유니콘으로의 여정을 함께합니다.
               </p>
 
               <div className="relative max-w-2xl animate-slide-up [animation-delay:0.18s]">
@@ -93,7 +89,7 @@ export default function Home() {
             </div>
 
             {/* Original 2-Column Grid Reverted & Polished */}
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5 content-auto">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-4 md:gap-5 content-auto w-full">
               {featureCards.map((card, i) => (
                 <Link
                   key={card.title}

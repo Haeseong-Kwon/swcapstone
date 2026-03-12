@@ -20,44 +20,50 @@ export default function ProposalsPage() {
                     {MOCK_PROPOSALS.map((proposal, i) => (
                         <div
                             key={proposal.id}
-                            className="group flex flex-col lg:flex-row items-start lg:items-center py-16 border-b border-border hover:bg-muted/5 premium-transition px-8 relative overflow-hidden animate-slide-up"
+                            className="group flex flex-col items-start py-12 border-b border-border hover:bg-muted/5 premium-transition px-6 sm:px-8 relative overflow-hidden animate-slide-up lg:flex-row lg:items-center lg:py-16"
                             style={{ animationDelay: `${0.3 + i * 0.1}s` }}
                         >
-                            <div className="w-24 h-24 bg-slate-100 dark:bg-white/5 border border-border dark:border-white/10 flex items-center justify-center text-foreground dark:text-white group-hover:border-primary group-hover:text-primary premium-transition shrink-0 mb-8 lg:mb-0 relative z-10 glass-card">
-                                <Building2 size={40} strokeWidth={1} />
-                            </div>
-
-                            <div className="flex-grow lg:px-16 space-y-6 relative z-10">
-                                <div className="flex items-center gap-6">
-                                    <div className="section-accent-bar">
-                                        <span className="text-[12px] font-black text-primary uppercase tracking-[0.3em]">{proposal.companyName}</span>
-                                    </div>
-                                    <Badge variant={proposal.category === 'GOVERNMENT' ? 'info' : 'primary'} className="bg-transparent border-primary/20 dark:border-white/20 text-foreground dark:text-white text-[10px] px-4 font-black">
-                                        Institutional {proposal.category === 'GOVERNMENT' ? 'Gov' : 'Corp'}
-                                    </Badge>
-                                    {proposal.isHot && (
-                                        <div className="flex items-center gap-2 text-[10px] font-black text-amber-500 tracking-[0.2em] uppercase">
-                                            <Flame size={16} className="fill-current animate-pulse" /> Hot Priority
-                                        </div>
-                                    )}
+                            <div className="flex flex-col sm:flex-row items-start gap-6 lg:flex-row lg:items-center lg:gap-0 lg:px-16 flex-grow relative z-10 space-y-6 sm:space-y-0 w-full">
+                                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-slate-100 dark:bg-white/5 border border-border dark:border-white/10 flex items-center justify-center text-foreground dark:text-white group-hover:border-primary group-hover:text-primary premium-transition shrink-0 relative z-10 glass-card">
+                                    <Building2 size={32} strokeWidth={1} className="sm:hidden" />
+                                    <Building2 size={40} strokeWidth={1} className="hidden sm:block" />
                                 </div>
-                                <h3 className="text-[36px] font-black tracking-tightest uppercase leading-[1.1] text-foreground group-hover:text-primary premium-transition">
-                                    {proposal.title}
-                                </h3>
-                                <p className="text-[18px] text-muted-foreground dark:text-slate-400 font-bold leading-relaxed max-w-4xl tracking-tight group-hover:text-foreground premium-transition">
-                                    {proposal.description}
-                                </p>
+
+                                <div className="flex-grow sm:pl-8 lg:px-0 space-y-4">
+                                    <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+                                        <div className="section-accent-bar">
+                                            <span className="text-[11px] sm:text-[12px] font-black text-primary uppercase tracking-[0.3em]">{proposal.companyName}</span>
+                                        </div>
+                                        <Badge variant={proposal.category === 'GOVERNMENT' ? 'info' : 'primary'} className="bg-transparent border-primary/20 dark:border-white/20 text-foreground dark:text-white text-[9px] sm:text-[10px] px-3 sm:px-4 font-black">
+                                            Institutional {proposal.category === 'GOVERNMENT' ? 'Gov' : 'Corp'}
+                                        </Badge>
+                                        {proposal.isHot && (
+                                            <div className="flex items-center gap-2 text-[10px] font-black text-amber-500 tracking-[0.2em] uppercase">
+                                                <Flame size={16} className="fill-current animate-pulse" /> Hot Priority
+                                            </div>
+                                        )}
+                                    </div>
+                                    <h3 className="text-[28px] sm:text-[36px] font-black tracking-tightest uppercase leading-[1.1] text-foreground group-hover:text-primary premium-transition">
+                                        {proposal.title}
+                                    </h3>
+                                    <p className="text-[16px] sm:text-[18px] text-muted-foreground dark:text-slate-400 font-bold leading-relaxed max-w-4xl tracking-tight group-hover:text-foreground premium-transition">
+                                        {proposal.description}
+                                    </p>
+                                </div>
                             </div>
 
-                             <div className="flex flex-col lg:items-end gap-10 shrink-0 pt-12 lg:pt-0 relative z-10">
-                                <div className="flex items-center gap-3 text-[12px] font-black text-foreground/70 dark:text-white/70 uppercase tracking-[0.25em] bg-slate-100/50 dark:bg-white/5 px-6 py-4 border border-border dark:border-white/10 glass-card">
+                            <div className="flex flex-col sm:flex-row lg:flex-col items-start sm:items-center lg:items-end gap-6 sm:gap-10 shrink-0 pt-10 sm:pt-12 lg:pt-0 relative z-10 w-full lg:w-auto">
+                                <div className="flex items-center gap-3 text-[11px] sm:text-[12px] font-black text-foreground/70 dark:text-white/70 uppercase tracking-[0.25em] bg-slate-100/50 dark:bg-white/5 px-5 py-3 sm:px-6 sm:py-4 border border-border dark:border-white/10 glass-card">
                                     <Calendar size={18} className="text-primary" />
                                     Due: {proposal.deadline}
                                 </div>
-                                <Button variant="outline" size="lg" className="h-16 px-12 gap-6 group/btn shadow-xl overflow-hidden relative bg-background dark:bg-white text-foreground dark:text-black border-border dark:border-white hover:border-primary">
-                                    <span className="relative z-10 text-[13px] group-hover:text-white uppercase font-black">Apply Now</span>
-                                    <ArrowRight size={22} className="relative z-10 group-hover:text-white group-hover/btn:translate-x-2 premium-transition" />
-                                    <div className="absolute inset-0 bg-primary translate-y-full group-hover/btn:translate-y-0 premium-transition"></div>
+                                <Button 
+                                    variant="outline" 
+                                    size="lg" 
+                                    className="h-14 sm:h-16 px-8 sm:px-12 gap-4 sm:gap-6 shadow-xl relative bg-background dark:bg-white text-foreground dark:text-black border-border dark:border-white hover:border-primary hover:bg-primary hover:text-white w-full sm:w-auto overflow-hidden premium-transition group/btn"
+                                >
+                                    <span className="relative z-10 text-[13px] uppercase font-black transition-colors duration-200">Apply Now</span>
+                                    <ArrowRight size={22} className="relative z-10 group-hover/btn:translate-x-2 transition-transform duration-200" />
                                 </Button>
                             </div>
                             <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/[0.01] premium-transition pointer-events-none"></div>
