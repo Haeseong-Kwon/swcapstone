@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X, Plus, Trash2, Users } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { RegisteredTeam } from "@/types";
@@ -21,8 +22,19 @@ export function TeamRegistrationModal({ isOpen, onClose, onSubmit }: TeamRegistr
 
   // Members info
   const [members, setMembers] = useState([{ name: "", studentId: "", department: "", role: "", email: "" }]);
+  const [mounted, setMounted] = useState(false);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    setMounted(true);
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [isOpen]);
+
+  if (!mounted) return null;
 
   const handleAddMember = () => {
     setMembers([...members, { name: "", studentId: "", department: "", role: "", email: "" }]);
@@ -41,7 +53,6 @@ export function TeamRegistrationModal({ isOpen, onClose, onSubmit }: TeamRegistr
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Create new team object
     const newTeam: RegisteredTeam = {
       id: `rt_${Date.now()}`,
       teamName,
@@ -70,10 +81,10 @@ export function TeamRegistrationModal({ isOpen, onClose, onSubmit }: TeamRegistr
     setMembers([{ name: "", studentId: "", department: "", role: "", email: "" }]);
   };
 
-  return (
+  const modalContent = (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-10 bg-slate-950/80 backdrop-blur-xl">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 md:p-10 bg-slate-950/80 backdrop-blur-xl">
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -81,15 +92,15 @@ export function TeamRegistrationModal({ isOpen, onClose, onSubmit }: TeamRegistr
             transition={{ type: "spring", damping: 28, stiffness: 260 }}
             className="bg-white dark:bg-slate-900 w-full max-w-6xl max-h-full h-full md:h-auto md:max-h-[90vh] flex flex-col overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_32px_120px_rgba(0,0,0,0.5)] border border-slate-200 dark:border-slate-800 relative"
           >
-            {/* Design Ornaments */}
+            {/* 디자인 장식 */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 dark:bg-blue-500/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none"></div>
             
-            {/* Header - Fixed Height */}
+            {/* 헤더 */}
             <div className="flex-none bg-white/50 dark:bg-slate-900/50 backdrop-blur-md px-8 py-6 md:px-12 md:py-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center z-10">
               <div>
                 <div className="flex items-center gap-3 mb-1">
                   <div className="w-2 h-6 bg-primary dark:bg-blue-500 rounded-full"></div>
-                  <h2 className="text-2xl md:text-4xl font-black text-slate-900 dark:text-slate-50 tracking-tight uppercase">Team Registration</h2>
+                  <h2 className="text-2xl md:text-4xl font-black text-slate-900 dark:text-slate-50 tracking-tight uppercase">팀 등록하기</h2>
                 </div>
                 <p className="text-xs md:text-sm font-bold text-slate-500 dark:text-slate-400 tracking-widest uppercase opacity-70">
                   Hanyang University ERICA / SW Capstone Design
@@ -103,67 +114,67 @@ export function TeamRegistrationModal({ isOpen, onClose, onSubmit }: TeamRegistr
               </button>
             </div>
 
-            {/* Main Form Area - Scrollable */}
+            {/* 메인 폼 영역 - 스크롤 가능 */}
             <div className="flex-1 overflow-y-auto px-8 py-10 md:px-12 md:py-12 custom-scrollbar focus:outline-none">
               <form id="team-registration-form" onSubmit={handleSubmit} className="max-w-5xl mx-auto space-y-16">
                 
-                {/* 01. Basic Information */}
+                {/* 01. 기본 정보 */}
                 <section className="animate-slide-up [animation-delay:0.1s]">
                   <div className="flex items-center gap-4 mb-8">
                     <span className="text-4xl font-black text-slate-100 dark:text-slate-800 select-none">01</span>
-                    <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 dark:text-slate-50">Basic Information</h3>
+                    <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 dark:text-slate-50">기본 정보</h3>
                     <div className="flex-1 h-px bg-slate-100 dark:bg-slate-800"></div>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
                     <div className="space-y-3">
-                      <label className="text-[11px] font-black text-primary dark:text-blue-400 uppercase tracking-widest ml-1">Team Name <span className="text-red-500">*</span></label>
-                      <input required type="text" value={teamName} onChange={e => setTeamName(e.target.value)} className="w-full px-6 py-5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-slate-50 focus:ring-4 focus:ring-primary/10 dark:focus:ring-blue-500/10 focus:border-primary dark:focus:border-blue-500 transition-all outline-none font-bold" placeholder="Enter your team name" />
+                      <label className="text-[11px] font-black text-primary dark:text-blue-400 uppercase tracking-widest ml-1">팀명 <span className="text-red-500">*</span></label>
+                      <input required type="text" value={teamName} onChange={e => setTeamName(e.target.value)} className="w-full px-6 py-5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-slate-50 focus:ring-4 focus:ring-primary/10 dark:focus:ring-blue-500/10 focus:border-primary dark:focus:border-blue-500 transition-all outline-none font-bold" placeholder="팀 이름을 입력하세요" />
                     </div>
                     <div className="space-y-3">
-                      <label className="text-[11px] font-black text-primary dark:text-blue-400 uppercase tracking-widest ml-1">Official Contact <span className="text-red-500">*</span></label>
+                      <label className="text-[11px] font-black text-primary dark:text-blue-400 uppercase tracking-widest ml-1">대표 연락처 (이메일) <span className="text-red-500">*</span></label>
                       <input required type="email" value={contactEmail} onChange={e => setContactEmail(e.target.value)} className="w-full px-6 py-5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-slate-50 focus:ring-4 focus:ring-primary/10 dark:focus:ring-blue-500/10 focus:border-primary dark:focus:border-blue-500 transition-all outline-none font-bold" placeholder="contact@hanyang.ac.kr" />
                     </div>
                     <div className="space-y-3 md:col-span-2">
-                      <label className="text-[11px] font-black text-primary dark:text-blue-400 uppercase tracking-widest ml-1">Project Idea / Item <span className="text-red-500">*</span></label>
-                      <input required type="text" value={productIdea} onChange={e => setProductIdea(e.target.value)} className="w-full px-6 py-5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-slate-50 focus:ring-4 focus:ring-primary/10 dark:focus:ring-blue-500/10 focus:border-primary dark:focus:border-blue-500 transition-all outline-none font-bold" placeholder="Briefly describe your innovative project idea" />
+                      <label className="text-[11px] font-black text-primary dark:text-blue-400 uppercase tracking-widest ml-1">프로젝트 아이템 (아이디어) <span className="text-red-500">*</span></label>
+                      <input required type="text" value={productIdea} onChange={e => setProductIdea(e.target.value)} className="w-full px-6 py-5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-slate-50 focus:ring-4 focus:ring-primary/10 dark:focus:ring-blue-500/10 focus:border-primary dark:focus:border-blue-500 transition-all outline-none font-bold" placeholder="해결하고자 하는 문제와 핵심 솔루션을 입력하세요" />
                     </div>
                   </div>
                 </section>
 
-                {/* 02. Team Leader */}
+                {/* 02. 팀장 정보 */}
                 <section className="animate-slide-up [animation-delay:0.2s]">
                   <div className="flex items-center gap-4 mb-8">
                     <span className="text-4xl font-black text-slate-100 dark:text-slate-800 select-none">02</span>
-                    <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 dark:text-slate-50">Team Leader Info</h3>
+                    <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 dark:text-slate-50">팀장 정보</h3>
                     <div className="flex-1 h-px bg-slate-100 dark:bg-slate-800"></div>
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 p-10 bg-slate-50/30 dark:bg-slate-800/20 rounded-[2rem] border border-slate-100 dark:border-slate-800">
                     <div className="space-y-3">
-                      <label className="text-[11px] font-black text-slate-500 uppercase tracking-widest ml-1">Full Name</label>
+                      <label className="text-[11px] font-black text-slate-500 uppercase tracking-widest ml-1">이름</label>
                       <input required type="text" value={leaderName} onChange={e => setLeaderName(e.target.value)} className="w-full px-6 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-50 focus:border-primary dark:focus:border-blue-500 outline-none transition-all font-bold" placeholder="홍길동" />
                     </div>
                     <div className="space-y-3">
-                      <label className="text-[11px] font-black text-slate-500 uppercase tracking-widest ml-1">Student ID</label>
+                      <label className="text-[11px] font-black text-slate-500 uppercase tracking-widest ml-1">학번</label>
                       <input required type="text" value={leaderId} onChange={e => setLeaderId(e.target.value)} className="w-full px-6 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-50 focus:border-primary dark:focus:border-blue-500 outline-none transition-all font-bold" placeholder="2024000000" />
                     </div>
                     <div className="space-y-3">
-                      <label className="text-[11px] font-black text-slate-500 uppercase tracking-widest ml-1">Department</label>
-                      <input required type="text" value={leaderDept} onChange={e => setLeaderDept(e.target.value)} className="w-full px-6 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-50 focus:border-primary dark:focus:border-blue-500 outline-none transition-all font-bold" placeholder="Software Architecture" />
+                      <label className="text-[11px] font-black text-slate-500 uppercase tracking-widest ml-1">학과</label>
+                      <input required type="text" value={leaderDept} onChange={e => setLeaderDept(e.target.value)} className="w-full px-6 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-50 focus:border-primary dark:focus:border-blue-500 outline-none transition-all font-bold" placeholder="소프트웨어학부" />
                     </div>
                   </div>
                 </section>
 
-                {/* 03. Team Members */}
+                {/* 03. 팀원 정보 */}
                 <section className="animate-slide-up [animation-delay:0.3s]">
                   <div className="flex justify-between items-center mb-8">
                     <div className="flex items-center gap-4">
                       <span className="text-4xl font-black text-slate-100 dark:text-slate-800 select-none">03</span>
-                      <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 dark:text-slate-50">Team Members</h3>
+                      <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 dark:text-slate-50">팀원 정보</h3>
                     </div>
                     <button type="button" onClick={handleAddMember} className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-[11px] font-black uppercase tracking-[0.2em] hover:bg-primary dark:hover:bg-blue-400 hover:text-white transition-all active:scale-95 shadow-lg">
-                      <Plus size={16} /> Add Member
+                      <Plus size={16} /> 팀원 추가
                     </button>
                   </div>
                   
@@ -180,32 +191,32 @@ export function TeamRegistrationModal({ isOpen, onClose, onSubmit }: TeamRegistr
                           <div className="flex flex-col lg:flex-row gap-8 items-start">
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 flex-1 w-full">
                               <div className="space-y-2">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Name</label>
-                                <input type="text" value={member.name} onChange={e => handleMemberChange(index, "name", e.target.value)} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm font-bold text-slate-900 dark:text-slate-50 focus:ring-2 focus:ring-primary outline-none" placeholder="Name" />
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">이름</label>
+                                <input type="text" value={member.name} onChange={e => handleMemberChange(index, "name", e.target.value)} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm font-bold text-slate-900 dark:text-slate-50 focus:ring-2 focus:ring-primary outline-none" placeholder="이름" />
                               </div>
                               <div className="space-y-2">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Student ID</label>
-                                <input type="text" value={member.studentId} onChange={e => handleMemberChange(index, "studentId", e.target.value)} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm font-bold text-slate-900 dark:text-slate-50 focus:ring-2 focus:ring-primary outline-none" placeholder="ID" />
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">학번</label>
+                                <input type="text" value={member.studentId} onChange={e => handleMemberChange(index, "studentId", e.target.value)} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm font-bold text-slate-900 dark:text-slate-50 focus:ring-2 focus:ring-primary outline-none" placeholder="학번" />
                               </div>
                               <div className="space-y-2">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Dept</label>
-                                <input type="text" value={member.department} onChange={e => handleMemberChange(index, "department", e.target.value)} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm font-bold text-slate-900 dark:text-slate-50 focus:ring-2 focus:ring-primary outline-none" placeholder="Dept" />
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">학과</label>
+                                <input type="text" value={member.department} onChange={e => handleMemberChange(index, "department", e.target.value)} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm font-bold text-slate-900 dark:text-slate-50 focus:ring-2 focus:ring-primary outline-none" placeholder="학과" />
                               </div>
                               <div className="space-y-2">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Role</label>
-                                <input type="text" value={member.role} onChange={e => handleMemberChange(index, "role", e.target.value)} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm font-bold text-slate-900 dark:text-slate-50 focus:ring-2 focus:ring-primary outline-none" placeholder="Role" />
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">역할</label>
+                                <input type="text" value={member.role} onChange={e => handleMemberChange(index, "role", e.target.value)} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm font-bold text-slate-900 dark:text-slate-50 focus:ring-2 focus:ring-primary outline-none" placeholder="역할" />
                               </div>
                             </div>
                             <div className="flex flex-row lg:flex-col gap-4 w-full lg:w-auto items-end justify-between lg:justify-start">
                               <div className="space-y-2 w-full">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Email</label>
-                                <input type="email" value={member.email} onChange={e => handleMemberChange(index, "email", e.target.value)} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm font-bold text-slate-900 dark:text-slate-50 focus:ring-2 focus:ring-primary outline-none lg:min-w-[240px]" placeholder="Email address" />
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">이메일</label>
+                                <input type="email" value={member.email} onChange={e => handleMemberChange(index, "email", e.target.value)} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm font-bold text-slate-900 dark:text-slate-50 focus:ring-2 focus:ring-primary outline-none lg:min-w-[240px]" placeholder="이메일 주소" />
                               </div>
                               <button 
                                 type="button" 
                                 onClick={() => handleRemoveMember(index)} 
                                 className="p-3 text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all shrink-0" 
-                                title="Remove Member"
+                                title="팀원 삭제"
                               >
                                 <Trash2 size={24} />
                               </button>
@@ -219,25 +230,24 @@ export function TeamRegistrationModal({ isOpen, onClose, onSubmit }: TeamRegistr
               </form>
             </div>
 
-            {/* Footer - Fixed Height */}
+            {/* 푸터 */}
             <div className="flex-none bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl px-8 py-6 md:px-12 md:py-8 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row justify-end items-center gap-4 z-10">
               <button 
                 type="button" 
                 onClick={onClose} 
                 className="w-full sm:w-auto px-10 py-5 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
               >
-                Discard Changes
+                취소하기
               </button>
               <button 
                 form="team-registration-form"
                 type="submit" 
                 className="w-full sm:w-auto px-12 py-5 rounded-2xl font-black text-[12px] uppercase tracking-[0.25em] bg-primary dark:bg-blue-500 text-white hover:bg-slate-900 dark:hover:bg-white dark:hover:text-slate-900 shadow-[0_12px_40px_rgba(26,54,93,0.3)] hover:shadow-none transition-all hover:-translate-y-1 active:scale-95"
               >
-                Register Team Info
+                등록 신청하기
               </button>
             </div>
 
-            {/* Custom Scrollbar CSS */}
             <style jsx global>{`
               .custom-scrollbar::-webkit-scrollbar {
                 width: 8px;
@@ -261,4 +271,6 @@ export function TeamRegistrationModal({ isOpen, onClose, onSubmit }: TeamRegistr
       )}
     </AnimatePresence>
   );
+
+  return createPortal(modalContent, document.body);
 }
