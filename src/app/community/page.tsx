@@ -26,32 +26,32 @@ export default function CommunityPage() {
                 description="최고의 기술력과 아이디어를 가진 팀원들을 찾아 열정적인 프로젝트를 시작하세요."
                 backgroundImage="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070&auto=format&fit=crop"
             >
-                <Button variant="outline" size="lg" className="bg-white text-black border-white hover:bg-primary hover:text-white hover:border-primary gap-4 h-18 px-14 group/post shadow-2xl">
-                    <Plus size={24} className="group-hover:rotate-90 premium-transition" />
-                    <span className="text-[14px]">Create New Proposal</span>
+                <Button variant="outline" size="lg" className="bg-white text-black border-white hover:bg-primary hover:text-white hover:border-primary gap-3 sm:gap-4 h-14 sm:h-18 px-8 sm:px-14 group/post shadow-2xl w-full sm:w-auto">
+                    <Plus size={20} className="sm:size-[24px] group-hover:rotate-90 premium-transition" />
+                    <span className="text-[13px] sm:text-[14px]">Create New Proposal</span>
                 </Button>
             </SubPageHero>
 
             <div className="mx-auto max-w-8xl px-5 py-16 animate-slide-up sm:px-6 sm:py-20 lg:px-8 lg:py-24 [animation-delay:0.1s]">
                 <LazyMotion features={domAnimation}>
                     <div className="mb-14 flex flex-col gap-6 lg:mb-20 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
-                        <div className="inline-flex items-center gap-1 overflow-hidden p-1 rounded-2xl bg-slate-100/80 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50 w-fit">
+                        <div className="inline-flex items-center gap-1 overflow-x-auto no-scrollbar p-1 rounded-2xl bg-slate-100/80 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50 w-full sm:w-fit">
                             {TABS.map((tab) => (
                                 <button
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
                                     className={cn(
-                                        "relative px-6 py-3 text-[11px] font-black tracking-[0.18em] uppercase premium-transition rounded-xl z-10",
+                                        "relative flex-grow sm:flex-initial px-4 sm:px-6 py-2.5 sm:py-3 text-[10px] sm:text-[11px] font-black tracking-[0.18em] uppercase premium-transition rounded-xl z-10",
                                         activeTab === tab
                                             ? "text-slate-900 dark:text-slate-50"
                                             : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50"
                                     )}
                                 >
-                                    {tab === 'ALL' ? 'Everything' : tab}
+                                    <span className="relative z-10">{tab === 'ALL' ? 'Everything' : tab}</span>
                                     {activeTab === tab && (
                                         <m.div
                                             layoutId="activeTabCommunity"
-                                            className="absolute inset-0 -z-10 rounded-xl bg-white dark:bg-slate-700 shadow-sm border border-slate-200/50 dark:border-white/10"
+                                            className="absolute inset-0 rounded-xl bg-white dark:bg-slate-700 shadow-sm border border-slate-200/50 dark:border-white/10"
                                             transition={{ type: "spring", stiffness: 350, damping: 35 }}
                                         />
                                     )}

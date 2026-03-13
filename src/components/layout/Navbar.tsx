@@ -44,8 +44,8 @@ export function Navbar() {
                     ? "glass-header shadow-[0_10px_30px_rgba(15,23,42,0.10)] border-white/5"
                     : "bg-gradient-to-b from-black/72 via-black/24 to-transparent border-transparent"
             )}>
-                <div className="max-w-8xl mx-auto flex h-[78px] items-center justify-between px-5 sm:px-6 lg:px-8">
-                    <div className="flex items-center gap-6 lg:gap-12">
+                <div className="mx-auto flex h-[78px] items-center justify-between fluid-container">
+                    <div className="flex items-center gap-6 xl:gap-12">
                         <Link href="/" className="flex items-center gap-3 group">
                             <span className={cn(
                                 "text-2xl sm:text-3xl font-black tracking-tighter premium-transition",
@@ -61,7 +61,7 @@ export function Navbar() {
                             )}>Entrepreneurship</span>
                         </Link>
 
-                        <div className="hidden lg:flex items-center gap-7 xl:gap-10">
+                        <div className="hidden min-[1200px]:flex items-center gap-7 xl:gap-10">
                             {NAV_ITEMS.map((item) => {
                                 const isActive = !!(pathname && item.href && pathname.startsWith(item.href));
                                 return (
@@ -123,7 +123,7 @@ export function Navbar() {
                         </div>
 
                         <Link href="/profile" className="flex items-center gap-4 group">
-                            <div className="text-right hidden sm:block">
+                            <div className="text-right hidden md:block">
                                 <p className={cn(
                                     "text-[10px] font-bold leading-none mb-1 uppercase tracking-widest",
                                     isScrolled ? "text-muted-foreground" : "text-white/70"
@@ -134,10 +134,10 @@ export function Navbar() {
                                 )}>KIM CHULSU</p>
                             </div>
                             <div className={cn(
-                                "flex h-10 w-10 items-center justify-center premium-transition group-hover:scale-105 sm:h-11 sm:w-11",
+                                "flex h-9 w-9 items-center justify-center premium-transition group-hover:scale-105 sm:h-11 sm:w-11",
                                 isScrolled ? "bg-foreground text-background" : "bg-white text-black"
                             )}>
-                                <UserIcon size={20} />
+                                <UserIcon size={18} className="sm:size-[20px]" />
                             </div>
                         </Link>
 
@@ -146,7 +146,7 @@ export function Navbar() {
                             onClick={() => setIsMobileMenuOpen(true)}
                             aria-label="Open menu"
                             className={cn(
-                                "lg:hidden premium-transition hover:scale-110",
+                                "min-[1200px]:hidden premium-transition hover:scale-110",
                                 isScrolled ? "text-foreground" : "text-white"
                             )}
                         >
@@ -158,10 +158,11 @@ export function Navbar() {
 
             {/* Premium Full-Screen Overlay Menu */}
             <div className={cn(
-                "fixed inset-0 z-[100] flex flex-col overflow-hidden bg-black/96 premium-transition will-change-transform",
+                "fixed inset-0 z-[100] flex flex-col overflow-hidden premium-transition will-change-transform",
+                "bg-black/98 dark:bg-black/98",
                 isMobileMenuOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
             )}>
-                <div className="flex h-[78px] items-center justify-between border-b border-white/10 px-5 sm:px-6">
+                <div className="flex h-[78px] items-center justify-between border-b border-white/10 fluid-container">
                     <span className="text-3xl font-black text-white tracking-tighter">AOP</span>
                     <button
                         onClick={() => setIsMobileMenuOpen(false)}
@@ -171,28 +172,29 @@ export function Navbar() {
                     </button>
                 </div>
 
-                <div className="flex flex-grow flex-col justify-center space-y-8 px-5 py-8 sm:px-6 sm:space-y-10">
+                <div className="flex flex-grow flex-col justify-center space-y-6 fluid-container py-8 sm:space-y-10 overflow-y-auto">
                     {NAV_ITEMS.map((item, i) => (
                         <Link
                             key={item.href}
                             href={item.href}
+                            onClick={() => setIsMobileMenuOpen(false)}
                             className="group block"
                         >
-                            <span className="text-white/30 text-[14px] font-black uppercase tracking-[0.3em] mb-4 block">0{i + 1}.</span>
-                            <div className="flex items-center justify-between border-b border-white/10 pb-5">
+                            <span className="text-white/30 text-[12px] sm:text-[14px] font-black uppercase tracking-[0.3em] mb-3 block">0{i + 1}.</span>
+                            <div className="flex items-center justify-between border-b border-white/10 pb-4 sm:pb-5">
                                 <div>
-                                    <h2 className="text-white text-[32px] sm:text-[42px] lg:text-[48px] font-black uppercase tracking-tight group-hover:text-primary premium-transition">
+                                    <h2 className="text-white text-[28px] sm:text-[42px] lg:text-[48px] font-black uppercase tracking-tight group-hover:text-primary premium-transition">
                                         {item.name}
                                     </h2>
-                                    <p className="mt-2 text-[11px] sm:text-[12px] text-white/40 font-bold uppercase tracking-[0.18em]">{item.desc}</p>
+                                    <p className="mt-1 sm:mt-2 text-[10px] sm:text-[12px] text-white/40 font-bold uppercase tracking-[0.18em]">{item.desc}</p>
                                 </div>
-                                <ChevronRight size={36} className="text-white/10 group-hover:text-primary group-hover:translate-x-2 premium-transition sm:size-12" />
+                                <ChevronRight size={28} className="text-white/10 group-hover:text-primary group-hover:translate-x-2 premium-transition sm:size-12" />
                             </div>
                         </Link>
                     ))}
                 </div>
 
-                <div className="border-t border-white/10 bg-white/5 p-5 sm:p-6">
+                <div className="border-t border-white/10 bg-white/5 py-5 sm:py-6 fluid-container">
                     <div className="flex flex-col gap-2 text-[11px] font-bold uppercase tracking-[0.18em] text-white/40 sm:flex-row sm:items-center sm:justify-between">
                         <span>Hanyang Univ ERICA</span>
                         <span>© 2024 Innovate Ahead</span>
