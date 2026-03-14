@@ -52,11 +52,11 @@ export function Navbar() {
                                 isScrolled ? "text-foreground" : "text-white"
                             )}>AOP</span>
                             <div className={cn(
-                                "w-[1px] h-6 mx-2 premium-transition",
+                                "hidden sm:block w-[1px] h-6 mx-2 premium-transition",
                                 isScrolled ? "bg-border" : "bg-white/20"
                             )}></div>
                             <span className={cn(
-                                "text-[11px] font-bold tracking-[0.3em] uppercase premium-transition",
+                                "hidden sm:block text-[11px] font-bold tracking-[0.3em] uppercase premium-transition",
                                 isScrolled ? "text-muted-foreground" : "text-white/70"
                             )}>Entrepreneurship</span>
                         </Link>
