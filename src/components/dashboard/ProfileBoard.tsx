@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { useState, memo, useCallback } from "react";
 import Image from "next/image";
 import { User } from "@/types";
 import { Badge } from "@/components/common/Badge";
@@ -91,26 +91,29 @@ interface ProfileBoardProps {
   users: User[];
 }
 
-export function ProfileBoard({ users: initialUsers }: ProfileBoardProps) {
+export const ProfileBoard = memo(function ProfileBoard({ users: initialUsers }: ProfileBoardProps) {
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleUploadProfile = (newUser: User) => {
-    setUsers([newUser, ...users]);
+  const handleUploadProfile = useCallback((newUser: User) => {
+    setUsers((prev) => [newUser, ...prev]);
     setIsModalOpen(false);
-  };
+  }, []);
+
+  const openModal = useCallback(() => setIsModalOpen(true), []);
+  const closeModal = useCallback(() => setIsModalOpen(false), []);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 transform-gpu">
       <ProfileUploadModal 
         isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        onClose={closeModal} 
         onSubmit={handleUploadProfile} 
       />
 
       <div className="flex justify-end mb-2">
         <button 
-          onClick={() => setIsModalOpen(true)}
+          onClick={openModal}
           className="flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-xl font-bold text-sm hover:bg-primary dark:hover:bg-blue-400 hover:text-white premium-transition shadow-md hover:shadow-lg hover:-translate-y-0.5"
         >
           <UserPlus size={18} />
@@ -118,11 +121,13 @@ export function ProfileBoard({ users: initialUsers }: ProfileBoardProps) {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transform-gpu">
         {users.map((user, index) => (
           <ProfileCard key={user.id} user={user} index={index} />
         ))}
       </div>
     </div>
   );
-}
+});
+
+ProfileBoard.displayName = "ProfileBoard";

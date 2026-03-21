@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, memo } from "react";
 import { LazyMotion, domAnimation, m } from "framer-motion";
 import { ProfileBoard } from "./ProfileBoard";
 import { TeamBoard } from "./TeamBoard";
@@ -20,17 +20,21 @@ const TABS: { id: TabType; label: string }[] = [
   { id: 'EDUCATIONAL_VIDEO', label: '교육 영상' },
 ];
 
-export function MainDashboard() {
+export const MainDashboard = memo(function MainDashboard() {
   const [activeTab, setActiveTab] = useState<TabType>('SELF_INTRO');
+
+  const handleTabChange = useCallback((id: TabType) => {
+    setActiveTab(id);
+  }, []);
 
   return (
     <LazyMotion features={domAnimation}>
-      <div className="w-full">
+      <div className="w-full transform-gpu">
         <div className="mb-8 flex flex-wrap gap-2 rounded-[1.75rem] border border-border bg-background/88 p-2 shadow-sm backdrop-blur-md sm:mb-10 lg:mb-12">
           {TABS.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               className={cn(
                 "relative rounded-2xl px-5 py-3 text-[11px] font-black uppercase tracking-[0.18em] premium-transition sm:px-6 sm:py-4 sm:text-xs lg:px-8",
                 activeTab === tab.id ? "text-slate-900 dark:text-slate-50" : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50"
@@ -54,6 +58,7 @@ export function MainDashboard() {
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.16, ease: "easeOut" }}
+            className="transform-gpu"
           >
             {activeTab === 'SELF_INTRO' && <ProfileBoard users={MOCK_USERS} />}
             {activeTab === 'TEAM_BUILDING' && <TeamBoard posts={MOCK_TEAM_POSTS} />}
@@ -65,4 +70,6 @@ export function MainDashboard() {
       </div>
     </LazyMotion>
   );
-}
+});
+
+MainDashboard.displayName = "MainDashboard";

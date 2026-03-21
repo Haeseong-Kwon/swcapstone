@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { cn } from "@/lib/utils";
 
 interface BadgeProps {
@@ -6,7 +7,7 @@ interface BadgeProps {
     className?: string;
 }
 
-export function Badge({ children, variant = 'default', className }: BadgeProps) {
+export const Badge = memo(function Badge({ children, variant = 'default', className }: BadgeProps) {
     const variants = {
         default: 'bg-muted/10 text-foreground border border-border',
         primary: 'border border-primary text-primary bg-primary/5 dark:bg-primary/20',
@@ -24,4 +25,6 @@ export function Badge({ children, variant = 'default', className }: BadgeProps) 
             {children}
         </span>
     );
-}
+});
+
+Badge.displayName = "Badge";

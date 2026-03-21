@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { useState, memo, useCallback } from "react";
 import { RegisteredTeam } from "@/types";
 import { Badge } from "@/components/common/Badge";
 import { motion } from "framer-motion";
@@ -10,7 +10,7 @@ const RegisteredTeamItem = memo(({ team, index }: { team: RegisteredTeam; index:
     initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.3, delay: index * 0.05, ease: "easeOut" }}
-    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-sm p-6 hover:shadow-md hover:border-primary dark:hover:border-blue-400 transition-all group flex flex-col md:flex-row gap-6 items-start md:items-center gpu-accelerated rounded-2xl"
+    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-sm p-6 hover:shadow-md hover:border-primary dark:hover:border-blue-400 transition-all group flex flex-col md:flex-row gap-6 items-start md:items-center gpu-accelerated rounded-2xl transform-gpu"
   >
     {/* Left: Status & Team Name */}
     <div className="flex flex-col gap-2 min-w-[180px]">
@@ -62,27 +62,30 @@ interface TeamRegistrationBoardProps {
   teams: RegisteredTeam[];
 }
 
-export function TeamRegistrationBoard({ teams: initialTeams }: TeamRegistrationBoardProps) {
+export const TeamRegistrationBoard = memo(function TeamRegistrationBoard({ teams: initialTeams }: TeamRegistrationBoardProps) {
   const [teams, setTeams] = useState<RegisteredTeam[]>(initialTeams);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleRegisterTeam = (newTeam: RegisteredTeam) => {
-    setTeams([newTeam, ...teams]);
+  const handleRegisterTeam = useCallback((newTeam: RegisteredTeam) => {
+    setTeams((prev) => [newTeam, ...prev]);
     setIsModalOpen(false);
-  };
+  }, []);
+
+  const openModal = useCallback(() => setIsModalOpen(true), []);
+  const closeModal = useCallback(() => setIsModalOpen(false), []);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 transform-gpu">
       <TeamRegistrationModal 
         isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        onClose={closeModal} 
         onSubmit={handleRegisterTeam} 
       />
 
       {/* Registration Button Header */}
       <div className="flex justify-end mb-2">
         <button 
-          onClick={() => setIsModalOpen(true)}
+          onClick={openModal}
           className="flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-xl font-bold text-sm hover:bg-primary dark:hover:bg-blue-400 hover:text-white premium-transition shadow-md hover:shadow-lg hover:-translate-y-0.5"
         >
           <Plus size={18} />
@@ -91,11 +94,13 @@ export function TeamRegistrationBoard({ teams: initialTeams }: TeamRegistrationB
       </div>
 
       {/* List of Registered Teams */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 transform-gpu">
         {teams.map((team, index) => (
           <RegisteredTeamItem key={team.id} team={team} index={index} />
         ))}
       </div>
     </div>
   );
-}
+});
+
+TeamRegistrationBoard.displayName = "TeamRegistrationBoard";

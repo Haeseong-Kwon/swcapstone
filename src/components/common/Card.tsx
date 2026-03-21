@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, memo, useCallback } from "react";
 import { cn } from "@/lib/utils";
 
 interface CardProps {
@@ -8,18 +8,18 @@ interface CardProps {
     noPadding?: boolean;
 }
 
-export function Card({ children, className, onClick, noPadding = false }: CardProps) {
-    const handleKeyDown = (e: React.KeyboardEvent) => {
+export const Card = memo(function Card({ children, className, onClick, noPadding = false }: CardProps) {
+    const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
         if (onClick && (e.key === 'Enter' || e.key === ' ')) {
             e.preventDefault();
             onClick();
         }
-    };
+    }, [onClick]);
 
     return (
         <div
             className={cn(
-                "institutional-card premium-transition group relative hover-lift",
+                "institutional-card premium-transition group relative hover-lift transform-gpu will-change-transform",
                 "overflow-visible", // allow shadows to bleed
                 !noPadding && "p-8 md:p-12",
                 onClick && "cursor-pointer hover:bg-muted/5",
@@ -33,4 +33,6 @@ export function Card({ children, className, onClick, noPadding = false }: CardPr
             {children}
         </div>
     );
-}
+});
+
+Card.displayName = "Card";

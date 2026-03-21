@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { useState, memo, useCallback } from "react";
 import { TeamBuildingPost } from "@/types";
 import { Badge } from "@/components/common/Badge";
 import { Card } from "@/components/common/Card";
@@ -12,7 +12,7 @@ const TeamCard = memo(({ post, index }: { post: TeamBuildingPost; index: number 
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5, delay: index * 0.08, ease: [0.2, 0.8, 0.2, 1] }}
   >
-    <Card className="p-8 h-full border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all group gpu-accelerated bg-white dark:bg-slate-900 rounded-2xl overflow-visible hover:-translate-y-2">
+    <Card className="p-8 h-full border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all group gpu-accelerated bg-white dark:bg-slate-900 rounded-2xl overflow-visible hover:-translate-y-2 transform-gpu">
       <div className="flex justify-between items-start mb-6">
         <Badge variant={post.courseBadge === 'CAPSTONE_1' ? 'info' : 'warning'}>
           {post.courseBadge === 'CAPSTONE_1' ? '캡스톤 1' : '캡스톤 2'}
@@ -77,26 +77,29 @@ interface TeamBoardProps {
   posts: TeamBuildingPost[];
 }
 
-export function TeamBoard({ posts: initialPosts }: TeamBoardProps) {
+export const TeamBoard = memo(function TeamBoard({ posts: initialPosts }: TeamBoardProps) {
   const [posts, setPosts] = useState<TeamBuildingPost[]>(initialPosts);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleUploadPost = (newPost: TeamBuildingPost) => {
-    setPosts([newPost, ...posts]);
+  const handleUploadPost = useCallback((newPost: TeamBuildingPost) => {
+    setPosts((prev) => [newPost, ...prev]);
     setIsModalOpen(false);
-  };
+  }, []);
+
+  const openModal = useCallback(() => setIsModalOpen(true), []);
+  const closeModal = useCallback(() => setIsModalOpen(false), []);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 transform-gpu">
       <RecruitmentUploadModal 
         isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        onClose={closeModal} 
         onSubmit={handleUploadPost} 
       />
 
       <div className="flex justify-end mb-2">
         <button 
-          onClick={() => setIsModalOpen(true)}
+          onClick={openModal}
           className="flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-xl font-bold text-sm hover:bg-primary dark:hover:bg-blue-400 hover:text-white premium-transition shadow-md hover:shadow-lg hover:-translate-y-0.5"
         >
           <PlusCircle size={18} />
@@ -104,11 +107,13 @@ export function TeamBoard({ posts: initialPosts }: TeamBoardProps) {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 transform-gpu">
         {posts.map((post, index) => (
           <TeamCard key={post.id} post={post} index={index} />
         ))}
       </div>
     </div>
   );
-}
+});
+
+TeamBoard.displayName = "TeamBoard";

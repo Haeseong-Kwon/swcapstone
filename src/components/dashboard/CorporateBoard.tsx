@@ -68,12 +68,14 @@ interface CorporateBoardProps {
   proposals: Proposal[];
 }
 
-export function CorporateBoard({ proposals }: CorporateBoardProps) {
+export const CorporateBoard = memo(function CorporateBoard({ proposals }: CorporateBoardProps) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 transform-gpu">
       {proposals.map((proposal, index) => (
         <ProposalListItem key={proposal.id} proposal={proposal} index={index} />
       ))}
     </div>
   );
-}
+});
+
+CorporateBoard.displayName = "CorporateBoard";

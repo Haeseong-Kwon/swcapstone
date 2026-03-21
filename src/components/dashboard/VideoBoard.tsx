@@ -69,12 +69,14 @@ interface VideoBoardProps {
   videos: VideoContent[];
 }
 
-export function VideoBoard({ videos }: VideoBoardProps) {
+export const VideoBoard = memo(function VideoBoard({ videos }: VideoBoardProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transform-gpu">
       {videos.map((video, index) => (
         <VideoCard key={video.id} video={video} index={index} />
       ))}
     </div>
   );
-}
+});
+
+VideoBoard.displayName = "VideoBoard";
