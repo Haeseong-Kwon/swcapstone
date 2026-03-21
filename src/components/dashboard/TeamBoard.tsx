@@ -1,10 +1,11 @@
-import { useState, memo, useCallback } from "react";
+import { useState, memo, useCallback, useEffect } from "react";
 import { TeamBuildingPost } from "@/types";
 import { Badge } from "@/components/common/Badge";
 import { Card } from "@/components/common/Card";
 import { motion } from "framer-motion";
-import { Users, Calendar, PlusCircle } from "lucide-react";
+import { Users, Calendar, PlusCircle, Loader2 } from "lucide-react";
 import { RecruitmentUploadModal } from "./RecruitmentUploadModal";
+import { getRecruitmentPosts, createRecruitmentPost } from "@/lib/services/BoardServices";
 
 const TeamCard = memo(({ post, index }: { post: TeamBuildingPost; index: number }) => (
   <motion.div
@@ -19,7 +20,7 @@ const TeamCard = memo(({ post, index }: { post: TeamBuildingPost; index: number 
         </Badge>
         <div className="flex items-center gap-2 text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest">
           <Calendar size={14} />
-          {post.createdAt}
+          {new Date(post.createdAt).toLocaleDateString()}
         </div>
       </div>
 
@@ -34,7 +35,7 @@ const TeamCard = memo(({ post, index }: { post: TeamBuildingPost; index: number 
         <div>
           <p className="text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest mb-3">구인 현황</p>
           <div className="flex flex-wrap gap-3">
-            {post.recruitingRoles.map((role) => (
+            {post.recruitingRoles?.map((role) => (
               <div key={role.role} className="flex items-center bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 px-3 py-2 rounded-lg">
                 <span className="text-xs font-bold text-slate-900 dark:text-slate-50 mr-3">{role.role}</span>
                 <div className="flex gap-1">
@@ -73,21 +74,68 @@ const TeamCard = memo(({ post, index }: { post: TeamBuildingPost; index: number 
 
 TeamCard.displayName = "TeamCard";
 
-interface TeamBoardProps {
-  posts: TeamBuildingPost[];
-}
-
-export const TeamBoard = memo(function TeamBoard({ posts: initialPosts }: TeamBoardProps) {
-  const [posts, setPosts] = useState<TeamBuildingPost[]>(initialPosts);
+export const TeamBoard = memo(function TeamBoard() {
+  const [posts, setPosts] = useState<TeamBuildingPost[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleUploadPost = useCallback((newPost: TeamBuildingPost) => {
-    setPosts((prev) => [newPost, ...prev]);
-    setIsModalOpen(false);
+  const fetchPosts = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await getRecruitmentPosts();
+      const mappedData: TeamBuildingPost[] = data.map((item: any) => ({
+        id: item.id,
+        title: item.title,
+        content: item.content,
+        authorId: item.author_id,
+        authorName: item.author?.full_name || "알 수 없음",
+        tags: item.tags || [],
+        projectPhase: 'IDEA', // Default or map if needed
+        recruitingRoles: item.recruiting_roles || [],
+        courseBadge: 'CAPSTONE_1', // Default or map if needed
+        createdAt: item.created_at
+      }));
+      setPosts(mappedData);
+    } catch (error) {
+      console.error("Error fetching recruitment posts:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
+
+  const handleUploadPost = useCallback(async (newPost: TeamBuildingPost) => {
+    try {
+      const dbPost = {
+        title: newPost.title,
+        content: newPost.content,
+        tags: newPost.tags,
+        recruiting_roles: newPost.recruitingRoles,
+        status: 'Recruiting'
+      };
+      await createRecruitmentPost(dbPost);
+      await fetchPosts();
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error uploading post:", error);
+      alert("모집글 업로드 중 오류가 발생했습니다.");
+    }
+  }, [fetchPosts]);
 
   const openModal = useCallback(() => setIsModalOpen(true), []);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
+
+  if (loading && posts.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-4 text-slate-500">
+        <Loader2 className="animate-spin" size={40} />
+        <p className="font-bold tracking-widest uppercase text-xs">Loading Recruitment Posts...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 transform-gpu">

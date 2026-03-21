@@ -1,9 +1,10 @@
-import { useState, memo, useCallback } from "react";
+import { useState, memo, useCallback, useEffect } from "react";
 import { RegisteredTeam } from "@/types";
 import { Badge } from "@/components/common/Badge";
 import { motion } from "framer-motion";
-import { Plus, Users, Mail, ArrowRight } from "lucide-react";
+import { Plus, Users, Mail, ArrowRight, Loader2 } from "lucide-react";
 import { TeamRegistrationModal } from "./TeamRegistrationModal";
+import { getTeamRegistrations, registerTeam } from "@/lib/services/BoardServices";
 
 const RegisteredTeamItem = memo(({ team, index }: { team: RegisteredTeam; index: number }) => (
   <motion.div
@@ -58,21 +59,64 @@ const RegisteredTeamItem = memo(({ team, index }: { team: RegisteredTeam; index:
 
 RegisteredTeamItem.displayName = "RegisteredTeamItem";
 
-interface TeamRegistrationBoardProps {
-  teams: RegisteredTeam[];
-}
-
-export const TeamRegistrationBoard = memo(function TeamRegistrationBoard({ teams: initialTeams }: TeamRegistrationBoardProps) {
-  const [teams, setTeams] = useState<RegisteredTeam[]>(initialTeams);
+export const TeamRegistrationBoard = memo(function TeamRegistrationBoard() {
+  const [teams, setTeams] = useState<RegisteredTeam[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleRegisterTeam = useCallback((newTeam: RegisteredTeam) => {
-    setTeams((prev) => [newTeam, ...prev]);
-    setIsModalOpen(false);
+  const fetchTeams = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await getTeamRegistrations();
+      const mappedData: RegisteredTeam[] = data.map((item: any) => ({
+        id: item.id,
+        teamName: item.team_name,
+        productIdea: item.project_item,
+        leaderName: item.leader?.full_name || "알 수 없음",
+        members: item.members || [],
+        contactEmail: item.leader?.email || "N/A",
+        status: item.status === 'Activities' ? 'ACTIVE' : 'COMPLETED'
+      }));
+      setTeams(mappedData);
+    } catch (error) {
+      console.error("Error fetching teams:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchTeams();
+  }, [fetchTeams]);
+
+  const handleRegisterTeam = useCallback(async (newTeam: RegisteredTeam) => {
+    try {
+      const dbTeam = {
+        team_name: newTeam.teamName,
+        project_item: newTeam.productIdea,
+        members: newTeam.members,
+        status: 'Activities'
+      };
+      await registerTeam(dbTeam);
+      await fetchTeams();
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error registering team:", error);
+      alert("팀 등록 중 오류가 발생했습니다.");
+    }
+  }, [fetchTeams]);
 
   const openModal = useCallback(() => setIsModalOpen(true), []);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
+
+  if (loading && teams.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-4 text-slate-500">
+        <Loader2 className="animate-spin" size={40} />
+        <p className="font-bold tracking-widest uppercase text-xs">Loading Teams...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 transform-gpu">
@@ -98,6 +142,12 @@ export const TeamRegistrationBoard = memo(function TeamRegistrationBoard({ teams
         {teams.map((team, index) => (
           <RegisteredTeamItem key={team.id} team={team} index={index} />
         ))}
+        
+        {teams.length === 0 && (
+          <div className="text-center py-20 text-slate-400 bg-slate-50/50 dark:bg-slate-800/30 rounded-3xl border border-dashed border-slate-200 dark:border-slate-700">
+            <p className="font-bold text-sm">등록된 팀이 없습니다.</p>
+          </div>
+        )}
       </div>
     </div>
   );

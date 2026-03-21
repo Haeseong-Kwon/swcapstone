@@ -7,7 +7,6 @@ import { TeamBoard } from "./TeamBoard";
 import { CorporateBoard } from "./CorporateBoard";
 import { VideoBoard } from "./VideoBoard";
 import { TeamRegistrationBoard } from "./TeamRegistrationBoard";
-import { MOCK_USERS, MOCK_TEAM_POSTS, MOCK_PROPOSALS, MOCK_VIDEOS, MOCK_REGISTERED_TEAMS } from "@/constants/mockData";
 import { cn } from "@/lib/utils";
 
 type TabType = 'SELF_INTRO' | 'TEAM_BUILDING' | 'TEAM_REGISTRATION' | 'CORPORATE' | 'EDUCATIONAL_VIDEO';
@@ -60,11 +59,11 @@ export const MainDashboard = memo(function MainDashboard() {
             transition={{ duration: 0.16, ease: "easeOut" }}
             className="transform-gpu"
           >
-            {activeTab === 'SELF_INTRO' && <ProfileBoard users={MOCK_USERS} />}
-            {activeTab === 'TEAM_BUILDING' && <TeamBoard posts={MOCK_TEAM_POSTS} />}
-            {activeTab === 'TEAM_REGISTRATION' && <TeamRegistrationBoard teams={MOCK_REGISTERED_TEAMS} />}
-            {activeTab === 'CORPORATE' && <CorporateBoard proposals={MOCK_PROPOSALS} />}
-            {activeTab === 'EDUCATIONAL_VIDEO' && <VideoBoard videos={MOCK_VIDEOS} />}
+            {activeTab === 'SELF_INTRO' && <ProfileBoard />}
+            {activeTab === 'TEAM_BUILDING' && <TeamBoard />}
+            {activeTab === 'TEAM_REGISTRATION' && <TeamRegistrationBoard />}
+            {activeTab === 'CORPORATE' && <CorporateBoard />}
+            {activeTab === 'EDUCATIONAL_VIDEO' && <VideoBoard />}
           </m.div>
         </div>
       </div>

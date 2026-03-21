@@ -1,16 +1,17 @@
-import { memo } from "react";
+import { useState, memo, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { VideoContent } from "@/types";
 import { Badge } from "@/components/common/Badge";
 import { motion } from "framer-motion";
-import { Play, User, Eye, Calendar } from "lucide-react";
+import { Play, User, Eye, Calendar, Loader2 } from "lucide-react";
+import { getVideos } from "@/lib/services/BoardServices";
 
 const VideoCard = memo(({ video, index }: { video: VideoContent; index: number }) => (
   <motion.div
     initial={{ opacity: 0, y: 15 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.3, delay: index * 0.05, ease: "easeOut" }}
-    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden group hover:shadow-xl transition-all flex flex-col h-full gpu-accelerated"
+    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden group hover:shadow-xl transition-all flex flex-col h-full gpu-accelerated rounded-2xl"
   >
     {/* Thumbnail Container */}
     <div className="relative aspect-video overflow-hidden bg-slate-100 dark:bg-slate-800">
@@ -56,7 +57,7 @@ const VideoCard = memo(({ video, index }: { video: VideoContent; index: number }
         </div>
         <div className="flex items-center gap-1 text-[10px] font-bold text-slate-600 dark:text-slate-400">
           <Calendar size={12} />
-          {video.createdAt}
+          {new Date(video.createdAt).toLocaleDateString()}
         </div>
       </div>
     </div>
@@ -65,16 +66,57 @@ const VideoCard = memo(({ video, index }: { video: VideoContent; index: number }
 
 VideoCard.displayName = "VideoCard";
 
-interface VideoBoardProps {
-  videos: VideoContent[];
-}
+export const VideoBoard = memo(function VideoBoard() {
+  const [videos, setVideos] = useState<VideoContent[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export const VideoBoard = memo(function VideoBoard({ videos }: VideoBoardProps) {
+  const fetchVideos = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await getVideos();
+      const mappedData: VideoContent[] = data.map((item: any) => ({
+        id: item.id,
+        title: item.title,
+        description: item.description,
+        instructor: "전문가", // Default or map if needed
+        duration: "15:00", // Default or map if needed
+        thumbnailUrl: item.thumbnail_url || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop",
+        category: item.category || "교육",
+        createdAt: item.created_at,
+        viewCount: 0
+      }));
+      setVideos(mappedData);
+    } catch (error) {
+      console.error("Error fetching videos:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchVideos();
+  }, [fetchVideos]);
+
+  if (loading && videos.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-4 text-slate-500">
+        <Loader2 className="animate-spin" size={40} />
+        <p className="font-bold tracking-widest uppercase text-xs">Loading Videos...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transform-gpu">
       {videos.map((video, index) => (
         <VideoCard key={video.id} video={video} index={index} />
       ))}
+      
+      {videos.length === 0 && (
+        <div className="col-span-full text-center py-20 text-slate-400 bg-slate-50/50 dark:bg-slate-800/30 rounded-3xl border border-dashed border-slate-200 dark:border-slate-700">
+          <p className="font-bold text-sm">등록된 교육 영상이 없습니다.</p>
+        </div>
+      )}
     </div>
   );
 });

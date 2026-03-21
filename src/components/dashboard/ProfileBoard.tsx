@@ -1,11 +1,12 @@
-import { useState, memo, useCallback } from "react";
+import { useState, memo, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { User } from "@/types";
 import { Badge } from "@/components/common/Badge";
 import { Card } from "@/components/common/Card";
 import { motion } from "framer-motion";
-import { Github, Globe, ExternalLink, UserPlus } from "lucide-react";
+import { Github, Globe, ExternalLink, UserPlus, Loader2 } from "lucide-react";
 import { ProfileUploadModal } from "./ProfileUploadModal";
+import { getProfiles, createProfile } from "@/lib/services/BoardServices";
 
 const ProfileCard = memo(({ user, index }: { user: User; index: number }) => (
   <motion.div
@@ -87,21 +88,71 @@ const ProfileCard = memo(({ user, index }: { user: User; index: number }) => (
 
 ProfileCard.displayName = "ProfileCard";
 
-interface ProfileBoardProps {
-  users: User[];
-}
-
-export const ProfileBoard = memo(function ProfileBoard({ users: initialUsers }: ProfileBoardProps) {
-  const [users, setUsers] = useState<User[]>(initialUsers);
+export const ProfileBoard = memo(function ProfileBoard() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleUploadProfile = useCallback((newUser: User) => {
-    setUsers((prev) => [newUser, ...prev]);
-    setIsModalOpen(false);
+  const fetchUsers = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await getProfiles();
+      const mappedData: User[] = data.map((item: any) => ({
+        id: item.id,
+        name: item.full_name,
+        email: "",
+        role: item.role as any,
+        avatar: item.avatar_url,
+        specialty: item.bio,
+        major: item.major,
+        techStack: item.tech_stack,
+        status: item.status as any || 'LOOKING',
+        githubUrl: item.github_url,
+        blogUrl: item.portfolio_url
+      }));
+      setUsers(mappedData);
+    } catch (error) {
+      console.error("Error fetching profiles:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  const handleUploadProfile = useCallback(async (newUser: User) => {
+    try {
+      const dbUser = {
+        full_name: newUser.name,
+        major: newUser.major,
+        bio: newUser.specialty,
+        tech_stack: newUser.techStack,
+        github_url: newUser.githubUrl,
+        portfolio_url: newUser.blogUrl,
+        role: newUser.role
+      };
+      await createProfile(dbUser);
+      await fetchUsers(); // Refresh the list
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error uploading profile:", error);
+      alert("업로드 중 오류가 발생했습니다.");
+    }
+  }, [fetchUsers]);
 
   const openModal = useCallback(() => setIsModalOpen(true), []);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
+
+  if (loading && users.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-4 text-slate-500">
+        <Loader2 className="animate-spin" size={40} />
+        <p className="font-bold tracking-widest uppercase text-xs">Loading Profiles...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 transform-gpu">
