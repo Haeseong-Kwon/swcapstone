@@ -15,20 +15,21 @@ export default function Home() {
   return (
     <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 overflow-x-hidden">
       <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-black pt-20">
-        <div className="absolute inset-0 z-0 gpu-accelerated">
+        <div className="absolute inset-0 z-0 gpu-accelerated overflow-hidden">
           <Image
             src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop"
             alt="Hero Background"
             fill
             priority
-            quality={85}
-            className="object-cover animate-slow-zoom opacity-50 transform-gpu"
-            sizes="(max-width: 768px) 100vw, 100vw"
+            quality={80}
+            className="object-cover animate-slow-zoom opacity-40 transform-gpu"
+            sizes="100vw"
           />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,197,94,0.12),_transparent_34%),linear-gradient(180deg,rgba(2,6,23,0.15)_0%,rgba(2,6,23,0.7)_60%,rgba(2,6,23,0.95)_100%)]"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,197,94,0.1),_transparent_40%),linear-gradient(180deg,rgba(2,6,23,0.1)_0%,rgba(2,6,23,0.6)_60%,rgba(2,6,23,0.9)_100%)]"></div>
           
-          <div className="absolute top-1/4 -left-20 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-blob"></div>
-          <div className="absolute bottom-1/4 -right-20 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[150px] animate-blob [animation-delay:2s]"></div>
+          {/* Optimized Blobs - Reduced Blur and Size for Performance */}
+          <div className="absolute top-1/4 -left-10 w-64 h-64 bg-primary/10 rounded-full blur-[80px] animate-blob transform-gpu will-change-transform opacity-60"></div>
+          <div className="absolute bottom-1/4 -right-10 w-96 h-96 bg-blue-600/5 rounded-full blur-[100px] animate-blob [animation-delay:2s] transform-gpu will-change-transform opacity-50"></div>
         </div>
 
         <div className="relative z-10 mx-auto w-full fluid-container pb-16 pt-16 lg:pb-24 lg:pt-24">
