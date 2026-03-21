@@ -22,8 +22,8 @@ export default function Home() {
             fill
             priority
             quality={85}
-            className="object-cover animate-slow-zoom opacity-50"
-            sizes="100vw"
+            className="object-cover animate-slow-zoom opacity-50 transform-gpu"
+            sizes="(max-width: 768px) 100vw, 100vw"
           />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,197,94,0.12),_transparent_34%),linear-gradient(180deg,rgba(2,6,23,0.15)_0%,rgba(2,6,23,0.7)_60%,rgba(2,6,23,0.95)_100%)]"></div>
           
@@ -48,8 +48,8 @@ export default function Home() {
                 한양대학교 ERICA SW창업캡스톤디자인 통합 플랫폼. 아이디어에서 기술 구현까지, 데이터 기반의 정교한 매칭으로 넥스트 유니콘으로의 여정을 함께합니다.
               </p>
 
-              <div className="relative max-w-2xl animate-slide-up [animation-delay:0.3s]">
-                <div className="group flex flex-col gap-3 rounded-[2rem] border border-white/12 bg-slate-950/40 p-3 shadow-[0_32px_100px_rgba(0,0,0,0.3)] backdrop-blur-2xl sm:flex-row sm:items-center sm:gap-0 sm:rounded-full sm:p-2">
+              <div className="relative max-w-2xl animate-slide-up [animation-delay:0.3s] transform-gpu">
+                <div className="group flex flex-col gap-3 rounded-[2rem] border border-white/12 bg-slate-950/40 p-3 shadow-[0_32px_100px_rgba(0,0,0,0.3)] backdrop-blur-lg sm:flex-row sm:items-center sm:gap-0 sm:rounded-full sm:p-2">
                   <div className="flex min-w-0 flex-1 items-center px-4 sm:px-8">
                     <Search className="mr-3 text-white/70 sm:mr-4" size={24} />
                     <input
@@ -79,7 +79,7 @@ export default function Home() {
                   ["지원사업", "기회 탐색 최적화"],
                   ["포트폴리오", "성과 아카이빙"],
                 ].map(([title, desc]) => (
-                  <div key={title} className="rounded-2xl border border-white/10 bg-white/5 px-6 py-6 backdrop-blur-md sm:min-w-[200px] sm:flex-1 premium-transition hover:bg-white/10">
+                  <div key={title} className="rounded-2xl border border-white/10 bg-white/5 px-6 py-6 backdrop-blur-sm sm:min-w-[200px] sm:flex-1 premium-transition hover:bg-white/10 transform-gpu">
                     <p className="text-[11px] font-black uppercase tracking-[0.3em] text-white/50">{title}</p>
                     <p className="mt-3 text-[15px] font-semibold text-white/90">{desc}</p>
                   </div>
@@ -92,7 +92,7 @@ export default function Home() {
                 <Link
                   key={card.title}
                   href={card.href}
-                  className="group relative flex flex-col justify-between overflow-visible rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-xl hover-lift hover:border-white/30 hover:bg-white/10 sm:rounded-[3rem] sm:p-10 md:h-[260px] lg:h-[280px]"
+                  className="group relative flex flex-col justify-between overflow-visible rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-lg hover-lift hover:border-white/30 hover:bg-white/10 sm:rounded-[3rem] sm:p-10 md:h-[260px] lg:h-[280px] transform-gpu"
                 >
                   <div className="absolute inset-0 rounded-[inherit] overflow-hidden pointer-events-none z-0">
                     <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-70"></div>
@@ -118,8 +118,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-white section-padding dark:bg-slate-900 overflow-hidden">
-        <div className="fluid-container">
+      <section className="bg-white section-padding dark:bg-slate-900 overflow-hidden content-auto contain-intrinsic-size-[auto_800px]">
+        <div className="fluid-container transform-gpu">
           <div className="section-accent-bar mb-12 sm:mb-20 reveal-entry active">
             <h2 className="fluid-title mb-6 text-slate-900 dark:text-slate-50 uppercase">Core <br className="sm:hidden" /> Ecosystem</h2>
             <p className="max-w-2xl font-medium text-slate-600 dark:text-slate-400 fluid-subtitle">기획부터 기술 구현, 팀매칭까지 창업의 전 과정을 지원합니다.</p>

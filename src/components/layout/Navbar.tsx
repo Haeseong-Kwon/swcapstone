@@ -39,7 +39,7 @@ export function Navbar() {
     return (
         <>
             <nav className={cn(
-                "fixed top-0 left-0 right-0 z-50 border-b premium-transition will-change-transform",
+                "fixed top-0 left-0 right-0 z-50 border-b premium-transition will-change-transform transform-gpu",
                 isScrolled
                     ? "glass-header shadow-[0_10px_30px_rgba(15,23,42,0.10)] border-white/5"
                     : "bg-gradient-to-b from-black/72 via-black/24 to-transparent border-transparent"

@@ -26,8 +26,8 @@ export function SubPageHero({
                     fill
                     priority
                     quality={76}
-                    className="object-cover opacity-56 animate-slow-zoom"
-                    sizes="(max-width: 768px) 100vw, 100vw"
+                    className="object-cover opacity-56 animate-slow-zoom transform-gpu"
+                    sizes="(max-width: 1024px) 100vw, 100vw"
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,23,0.28)_0%,rgba(2,6,23,0.58)_42%,rgba(2,6,23,0.92)_100%)]"></div>
             </div>
