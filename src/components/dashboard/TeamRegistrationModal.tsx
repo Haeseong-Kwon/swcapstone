@@ -19,21 +19,26 @@ export function TeamRegistrationModal({ isOpen, onClose, onSubmit }: TeamRegistr
   const [members, setMembers] = useState([{ name: "", studentId: "", department: "", role: "", email: "" }]);
   const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [isRendered, setIsRendered] = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     if (isOpen) {
+      setIsRendered(true);
       document.body.style.overflow = 'hidden';
       requestAnimationFrame(() => setVisible(true));
     } else {
       setVisible(false);
-      const t = setTimeout(() => { document.body.style.overflow = 'unset'; }, 200);
+      const t = setTimeout(() => {
+        document.body.style.overflow = 'unset';
+        setIsRendered(false);
+      }, 220);
       return () => clearTimeout(t);
     }
   }, [isOpen]);
 
-  if (!mounted) return null;
+  if (!mounted || !isRendered) return null;
 
   const handleAddMember = () => setMembers([...members, { name: "", studentId: "", department: "", role: "", email: "" }]);
   const handleRemoveMember = (index: number) => setMembers(members.filter((_, i) => i !== index));

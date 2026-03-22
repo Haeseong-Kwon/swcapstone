@@ -20,21 +20,27 @@ export function ProfileUploadModal({ isOpen, onClose, onSubmit }: ProfileUploadM
   const [blogUrl, setBlogUrl] = useState("");
   const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [isRendered, setIsRendered] = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     if (isOpen) {
+      setIsRendered(true);
       document.body.style.overflow = "hidden";
       requestAnimationFrame(() => setVisible(true));
     } else {
       setVisible(false);
-      const t = setTimeout(() => { document.body.style.overflow = "unset"; }, 200);
+      const t = setTimeout(() => {
+        document.body.style.overflow = "unset";
+        setIsRendered(false);
+      }, 220);
       return () => clearTimeout(t);
     }
   }, [isOpen]);
 
-  if (!mounted) return null;
+  if (!mounted || !isRendered) return null;
+
 
   const handleAddStack = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && stackInput.trim()) {

@@ -19,22 +19,27 @@ export function RecruitmentUploadModal({ isOpen, onClose, onSubmit }: Recruitmen
   const [stackInput, setStackInput] = useState("");
   const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [isRendered, setIsRendered] = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     if (isOpen) {
+      setIsRendered(true);
       document.body.style.overflow = "hidden";
       // Defer showing modal to next frame for smooth open
       requestAnimationFrame(() => setVisible(true));
     } else {
       setVisible(false);
-      const t = setTimeout(() => { document.body.style.overflow = "unset"; }, 200);
+      const t = setTimeout(() => {
+        document.body.style.overflow = "unset";
+        setIsRendered(false);
+      }, 220); // slightly after animation ends
       return () => clearTimeout(t);
     }
   }, [isOpen]);
 
-  if (!mounted) return null;
+  if (!mounted || !isRendered) return null;
 
   const handleAddRole = () => setRecruitingRoles([...recruitingRoles, { role: "", current: 0, total: 1 }]);
   const handleRemoveRole = (index: number) => setRecruitingRoles(recruitingRoles.filter((_, i) => i !== index));
