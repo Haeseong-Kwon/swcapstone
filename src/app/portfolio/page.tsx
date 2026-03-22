@@ -16,7 +16,7 @@ export default function PortfolioPage() {
 
             <section className="py-24 max-w-8xl mx-auto px-6 md:px-12">
                 {/* Minimalist Section Header */}
-                <div className="mb-20 animate-slide-up [animation-delay:0.1s]">
+                <div className="mb-20">
                     <h2 className="text-[12vw] leading-[0.9] md:text-[8rem] font-bold tracking-tighter uppercase">
                         Our<br />
                         <span className="opacity-40 italic">Projects</span>
@@ -31,8 +31,7 @@ export default function PortfolioPage() {
                     {MOCK_PORTFOLIOS.map((item, index) => (
                         <div
                             key={item.id}
-                            className="group relative animate-slide-up"
-                            style={{ animationDelay: `${0.2 + index * 0.1}s` }}
+                            className="group relative"
                         >
                             {/* Card Container */}
                             <div className="relative aspect-[4/5] md:aspect-square w-full overflow-hidden bg-[#111] isolate">
@@ -40,7 +39,7 @@ export default function PortfolioPage() {
                                     src={item.thumbnailUrl}
                                     alt={item.title}
                                     fill
-                                    className="object-cover transition-transform duration-1000 ease-out group-hover:scale-110 opacity-60 group-hover:opacity-40"
+                                    className="object-cover transition-[transform,opacity] duration-700 ease-out group-hover:scale-110 opacity-60 group-hover:opacity-40"
                                     sizes="(max-width: 768px) 100vw, 50vw"
                                 />
 
@@ -48,7 +47,7 @@ export default function PortfolioPage() {
                                 <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black via-black/40 to-transparent z-10 transition-opacity duration-500 group-hover:opacity-0" />
 
                                 {/* Overlay Content */}
-                                <div className="absolute inset-0 p-8 md:p-12 flex flex-col justify-between z-20 transition-all duration-500 group-hover:translate-y-4">
+                                <div className="absolute inset-0 p-8 md:p-12 flex flex-col justify-between z-20 transition-transform duration-500 group-hover:translate-y-4">
                                     <div className="flex justify-between items-start">
                                         <span className="text-xl md:text-2xl font-bold tracking-tighter text-white/90">
                                             {item.client}
@@ -66,10 +65,10 @@ export default function PortfolioPage() {
                                 </div>
 
                                 {/* Hover Action Overlay */}
-                                <div className="absolute inset-0 p-8 md:p-12 flex items-center justify-center gap-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20 bg-black/40 backdrop-blur-sm">
+                                <div className="absolute inset-0 p-8 md:p-12 flex items-center justify-center gap-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-black/40">
                                     {item.videoUrl && (
                                         <Link href={item.videoUrl} className="flex flex-col items-center gap-3 text-white hover:text-primary transition-colors">
-                                            <div className="w-20 h-20 rounded-full border border-white/30 flex items-center justify-center backdrop-blur-md bg-white/10 hover:bg-white/20 transition-all">
+                                            <div className="w-20 h-20 rounded-full border border-white/30 flex items-center justify-center bg-white/10 hover:bg-white/20" style={{ transition: 'background-color 0.15s' }}>
                                                 <Play size={28} className="ml-2" />
                                             </div>
                                             <span className="text-sm font-bold tracking-widest uppercase">Play Video</span>
@@ -77,7 +76,7 @@ export default function PortfolioPage() {
                                     )}
                                     {item.irDeckUrl && (
                                         <Link href={item.irDeckUrl} className="flex flex-col items-center gap-3 text-white hover:text-primary transition-colors">
-                                            <div className="w-20 h-20 rounded-full border border-white/30 flex items-center justify-center backdrop-blur-md bg-white/10 hover:bg-white/20 transition-all">
+                                            <div className="w-20 h-20 rounded-full border border-white/30 flex items-center justify-center bg-white/10 hover:bg-white/20" style={{ transition: 'background-color 0.15s' }}>
                                                 <Download size={28} />
                                             </div>
                                             <span className="text-sm font-bold tracking-widest uppercase">IR Deck</span>
