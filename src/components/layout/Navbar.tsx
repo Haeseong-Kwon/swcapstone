@@ -9,6 +9,7 @@ import { useTheme } from "@/context/ThemeContext";
 import { onAuthStateChange, signOut } from "@/lib/services/AuthService";
 import { Button } from "@/components/common/Button";
 import { useRouter } from "next/navigation";
+import { SearchModal } from "@/components/common/SearchModal";
 
 const NAV_ITEMS = [
     { name: "SW창업캡스톤디자인", href: "/dashboard", desc: "Project & Grade Management" },
@@ -25,6 +26,7 @@ export function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [user, setUser] = useState<any>(null);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChange((user) => {
@@ -122,6 +124,7 @@ export function Navbar() {
                         )}>
                             <button 
                                 type="button"
+                                onClick={() => setIsSearchOpen(true)}
                                 aria-label="Search"
                                 className={cn(
                                     "premium-transition hover:scale-110",
@@ -248,6 +251,10 @@ export function Navbar() {
                     </div>
                 </div>
             </div>
+            <SearchModal 
+                isOpen={isSearchOpen} 
+                onClose={() => setIsSearchOpen(false)} 
+            />
         </>
     );
 }

@@ -1,10 +1,17 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/common/Button";
 import { Search, ChevronRight, Presentation, Rocket, Users, Briefcase } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SearchModal } from "@/components/common/SearchModal";
 
 export default function Home() {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const featureCards = [
     { title: "Course 01", label: "Business Strategy", icon: <Presentation size={28} />, href: "/community" },
     { title: "Course 02", label: "Tech Build", icon: <Rocket size={28} />, href: "/community" },
@@ -54,12 +61,18 @@ export default function Home() {
                     <Search className="mr-3 text-white/70 sm:mr-4" size={24} />
                     <input
                       type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && setIsSearchOpen(true)}
                       placeholder="Search for projects, teams..."
                       className="h-10 w-full bg-transparent text-[14px] font-medium text-white outline-none placeholder:text-white/40 sm:h-16 sm:text-[18px]"
                     />
                   </div>
                   <div className="hidden h-10 w-px bg-white/12 sm:block"></div>
-                  <button className="flex h-10 items-center justify-center gap-2 rounded-full bg-white px-5 text-[12px] font-bold uppercase tracking-[0.22em] text-slate-950 premium-transition hover:bg-primary hover:text-white active:scale-95 sm:mx-2 sm:h-14 sm:px-10">
+                  <button 
+                    onClick={() => setIsSearchOpen(true)}
+                    className="flex h-10 items-center justify-center gap-2 rounded-full bg-white px-5 text-[12px] font-bold uppercase tracking-[0.22em] text-slate-950 premium-transition hover:bg-primary hover:text-white active:scale-95 sm:mx-2 sm:h-14 sm:px-10"
+                  >
                     Search <ChevronRight size={18} />
                   </button>
                 </div>
@@ -159,6 +172,12 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <SearchModal 
+        isOpen={isSearchOpen} 
+        onClose={() => setIsSearchOpen(false)} 
+        initialQuery={searchQuery}
+      />
     </div>
   );
 }
