@@ -1,6 +1,8 @@
 -- Enable RLS
 ALTER TABLE IF EXISTS profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS recruitment_posts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS recruitment_post_comments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS notifications ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS team_registrations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS corporate_proposals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS videos ENABLE ROW LEVEL SECURITY;
@@ -28,6 +30,28 @@ CREATE TABLE IF NOT EXISTS recruitment_posts (
   tags TEXT[],
   recruiting_roles JSONB,
   status TEXT DEFAULT 'Recruiting',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 2-1. Recruitment Post Comments Table
+CREATE TABLE IF NOT EXISTS recruitment_post_comments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  post_id UUID NOT NULL REFERENCES recruitment_posts(id) ON DELETE CASCADE,
+  author_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  content TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 2-2. Notifications Table
+CREATE TABLE IF NOT EXISTS notifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  recipient_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  actor_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  type TEXT NOT NULL,
+  post_id UUID REFERENCES recruitment_posts(id) ON DELETE CASCADE,
+  comment_id UUID REFERENCES recruitment_post_comments(id) ON DELETE CASCADE,
+  content TEXT NOT NULL,
+  is_read BOOLEAN DEFAULT false NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
@@ -71,6 +95,13 @@ CREATE POLICY "Users can update their own profile" ON profiles FOR UPDATE USING 
 
 CREATE POLICY "Public Recruitment posts are viewable by everyone" ON recruitment_posts FOR SELECT USING (true);
 CREATE POLICY "Authenticated users can create recruitment posts" ON recruitment_posts FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+CREATE POLICY "Public Recruitment post comments are viewable by everyone" ON recruitment_post_comments FOR SELECT USING (true);
+CREATE POLICY "Authenticated users can create recruitment post comments" ON recruitment_post_comments FOR INSERT WITH CHECK (auth.role() = 'authenticated' AND auth.uid() = author_id);
+
+CREATE POLICY "Users can view their own notifications" ON notifications FOR SELECT USING (auth.uid() = recipient_id);
+CREATE POLICY "Authenticated users can create notifications" ON notifications FOR INSERT WITH CHECK (auth.role() = 'authenticated' AND auth.uid() = actor_id);
+CREATE POLICY "Users can update their own notifications" ON notifications FOR UPDATE USING (auth.uid() = recipient_id);
 
 CREATE POLICY "Public Team registrations are viewable by everyone" ON team_registrations FOR SELECT USING (true);
 CREATE POLICY "Authenticated users can register teams" ON team_registrations FOR INSERT WITH CHECK (auth.role() = 'authenticated');

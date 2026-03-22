@@ -10,11 +10,20 @@ import { SubPageHero } from "@/components/common/SubPageHero";
 import { TeamBuildingPost } from "@/types";
 import { RecruitmentUploadModal } from "@/components/dashboard/RecruitmentUploadModal";
 import { getRecruitmentPosts, createRecruitmentPost } from "@/lib/services/BoardServices";
+import { RecruitmentPostDetailModal } from "@/components/community/RecruitmentPostDetailModal";
 
 const TABS = ['ALL', 'IDEA', 'MVP'] as const;
 type ActiveTab = typeof TABS[number];
 
-const CommunityCard = memo(({ post, index }: { post: TeamBuildingPost; index: number }) => (
+const CommunityCard = memo(({
+  post,
+  index,
+  onOpen,
+}: {
+  post: TeamBuildingPost;
+  index: number;
+  onOpen: (post: TeamBuildingPost) => void;
+}) => (
   <m.div
     layout
     initial={{ opacity: 0, scale: 0.95 }}
@@ -66,7 +75,11 @@ const CommunityCard = memo(({ post, index }: { post: TeamBuildingPost; index: nu
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Founder</p>
             </div>
           </div>
-          <button className="flex h-10 items-center justify-center rounded-xl bg-slate-50 px-5 text-[11px] font-black uppercase tracking-widest text-slate-900 hover:bg-primary hover:text-white dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-blue-400 premium-transition">
+          <button
+            type="button"
+            onClick={() => onOpen(post)}
+            className="flex h-10 items-center justify-center rounded-xl bg-slate-50 px-5 text-[11px] font-black uppercase tracking-widest text-slate-900 hover:bg-primary hover:text-white dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-blue-400 premium-transition"
+          >
             View Idea
           </button>
         </div>
@@ -83,6 +96,7 @@ export default function CommunityPage() {
     const [posts, setPosts] = useState<TeamBuildingPost[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedPost, setSelectedPost] = useState<TeamBuildingPost | null>(null);
 
     const fetchPosts = useCallback(async () => {
       try {
@@ -142,6 +156,11 @@ export default function CommunityPage() {
                 isOpen={isModalOpen} 
                 onClose={() => setIsModalOpen(false)} 
                 onSubmit={handleUploadPost} 
+            />
+            <RecruitmentPostDetailModal
+                isOpen={!!selectedPost}
+                post={selectedPost}
+                onClose={() => setSelectedPost(null)}
             />
 
             <SubPageHero
@@ -206,9 +225,9 @@ export default function CommunityPage() {
                       </div>
                     ) : (
                       <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 xl:gap-10 content-auto">
-                          <AnimatePresence mode="popLayout">
+                              <AnimatePresence mode="popLayout">
                               {filteredPosts.map((post, i) => (
-                                  <CommunityCard key={post.id} post={post} index={i} />
+                                  <CommunityCard key={post.id} post={post} index={i} onOpen={setSelectedPost} />
                               ))}
                           </AnimatePresence>
                           

@@ -48,6 +48,28 @@ export interface TeamBuildingPost {
   createdAt: string;
 }
 
+export interface PostComment {
+  id: string;
+  postId: string;
+  authorId: string;
+  authorName: string;
+  content: string;
+  createdAt: string;
+}
+
+export interface NotificationItem {
+  id: string;
+  recipientId: string;
+  actorId: string;
+  actorName: string;
+  type: 'NEW_COMMENT';
+  postId: string;
+  postTitle: string;
+  content: string;
+  isRead: boolean;
+  createdAt: string;
+}
+
 export interface Proposal {
   id: string;
   companyName: string;

@@ -6,8 +6,17 @@ import { motion } from "framer-motion";
 import { Users, Calendar, PlusCircle, Loader2 } from "lucide-react";
 import { RecruitmentUploadModal } from "./RecruitmentUploadModal";
 import { getRecruitmentPosts, createRecruitmentPost } from "@/lib/services/BoardServices";
+import { RecruitmentPostDetailModal } from "@/components/community/RecruitmentPostDetailModal";
 
-const TeamCard = memo(({ post, index }: { post: TeamBuildingPost; index: number }) => (
+const TeamCard = memo(({
+  post,
+  index,
+  onOpen,
+}: {
+  post: TeamBuildingPost;
+  index: number;
+  onOpen: (post: TeamBuildingPost) => void;
+}) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -63,7 +72,11 @@ const TeamCard = memo(({ post, index }: { post: TeamBuildingPost; index: number 
             </div>
             <span className="text-sm font-bold text-slate-900 dark:text-slate-50">{post.authorName}</span>
           </div>
-          <button className="text-xs font-black uppercase tracking-widest text-primary dark:text-blue-400 hover:translate-x-1 transition-transform flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => onOpen(post)}
+            className="text-xs font-black uppercase tracking-widest text-primary dark:text-blue-400 hover:translate-x-1 transition-transform flex items-center gap-2"
+          >
             자세히 보기 <Users size={16} />
           </button>
         </div>
@@ -78,6 +91,7 @@ export const TeamBoard = memo(function TeamBoard() {
   const [posts, setPosts] = useState<TeamBuildingPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState<TeamBuildingPost | null>(null);
 
   const fetchPosts = useCallback(async () => {
     try {
@@ -144,6 +158,11 @@ export const TeamBoard = memo(function TeamBoard() {
         onClose={closeModal} 
         onSubmit={handleUploadPost} 
       />
+      <RecruitmentPostDetailModal
+        isOpen={!!selectedPost}
+        post={selectedPost}
+        onClose={() => setSelectedPost(null)}
+      />
 
       <div className="flex justify-end mb-2">
         <button 
@@ -157,7 +176,7 @@ export const TeamBoard = memo(function TeamBoard() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 transform-gpu">
         {posts.map((post, index) => (
-          <TeamCard key={post.id} post={post} index={index} />
+          <TeamCard key={post.id} post={post} index={index} onOpen={setSelectedPost} />
         ))}
       </div>
     </div>

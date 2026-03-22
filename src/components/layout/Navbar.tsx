@@ -1,15 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Mail, Award, Rocket, Shield, Github, Settings, ChevronRight, CheckCircle2, Search, Bell, User as UserIcon, Menu, X, Sun, Moon } from "lucide-react";
+import { ChevronRight, Search, Bell, User as UserIcon, Menu, X, Sun, Moon, Loader2, MessageSquare } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import { onAuthStateChange, signOut } from "@/lib/services/AuthService";
+import { getNotifications, markNotificationsAsRead } from "@/lib/services/BoardServices";
 import { Button } from "@/components/common/Button";
 import { useRouter } from "next/navigation";
 import { SearchModal } from "@/components/common/SearchModal";
+import { NotificationItem } from "@/types";
 
 const NAV_ITEMS = [
     { name: "SW창업캡스톤디자인", href: "/dashboard", desc: "Project & Grade Management" },
@@ -27,12 +29,71 @@ export function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [user, setUser] = useState<any>(null);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+    const [isNotificationLoading, setIsNotificationLoading] = useState(false);
+    const notificationRef = useRef<HTMLDivElement | null>(null);
+
+    const unreadNotifications = notifications.filter((item) => !item.isRead);
+
+    const fetchNotifications = useCallback(async () => {
+        if (!user) {
+            setNotifications([]);
+            return;
+        }
+
+        try {
+            setIsNotificationLoading(true);
+            const data = await getNotifications();
+            const mappedNotifications: NotificationItem[] = data.map((item: any) => ({
+                id: item.id,
+                recipientId: item.recipient_id,
+                actorId: item.actor_id,
+                actorName: item.actor?.full_name || "알 수 없음",
+                type: item.type,
+                postId: item.post_id,
+                postTitle: item.post?.title || "게시글",
+                content: item.content,
+                isRead: item.is_read,
+                createdAt: item.created_at,
+            }));
+            setNotifications(mappedNotifications);
+        } catch (error) {
+            console.error("Error fetching notifications:", error);
+        } finally {
+            setIsNotificationLoading(false);
+        }
+    }, [user]);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChange((user) => {
             setUser(user);
         });
         return () => unsubscribe();
+    }, []);
+
+    useEffect(() => {
+        fetchNotifications();
+    }, [fetchNotifications]);
+
+    useEffect(() => {
+        const handleRefresh = () => {
+            fetchNotifications();
+        };
+
+        window.addEventListener("notifications:refresh", handleRefresh);
+        return () => window.removeEventListener("notifications:refresh", handleRefresh);
+    }, [fetchNotifications]);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+                setIsNotificationOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
     const handleLogout = async () => {
@@ -58,6 +119,25 @@ export function Navbar() {
         window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    const handleNotificationToggle = async () => {
+        const nextOpen = !isNotificationOpen;
+        setIsNotificationOpen(nextOpen);
+
+        if (!nextOpen || unreadNotifications.length === 0) return;
+
+        try {
+            const unreadIds = unreadNotifications.map((item) => item.id);
+            await markNotificationsAsRead(unreadIds);
+            setNotifications((current) =>
+                current.map((item) =>
+                    unreadIds.includes(item.id) ? { ...item, isRead: true } : item
+                )
+            );
+        } catch (error) {
+            console.error("Error marking notifications as read:", error);
+        }
+    };
 
     return (
         <>
@@ -133,17 +213,79 @@ export function Navbar() {
                             >
                                 <Search size={22} />
                             </button>
-                            <button 
-                                type="button"
-                                aria-label="Notifications"
-                                className={cn(
-                                    "premium-transition hover:scale-110 relative",
-                                    isScrolled ? "text-muted-foreground hover:text-foreground" : "text-white/80 hover:text-white"
+                            <div className="relative" ref={notificationRef}>
+                                <button 
+                                    type="button"
+                                    onClick={handleNotificationToggle}
+                                    aria-label="Notifications"
+                                    className={cn(
+                                        "premium-transition hover:scale-110 relative",
+                                        isScrolled ? "text-muted-foreground hover:text-foreground" : "text-white/80 hover:text-white"
+                                    )}
+                                >
+                                    <Bell size={22} />
+                                    {unreadNotifications.length > 0 && (
+                                        <>
+                                            <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-white">
+                                                {Math.min(unreadNotifications.length, 9)}
+                                            </span>
+                                            <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-primary"></span>
+                                        </>
+                                    )}
+                                </button>
+
+                                {isNotificationOpen && (
+                                    <div className="absolute right-0 top-12 z-[120] w-[360px] overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+                                        <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4 dark:border-slate-800">
+                                            <div>
+                                                <p className="text-sm font-black text-slate-900 dark:text-slate-50">알림</p>
+                                                <p className="text-[11px] font-semibold text-slate-400">
+                                                    새 댓글이 오면 여기 표시됩니다.
+                                                </p>
+                                            </div>
+                                            {isNotificationLoading && <Loader2 className="animate-spin text-primary" size={16} />}
+                                        </div>
+
+                                        <div className="max-h-[420px] overflow-y-auto">
+                                            {notifications.length > 0 ? (
+                                                notifications.map((notification) => (
+                                                    <div
+                                                        key={notification.id}
+                                                        className={cn(
+                                                            "border-b border-slate-100 px-5 py-4 last:border-b-0 dark:border-slate-800",
+                                                            !notification.isRead && "bg-primary/[0.04] dark:bg-blue-500/10"
+                                                        )}
+                                                    >
+                                                        <div className="flex items-start gap-3">
+                                                            <div className="mt-1 rounded-xl bg-slate-100 p-2 text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                                                                <MessageSquare size={16} />
+                                                            </div>
+                                                            <div className="min-w-0 flex-1">
+                                                                <p className="text-sm font-bold text-slate-900 dark:text-slate-50">
+                                                                    {notification.actorName}님이 댓글을 남겼습니다.
+                                                                </p>
+                                                                <p className="mt-1 line-clamp-1 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                                                                    게시글: {notification.postTitle}
+                                                                </p>
+                                                                <p className="mt-2 line-clamp-2 text-sm text-slate-600 dark:text-slate-300">
+                                                                    {notification.content}
+                                                                </p>
+                                                                <p className="mt-2 text-[11px] font-semibold text-slate-400">
+                                                                    {new Date(notification.createdAt).toLocaleString()}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div className="px-5 py-16 text-center text-sm font-semibold text-slate-400">
+                                                    아직 알림이 없습니다.
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
                                 )}
-                            >
-                                <Bell size={22} />
-                                <span className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
-                            </button>
+                            </div>
                         </div>
 
                         {user ? (
