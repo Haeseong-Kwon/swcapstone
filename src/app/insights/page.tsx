@@ -111,9 +111,9 @@ export default function InsightsPage() {
                                 <h2 className="text-4xl font-black text-slate-900 dark:text-slate-50 tracking-tighter mb-2">인사이트</h2>
                                 <p className="text-slate-600 dark:text-slate-400 font-medium text-lg">성공적인 창업을 위한 전문가들의 깊이 있는 분석</p>
                             </div>
-                            <button className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 premium-transition flex items-center gap-1">
+                            <Link href="/insights/all" className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 premium-transition flex items-center gap-1">
                                 전체보기 <ChevronRight size={16} />
-                            </button>
+                            </Link>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
                             {MOCK_INSIGHTS.map((article, i) => (
@@ -129,9 +129,9 @@ export default function InsightsPage() {
                                 <h2 className="text-4xl font-black text-slate-900 dark:text-slate-50 tracking-tighter mb-2">창업 관련 정보</h2>
                                 <p className="text-slate-600 dark:text-slate-400 font-medium text-lg">실전에서 바로 써먹는 창업 가이드</p>
                             </div>
-                            <button className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 premium-transition flex items-center gap-1">
+                            <Link href="/insights/all" className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:border-blue-400 premium-transition flex items-center gap-1">
                                 더 많은 꿀팁 <ChevronRight size={16} />
-                            </button>
+                            </Link>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {/* Reverse or slice mock data to make it look different */}
@@ -149,9 +149,9 @@ export default function InsightsPage() {
                                     <h2 className="text-4xl font-black text-slate-900 dark:text-slate-50 tracking-tighter mb-2">미디어</h2>
                                     <p className="text-slate-600 dark:text-slate-400 font-medium text-lg">최신 스타트업 트렌드와 뉴스</p>
                                 </div>
-                                <button className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 premium-transition flex items-center gap-1">
+                                <Link href="/insights/all" className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:border-blue-400 premium-transition flex items-center gap-1">
                                     뉴스 더보기 <ChevronRight size={16} />
-                                </button>
+                                </Link>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 {[...MOCK_INSIGHTS].slice(0, 2).map((article) => (

@@ -160,9 +160,12 @@ export default function InsightDetailPage() {
                             <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
                                 스타트업 생태계의 다양한 목소리를 전달하고, 창업자들에게 영감을 주는 흥미로운 이야기를 기록합니다.
                             </p>
-                            <button className="px-6 py-2.5 bg-slate-900 dark:bg-slate-50 text-white dark:text-slate-900 rounded-xl font-bold text-sm hover:scale-105 transition-transform">
+                            <Link 
+                                href="/insights/all"
+                                className="px-6 py-2.5 bg-slate-900 dark:bg-slate-50 text-white dark:text-slate-900 rounded-xl font-bold text-sm hover:scale-105 transition-transform inline-block"
+                            >
                                 아티클 전체보기
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 </div>
