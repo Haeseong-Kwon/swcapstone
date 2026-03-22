@@ -84,14 +84,15 @@ export function SearchModal({ isOpen, onClose, initialQuery = "" }: SearchModalP
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                        className="absolute inset-0 bg-black/40 backdrop-blur-md"
                     />
                     
                     <m.div
-                        initial={{ opacity: 0, scale: 0.95, y: -20 }}
+                        initial={{ opacity: 0, scale: 0.98, y: -10 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: -20 }}
-                        className="relative w-full max-w-2xl bg-background rounded-[2.5rem] border border-border shadow-2xl overflow-hidden premium-transition"
+                        exit={{ opacity: 0, scale: 0.98, y: -10 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        className="relative w-full max-w-2xl bg-background rounded-[2.5rem] border border-border shadow-2xl overflow-hidden premium-transition transform-gpu will-change-transform"
                     >
                         <div className="p-6 sm:p-8 space-y-8">
                             <div className="flex items-center gap-4 border-b border-border pb-6">

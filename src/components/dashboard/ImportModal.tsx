@@ -26,10 +26,10 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             <div
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+                className="absolute inset-0 bg-black/40 backdrop-blur-md transition-opacity"
                 onClick={onClose}
             />
-            <div className="relative bg-background border-2 border-foreground w-full max-w-2xl animate-in zoom-in-95 duration-200">
+            <div className="relative bg-background border-2 border-foreground w-full max-w-2xl animate-in zoom-in-95 duration-200 transform-gpu will-change-transform">
                 <div className="p-10 border-b border-border flex items-center justify-between">
                     <h2 className="text-[28px] font-black tracking-tighter uppercase">{title}</h2>
                     <button onClick={onClose} className="text-muted hover:text-foreground transition-colors">

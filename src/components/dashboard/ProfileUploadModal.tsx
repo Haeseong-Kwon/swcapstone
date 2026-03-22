@@ -81,19 +81,19 @@ export function ProfileUploadModal({ isOpen, onClose, onSubmit }: ProfileUploadM
   const modalContent = (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 md:p-10 bg-slate-950/80 backdrop-blur-xl">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 md:p-10 bg-slate-950/60 backdrop-blur-md">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 40 }}
+            initial={{ opacity: 0, scale: 0.98, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 40 }}
-            transition={{ type: "spring", damping: 28, stiffness: 260 }}
-            className="bg-white dark:bg-slate-900 w-full max-w-5xl max-h-full h-full md:h-auto md:max-h-[85vh] flex flex-col overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_32px_120px_rgba(0,0,0,0.5)] border border-slate-200 dark:border-slate-800 relative"
+            exit={{ opacity: 0, scale: 0.98, y: 10 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="bg-white dark:bg-slate-900 w-full max-w-5xl max-h-full h-full md:h-auto md:max-h-[85vh] flex flex-col overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_32px_120px_rgba(0,0,0,0.5)] border border-slate-200 dark:border-slate-800 relative transform-gpu will-change-transform"
           >
             {/* 디자인 장식 */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 dark:bg-blue-500/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none"></div>
             
             {/* 헤더 */}
-            <div className="flex-none bg-white/50 dark:bg-slate-900/50 backdrop-blur-md px-8 py-6 md:px-12 md:py-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center z-10">
+            <div className="flex-none bg-white/80 dark:bg-slate-900/80 px-8 py-6 md:px-12 md:py-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center z-10">
               <div>
                 <div className="flex items-center gap-3 mb-1">
                   <div className="w-2 h-6 bg-primary dark:bg-blue-500 rounded-full"></div>
@@ -220,7 +220,7 @@ export function ProfileUploadModal({ isOpen, onClose, onSubmit }: ProfileUploadM
             </div>
 
             {/* 푸터 */}
-            <div className="flex-none bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl px-8 py-6 md:px-12 md:py-8 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row justify-end items-center gap-4 z-10">
+            <div className="flex-none bg-white dark:bg-slate-900 px-8 py-6 md:px-12 md:py-8 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row justify-end items-center gap-4 z-10">
               <button 
                 type="button" 
                 onClick={onClose} 
