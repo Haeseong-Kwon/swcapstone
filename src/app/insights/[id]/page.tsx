@@ -16,7 +16,8 @@ export default function InsightDetailPage() {
 
     useEffect(() => {
         setMounted(true);
-    }, []);
+        window.scrollTo(0, 0);
+    }, [id]);
 
     const article = MOCK_INSIGHTS.find(a => a.id === id) || MOCK_INSIGHTS[0];
 
