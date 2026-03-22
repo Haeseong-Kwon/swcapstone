@@ -75,10 +75,10 @@ body {
   color: #ffffff;
 }
 
-/* Base Transition - Refined for "Premium" feel */
+/* Base Transition - Highly specific to avoid triggering layout recalculations */
 .premium-transition {
-  transition-property: all;
-  transition-duration: 500ms;
+  transition-property: color, background-color, border-color, opacity, transform, box-shadow;
+  transition-duration: 400ms;
   transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
@@ -111,11 +111,11 @@ body {
   padding-left: clamp(20px, 4vw, 40px);
 }
 
-/* Unified Translucent Styles (Theme-Aware) - Optimized Blur */
+/* Unified Translucent Styles (Theme-Aware) */
 .glass-header {
   background-color: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--glass-border);
   color: var(--glass-text);
 }
@@ -216,15 +216,11 @@ body {
   }
 
   @keyframes slow-zoom {
-    from {
-      transform: scale(1.0) translateZ(0);
-    }
-
-    to {
-      transform: scale(1.15) translateZ(0);
-    }
+    from { transform: scale(1.0) translateZ(0); }
+    to   { transform: scale(1.15) translateZ(0); }
   }
 
+  /* slow-zoom kept for reference but not applied to hero background */
   .animate-slow-zoom {
     animation: slow-zoom 30s ease-out infinite alternate;
     will-change: transform;
@@ -232,20 +228,12 @@ body {
 
   .gpu-accelerated {
     transform: translateZ(0);
-    will-change: transform;
     backface-visibility: hidden;
   }
 
-  @keyframes float {
-    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-    33% { transform: translate3d(4vw, -5vw, 0) scale(1.05); }
-    66% { transform: translate3d(-3vw, 2vw, 0) scale(0.98); }
-  }
-
+  /* animate-blob removed — replaced with static CSS gradient in hero */
   .animate-blob {
-    animation: float 25s infinite alternate cubic-bezier(0.45, 0, 0.55, 1);
-    will-change: transform;
-    pointer-events: none;
+    display: none;
   }
 
   .contain-layout-paint {
