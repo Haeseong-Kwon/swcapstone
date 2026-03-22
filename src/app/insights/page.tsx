@@ -12,7 +12,7 @@ type InsightArticle = typeof MOCK_INSIGHTS[number];
 // Reusable Article Card Component
 const ArticleCard = ({ article, index }: { article: InsightArticle, index: number }) => (
     <Link
-        href="#"
+        href={`/insights/${article.id}`}
         className="group flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-blue-400 premium-transition relative overflow-hidden animate-slide-up h-full"
         style={{ animationDelay: `${0.2 + index * 0.1}s` }}
     >
@@ -156,7 +156,7 @@ export default function InsightsPage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 {[...MOCK_INSIGHTS].slice(0, 2).map((article) => (
                                     <Link
-                                        href="#"
+                                        href={`/insights/${article.id}`}
                                         key={`media-${article.id}`}
                                         className="group flex flex-col md:flex-row bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-blue-400 premium-transition relative overflow-hidden min-h-[240px]"
                                     >
