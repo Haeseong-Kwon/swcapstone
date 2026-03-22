@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { SubPageHero } from "@/components/common/SubPageHero";
 import { Badge } from "@/components/common/Badge";
 import { Card } from "@/components/common/Card";
@@ -12,21 +14,70 @@ import {
     Github,
     Settings,
     ChevronRight,
-    CheckCircle2
+    CheckCircle2,
+    Loader2,
+    LogOut
 } from "lucide-react";
+import { getCurrentUser, signOut } from "@/lib/services/AuthService";
+import { getProfileByUserId } from "@/lib/services/BoardServices";
 
 export default function ProfilePage() {
+    const router = useRouter();
+    const [user, setUser] = useState<any>(null);
+    const [profile, setProfile] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const currentUser = await getCurrentUser();
+                if (!currentUser) {
+                    router.push("/login");
+                    return;
+                }
+                setUser(currentUser);
+                const userProfile = await getProfileByUserId(currentUser.id);
+                setProfile(userProfile);
+            } catch (error) {
+                console.error("Error fetching profile data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUserData();
+    }, [router]);
+
+    const handleLogout = async () => {
+        await signOut();
+        router.push("/");
+    };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-background">
+                <Loader2 className="animate-spin text-primary" size={48} />
+                <p className="font-black uppercase tracking-[0.3em] text-xs text-muted">Syncing Identity...</p>
+            </div>
+        );
+    }
+
+    if (!user) return null;
+
+    const displayName = profile?.full_name || user?.user_metadata?.full_name || "User";
+    const displayEmail = user?.email || "No email provided";
+    const displayBio = profile?.bio || "소프트웨어 창업을 준비 중인 학생입니다.";
+
     return (
-        <main className="min-h-screen bg-background text-foreground">
+        <main className="min-h-screen bg-background text-foreground transform-gpu">
             <SubPageHero
                 title="My Identity"
-                description="KIM CHULSU | Entrepreneurship Specialist. 분절된 아이디어를 실전 비즈니스로 구체화하는 SW 창업 전략가입니다."
+                description={`${displayName} | ${profile?.role || 'Student'}. ${displayBio}`}
                 backgroundImage="https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2070&auto=format&fit=crop"
             >
                 <div className="flex flex-wrap gap-4 mt-8">
-                    <Badge variant="primary" className="bg-primary/10 border-primary/20 text-primary">Senior Student</Badge>
-                    <Badge variant="success" className="bg-green-500/10 border-green-500/20 text-green-500">Certified Innovator</Badge>
-                    <Badge variant="info" className="bg-blue-500/10 border-blue-500/20 text-blue-500">SW Developer</Badge>
+                    <Badge variant="primary" className="bg-primary/10 border-primary/20 text-primary">{profile?.role || 'Student'}</Badge>
+                    <Badge variant="success" className="bg-green-500/10 border-green-500/20 text-green-500">Active Member</Badge>
                 </div>
             </SubPageHero>
 
@@ -38,21 +89,21 @@ export default function ProfilePage() {
                         <div className="p-12 bg-background border border-border group hover:border-primary premium-transition">
                             <div className="flex flex-col md:flex-row gap-12 items-start">
                                 <div className="w-40 h-40 bg-foreground text-background dark:bg-slate-100 dark:text-slate-900 flex items-center justify-center text-4xl font-black rounded-sm shrink-0">
-                                    K
+                                    {displayName[0]}
                                 </div>
                                 <div className="space-y-6 flex-grow">
-                                    <h2 className="text-[40px] font-black uppercase tracking-tightest leading-none text-foreground">Kim Chulsu</h2>
+                                    <h2 className="text-[40px] font-black uppercase tracking-tightest leading-none text-foreground">{displayName}</h2>
                                     <p className="text-muted font-bold text-[18px] leading-relaxed">
-                                        한양대학교 ERICA 소프트웨어학부 4학년. AI 기반 ESG 플랫폼 구축 프로젝트의 PM 및 백엔드 리드를 담당하고 있습니다.
+                                        {profile?.major || "Hanyang University"} {profile?.role || 'Student'}. {displayBio}
                                     </p>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-border">
                                         <div className="flex items-center gap-3 text-muted">
                                             <Mail size={18} />
-                                            <span className="font-bold text-[14px]">chulsu.kim@hanyang.ac.kr</span>
+                                            <span className="font-bold text-[14px]">{displayEmail}</span>
                                         </div>
                                         <div className="flex items-center gap-3 text-muted">
                                             <Github size={18} />
-                                            <span className="font-bold text-[14px]">github.com/chulsu-k</span>
+                                            <span className="font-bold text-[14px]">{profile?.github_url || "github.com"}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -65,26 +116,9 @@ export default function ProfilePage() {
                                 <Button variant="ghost" className="text-primary gap-2">Explore All <ChevronRight size={18} /></Button>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                                {[
-                                    { title: "Eco Connect", role: "Project Lead", phase: "MVP Phase", status: "Active" },
-                                    { title: "Smart Campus", role: "Contributor", phase: "Idea Phase", status: "Completed" }
-                                ].map((project, i) => (
-                                    <Card key={i} className="hover:border-primary bg-background" onClick={() => { }}>
-                                        <div className="space-y-8">
-                                            <div className="flex items-center justify-between">
-                                                <Badge variant={project.status === 'Active' ? 'primary' : 'default'}>{project.status}</Badge>
-                                                <Rocket size={20} className="text-muted" />
-                                            </div>
-                                            <div>
-                                                <h4 className="text-[24px] font-black uppercase tracking-tighter mb-2 text-foreground">{project.title}</h4>
-                                                <p className="text-[12px] font-black text-primary tracking-[0.2em] uppercase">{project.role}</p>
-                                            </div>
-                                            <p className="text-muted font-bold uppercase text-[11px] tracking-widest pt-4 border-t border-border focus:border-primary transition-colors">
-                                                {project.phase}
-                                            </p>
-                                        </div>
-                                    </Card>
-                                ))}
+                                <div className="col-span-full py-20 text-center border border-dashed border-border rounded-3xl bg-muted/5">
+                                    <p className="font-bold text-muted uppercase tracking-widest text-xs">No projects registered yet.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -97,19 +131,7 @@ export default function ProfilePage() {
                                 Achievements
                             </h3>
                             <div className="space-y-8">
-                                {[
-                                    { label: 'SW Competency', value: 'Level 5 (Expert)', icon: <Shield /> },
-                                    { label: 'Startup Camp', value: '1st Place Winner', icon: <CheckCircle2 /> },
-                                    { label: 'Industry Cert', value: 'AWS Practitioner', icon: <Rocket /> },
-                                ].map((item, i) => (
-                                    <div key={i} className="flex items-start gap-4">
-                                        <div className="mt-1 text-primary">{item.icon}</div>
-                                        <div>
-                                            <p className="text-[10px] font-black text-muted uppercase tracking-[0.2em] mb-1">{item.label}</p>
-                                            <p className="text-[16px] font-black uppercase tracking-tight text-foreground">{item.value}</p>
-                                        </div>
-                                    </div>
-                                ))}
+                                <p className="text-muted font-bold text-sm tracking-tight">상이나 자격증 등을 등록해 주세요.</p>
                             </div>
                             <div className="absolute top-0 right-0 w-40 h-40 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
                         </div>
@@ -124,11 +146,13 @@ export default function ProfilePage() {
                                     <span className="font-black uppercase tracking-tighter text-foreground">Edit Account Info</span>
                                     <ChevronRight size={18} className="group-hover/item:translate-x-2 premium-transition text-border" />
                                 </button>
-                                <button className="w-full flex items-center justify-between p-6 border border-border hover:border-foreground dark:hover:border-white premium-transition text-left group/item">
-                                    <span className="font-black uppercase tracking-tighter text-foreground">Privacy Settings</span>
-                                    <ChevronRight size={18} className="group-hover/item:translate-x-2 premium-transition text-border" />
+                                <button 
+                                    onClick={handleLogout}
+                                    className="w-full flex items-center justify-between p-6 border border-red-200 bg-red-50/10 hover:bg-red-50 dark:hover:bg-red-500/10 premium-transition text-left group/item"
+                                >
+                                    <span className="font-black uppercase tracking-tighter text-red-500">Sign Out</span>
+                                    <LogOut size={18} className="group-hover/item:translate-x-2 premium-transition text-red-500" />
                                 </button>
-                                <Button variant="black" className="w-full h-16 uppercase tracking-widest text-[13px] shadow-xl mt-4 bg-foreground text-background hover:bg-muted transition-colors">Save Changes</Button>
                             </div>
                         </div>
                     </aside>
@@ -140,19 +164,9 @@ export default function ProfilePage() {
                         <h3 className="text-[40px] font-black uppercase tracking-tighter leading-none">Operational Log</h3>
                     </div>
                     <div className="space-y-8">
-                        {[
-                            { action: "Profile Updated", detail: "Personal contact information synchronized with Hanyang LDAP", date: "2024.03.10" },
-                            { action: "Project Joined", detail: "Assigned as Project Lead for 'Eco Connect MVP'", date: "2024.03.05" },
-                            { action: "Certification Verified", detail: "AWS Practitioner certificate uploaded and validated", date: "2024.02.28" },
-                        ].map((log, i) => (
-                            <div key={i} className="flex flex-col md:flex-row md:items-center justify-between p-8 border border-border group hover:bg-muted/5 premium-transition">
-                                <div className="space-y-2">
-                                    <p className="text-[20px] font-black uppercase tracking-tightest group-hover:text-primary premium-transition">{log.action}</p>
-                                    <p className="text-muted font-bold tracking-tight">{log.detail}</p>
-                                </div>
-                                <p className="text-[14px] font-black font-mono text-muted mt-4 md:mt-0 uppercase tracking-widest">{log.date}</p>
-                            </div>
-                        ))}
+                        <div className="p-12 text-center border border-border rounded-xl bg-muted/5">
+                            <p className="font-bold text-muted tracking-tight">활동 로그가 없습니다.</p>
+                        </div>
                     </div>
                 </section>
             </div>

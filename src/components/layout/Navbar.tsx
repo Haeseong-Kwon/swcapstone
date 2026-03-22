@@ -4,8 +4,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Search, Bell, User as UserIcon, Menu, X, ChevronRight, Sun, Moon } from "lucide-react";
+import { Mail, Award, Rocket, Shield, Github, Settings, ChevronRight, CheckCircle2, Search, Bell, User as UserIcon, Menu, X, Sun, Moon } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
+import { onAuthStateChange, signOut } from "@/lib/services/AuthService";
+import { Button } from "@/components/common/Button";
+import { useRouter } from "next/navigation";
 
 const NAV_ITEMS = [
     { name: "SW창업캡스톤디자인", href: "/dashboard", desc: "Project & Grade Management" },
@@ -16,10 +19,28 @@ const NAV_ITEMS = [
 ];
 
 export function Navbar() {
+    const router = useRouter();
     const pathname = usePathname();
     const { theme, toggleTheme } = useTheme();
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [user, setUser] = useState<any>(null);
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChange((user) => {
+            setUser(user);
+        });
+        return () => unsubscribe();
+    }, []);
+
+    const handleLogout = async () => {
+        try {
+            await signOut();
+            router.push("/");
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    };
 
     useEffect(() => {
         let ticking = false;
@@ -122,24 +143,50 @@ export function Navbar() {
                             </button>
                         </div>
 
-                        <Link href="/profile" className="flex items-center gap-4 group">
-                            <div className="text-right hidden md:block">
-                                <p className={cn(
-                                    "text-[10px] font-bold leading-none mb-1 uppercase tracking-widest",
-                                    isScrolled ? "text-muted-foreground" : "text-white/70"
-                                )}>Status: Active</p>
-                                <p className={cn(
-                                    "text-[14px] font-black leading-none",
-                                    isScrolled ? "text-foreground group-hover:text-primary" : "text-white group-hover:text-primary"
-                                )}>KIM CHULSU</p>
+                        {user ? (
+                            <div className="flex items-center gap-4 sm:gap-6">
+                                <Link href="/profile" className="flex items-center gap-4 group">
+                                    <div className="text-right hidden md:block">
+                                        <p className={cn(
+                                            "text-[10px] font-bold leading-none mb-1 uppercase tracking-widest",
+                                            isScrolled ? "text-muted-foreground" : "text-white/70"
+                                        )}>Status: Active</p>
+                                        <p className={cn(
+                                            "text-[14px] font-black leading-none uppercase",
+                                            isScrolled ? "text-foreground group-hover:text-primary" : "text-white group-hover:text-primary"
+                                        )}>{user.user_metadata?.full_name || user.email?.split('@')[0] || 'User'}</p>
+                                    </div>
+                                    <div className={cn(
+                                        "flex h-9 w-9 items-center justify-center premium-transition group-hover:scale-105 sm:h-11 sm:w-11",
+                                        isScrolled ? "bg-foreground text-background" : "bg-white text-black"
+                                    )}>
+                                        <UserIcon size={18} className="sm:size-[20px]" />
+                                    </div>
+                                </Link>
+                                <button 
+                                    onClick={handleLogout}
+                                    className={cn(
+                                        "hidden sm:block text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-lg transition-all",
+                                        isScrolled ? "bg-slate-100 text-slate-900 hover:bg-slate-200" : "bg-white/10 text-white hover:bg-white/20"
+                                    )}
+                                >
+                                    Logout
+                                </button>
                             </div>
-                            <div className={cn(
-                                "flex h-9 w-9 items-center justify-center premium-transition group-hover:scale-105 sm:h-11 sm:w-11",
-                                isScrolled ? "bg-foreground text-background" : "bg-white text-black"
-                            )}>
-                                <UserIcon size={18} className="sm:size-[20px]" />
-                            </div>
-                        </Link>
+                        ) : (
+                            <Link href="/login">
+                                <Button 
+                                    variant={isScrolled ? "black" : "outline"} 
+                                    size="sm" 
+                                    className={cn(
+                                        "h-10 sm:h-11 px-6 sm:px-8",
+                                        !isScrolled && "bg-white/10 text-white border-white/20 hover:bg-white hover:text-black"
+                                    )}
+                                >
+                                    Login
+                                </Button>
+                            </Link>
+                        )}
 
                         <button
                             type="button"

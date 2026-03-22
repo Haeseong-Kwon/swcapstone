@@ -101,3 +101,15 @@ export const getVideos = async () => {
   if (error) throw error;
   return data || [];
 };
+
+export const getProfileByUserId = async (userId: string) => {
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', userId)
+    .single();
+  
+  if (error && error.code !== 'PGRST116') throw error; // PGRST116 is "No rows found"
+  return data || null;
+};
