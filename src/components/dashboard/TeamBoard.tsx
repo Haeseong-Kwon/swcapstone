@@ -7,6 +7,7 @@ import { Users, Calendar, PlusCircle, Loader2 } from "lucide-react";
 import { RecruitmentUploadModal } from "./RecruitmentUploadModal";
 import { getRecruitmentPosts, createRecruitmentPost } from "@/lib/services/BoardServices";
 import { RecruitmentPostDetailModal } from "@/components/community/RecruitmentPostDetailModal";
+import { SemesterOption } from "@/lib/semester";
 
 const TeamCard = memo(({
   post,
@@ -87,7 +88,7 @@ const TeamCard = memo(({
 
 TeamCard.displayName = "TeamCard";
 
-export const TeamBoard = memo(function TeamBoard() {
+export const TeamBoard = memo(function TeamBoard({ activeSemester }: { activeSemester: SemesterOption }) {
   const [posts, setPosts] = useState<TeamBuildingPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -96,7 +97,7 @@ export const TeamBoard = memo(function TeamBoard() {
   const fetchPosts = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await getRecruitmentPosts();
+      const data = await getRecruitmentPosts(activeSemester.key);
       const mappedData: TeamBuildingPost[] = data.map((item: any) => ({
         id: item.id,
         title: item.title,
@@ -104,9 +105,9 @@ export const TeamBoard = memo(function TeamBoard() {
         authorId: item.author_id,
         authorName: item.author?.full_name || "알 수 없음",
         tags: item.tags || [],
-        projectPhase: 'IDEA', // Default or map if needed
+        projectPhase: item.project_phase || 'IDEA',
         recruitingRoles: item.recruiting_roles || [],
-        courseBadge: 'CAPSTONE_1', // Default or map if needed
+        courseBadge: item.course_badge || 'CAPSTONE_1',
         createdAt: item.created_at
       }));
       setPosts(mappedData);
@@ -115,7 +116,7 @@ export const TeamBoard = memo(function TeamBoard() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [activeSemester.key]);
 
   useEffect(() => {
     fetchPosts();
@@ -128,7 +129,13 @@ export const TeamBoard = memo(function TeamBoard() {
         content: newPost.content,
         tags: newPost.tags,
         recruiting_roles: newPost.recruitingRoles,
-        status: 'Recruiting'
+        project_phase: newPost.projectPhase,
+        course_badge: newPost.courseBadge,
+        status: 'Recruiting',
+        semester_key: activeSemester.key,
+        academic_year: activeSemester.year,
+        academic_term: activeSemester.term,
+        course_track: activeSemester.courseTrack,
       };
       await createRecruitmentPost(dbPost);
       await fetchPosts();
@@ -137,7 +144,7 @@ export const TeamBoard = memo(function TeamBoard() {
       console.error("Error uploading post:", error);
       alert("모집글 업로드 중 오류가 발생했습니다.");
     }
-  }, [fetchPosts]);
+  }, [activeSemester, fetchPosts]);
 
   const openModal = useCallback(() => setIsModalOpen(true), []);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
@@ -156,7 +163,8 @@ export const TeamBoard = memo(function TeamBoard() {
       <RecruitmentUploadModal 
         isOpen={isModalOpen} 
         onClose={closeModal} 
-        onSubmit={handleUploadPost} 
+        onSubmit={handleUploadPost}
+        activeSemester={activeSemester}
       />
       <RecruitmentPostDetailModal
         isOpen={!!selectedPost}
@@ -164,7 +172,13 @@ export const TeamBoard = memo(function TeamBoard() {
         onClose={() => setSelectedPost(null)}
       />
 
-      <div className="flex justify-end mb-2">
+      <div className="mb-2 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+          <p className="text-[10px] font-black uppercase tracking-[0.24em] text-slate-400">Active Semester</p>
+          <p className="mt-1 text-sm font-black text-slate-900 dark:text-slate-50">
+            {activeSemester.label} · {activeSemester.courseLabel}
+          </p>
+        </div>
         <button 
           onClick={openModal}
           className="flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-xl font-bold text-sm hover:bg-primary dark:hover:bg-blue-400 hover:text-white premium-transition shadow-md hover:shadow-lg hover:-translate-y-0.5"

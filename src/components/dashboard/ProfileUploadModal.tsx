@@ -2,14 +2,16 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X, Github, Globe } from "lucide-react";
 import { User } from "@/types";
+import { SemesterOption } from "@/lib/semester";
 
 interface ProfileUploadModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (newUser: User) => void;
+  activeSemester: SemesterOption;
 }
 
-export function ProfileUploadModal({ isOpen, onClose, onSubmit }: ProfileUploadModalProps) {
+export function ProfileUploadModal({ isOpen, onClose, onSubmit, activeSemester }: ProfileUploadModalProps) {
   const [name, setName] = useState("");
   const [major, setMajor] = useState("");
   const [specialty, setSpecialty] = useState("");
@@ -84,7 +86,9 @@ export function ProfileUploadModal({ isOpen, onClose, onSubmit }: ProfileUploadM
               <div className="w-2 h-6 bg-primary dark:bg-blue-500 rounded-full"></div>
               <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-50 tracking-tight uppercase">자기소개 업로드</h2>
             </div>
-            <p className="text-xs font-bold text-slate-400 tracking-widest uppercase">Dashboard / Profile Introduction</p>
+            <p className="text-xs font-bold text-slate-400 tracking-widest uppercase">
+              {activeSemester.label} / {activeSemester.courseLabel}
+            </p>
           </div>
           <button onClick={onClose} className="p-3 bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 rounded-2xl" style={{ transition: 'color 0.15s, background-color 0.15s' }}>
             <X size={24} />

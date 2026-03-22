@@ -5,6 +5,7 @@ import { Badge } from "@/components/common/Badge";
 import { motion } from "framer-motion";
 import { Briefcase, ArrowRight, Loader2 } from "lucide-react";
 import { getCorporateProposals } from "@/lib/services/BoardServices";
+import { SemesterOption } from "@/lib/semester";
 
 const ProposalListItem = memo(({ proposal, index }: { proposal: Proposal; index: number }) => (
   <motion.div
@@ -65,14 +66,14 @@ const ProposalListItem = memo(({ proposal, index }: { proposal: Proposal; index:
 
 ProposalListItem.displayName = "ProposalListItem";
 
-export const CorporateBoard = memo(function CorporateBoard() {
+export const CorporateBoard = memo(function CorporateBoard({ activeSemester }: { activeSemester: SemesterOption }) {
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchProposals = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await getCorporateProposals();
+      const data = await getCorporateProposals(activeSemester.key);
       const mappedData: Proposal[] = data.map((item: any) => ({
         id: item.id,
         companyName: item.company_name,
@@ -92,7 +93,7 @@ export const CorporateBoard = memo(function CorporateBoard() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [activeSemester.key]);
 
   useEffect(() => {
     fetchProposals();
@@ -109,6 +110,13 @@ export const CorporateBoard = memo(function CorporateBoard() {
 
   return (
     <div className="flex flex-col gap-4 transform-gpu">
+      <div className="mb-2">
+        <p className="text-[10px] font-black uppercase tracking-[0.24em] text-slate-400">Active Semester</p>
+        <p className="mt-1 text-sm font-black text-slate-900 dark:text-slate-50">
+          {activeSemester.label} · {activeSemester.courseLabel}
+        </p>
+      </div>
+
       {proposals.map((proposal, index) => (
         <ProposalListItem key={proposal.id} proposal={proposal} index={index} />
       ))}

@@ -17,7 +17,7 @@ export default function DashboardPage() {
                 <div className="mb-6 flex items-center justify-between border-b border-border pb-4 sm:mb-10 sm:pb-8 lg:mb-16 lg:pb-12">
                     <SectionHeader
                         title="Comprehensive Dashboard"
-                        description="분절된 정보를 통합하여 창업 생태계의 모든 과정을 한눈에 파악하고 관리합니다."
+                        description="학기별 cohort를 기준으로 자기소개, 팀빌딩, 팀등록, 기업제안 프로젝트를 분리 관리합니다."
                     />
                 </div>
 

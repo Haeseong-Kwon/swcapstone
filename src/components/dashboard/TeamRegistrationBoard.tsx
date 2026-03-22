@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Plus, Users, Mail, ArrowRight, Loader2 } from "lucide-react";
 import { TeamRegistrationModal } from "./TeamRegistrationModal";
 import { getTeamRegistrations, registerTeam } from "@/lib/services/BoardServices";
+import { SemesterOption } from "@/lib/semester";
 
 const RegisteredTeamItem = memo(({ team, index }: { team: RegisteredTeam; index: number }) => (
   <motion.div
@@ -59,7 +60,7 @@ const RegisteredTeamItem = memo(({ team, index }: { team: RegisteredTeam; index:
 
 RegisteredTeamItem.displayName = "RegisteredTeamItem";
 
-export const TeamRegistrationBoard = memo(function TeamRegistrationBoard() {
+export const TeamRegistrationBoard = memo(function TeamRegistrationBoard({ activeSemester }: { activeSemester: SemesterOption }) {
   const [teams, setTeams] = useState<RegisteredTeam[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -67,7 +68,7 @@ export const TeamRegistrationBoard = memo(function TeamRegistrationBoard() {
   const fetchTeams = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await getTeamRegistrations();
+      const data = await getTeamRegistrations(activeSemester.key);
       const mappedData: RegisteredTeam[] = data.map((item: any) => ({
         id: item.id,
         teamName: item.team_name,
@@ -83,7 +84,7 @@ export const TeamRegistrationBoard = memo(function TeamRegistrationBoard() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [activeSemester.key]);
 
   useEffect(() => {
     fetchTeams();
@@ -95,7 +96,11 @@ export const TeamRegistrationBoard = memo(function TeamRegistrationBoard() {
         team_name: newTeam.teamName,
         project_item: newTeam.productIdea,
         members: newTeam.members,
-        status: 'Activities'
+        status: 'Activities',
+        semester_key: activeSemester.key,
+        academic_year: activeSemester.year,
+        academic_term: activeSemester.term,
+        course_track: activeSemester.courseTrack,
       };
       await registerTeam(dbTeam);
       await fetchTeams();
@@ -104,7 +109,7 @@ export const TeamRegistrationBoard = memo(function TeamRegistrationBoard() {
       console.error("Error registering team:", error);
       alert("팀 등록 중 오류가 발생했습니다.");
     }
-  }, [fetchTeams]);
+  }, [activeSemester, fetchTeams]);
 
   const openModal = useCallback(() => setIsModalOpen(true), []);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
@@ -123,11 +128,18 @@ export const TeamRegistrationBoard = memo(function TeamRegistrationBoard() {
       <TeamRegistrationModal 
         isOpen={isModalOpen} 
         onClose={closeModal} 
-        onSubmit={handleRegisterTeam} 
+        onSubmit={handleRegisterTeam}
+        activeSemester={activeSemester}
       />
 
       {/* Registration Button Header */}
-      <div className="flex justify-end mb-2">
+      <div className="mb-2 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+          <p className="text-[10px] font-black uppercase tracking-[0.24em] text-slate-400">Active Semester</p>
+          <p className="mt-1 text-sm font-black text-slate-900 dark:text-slate-50">
+            {activeSemester.label} · {activeSemester.courseLabel}
+          </p>
+        </div>
         <button 
           onClick={openModal}
           className="flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-xl font-bold text-sm hover:bg-primary dark:hover:bg-blue-400 hover:text-white premium-transition shadow-md hover:shadow-lg hover:-translate-y-0.5"

@@ -34,10 +34,10 @@ export const globalSearch = async (query: string): Promise<SearchResult[]> => {
     }));
   }
 
-  // 2. Search profiles
+  // 2. Search semester-scoped self introductions
   const { data: profiles } = await supabase
-    .from('profiles')
-    .select('id, full_name, bio, role')
+    .from('semester_profiles')
+    .select('id, full_name, bio, role, semester_key')
     .or(`full_name.ilike.${searchTerm},bio.ilike.${searchTerm}`)
     .limit(5);
 
@@ -47,7 +47,7 @@ export const globalSearch = async (query: string): Promise<SearchResult[]> => {
       title: p.full_name,
       description: `${p.role} | ${p.bio?.substring(0, 60)}...`,
       type: 'profile',
-      url: `/profile` // Simplified for now, or /profile/[id]
+      url: `/dashboard`
     }));
   }
 

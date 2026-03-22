@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Github, Globe, ExternalLink, UserPlus, Loader2 } from "lucide-react";
 import { ProfileUploadModal } from "./ProfileUploadModal";
 import { getProfiles, createProfile } from "@/lib/services/BoardServices";
+import { SemesterOption } from "@/lib/semester";
 
 const ProfileCard = memo(({ user, index }: { user: User; index: number }) => (
   <motion.div
@@ -88,7 +89,7 @@ const ProfileCard = memo(({ user, index }: { user: User; index: number }) => (
 
 ProfileCard.displayName = "ProfileCard";
 
-export const ProfileBoard = memo(function ProfileBoard() {
+export const ProfileBoard = memo(function ProfileBoard({ activeSemester }: { activeSemester: SemesterOption }) {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -96,9 +97,9 @@ export const ProfileBoard = memo(function ProfileBoard() {
   const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await getProfiles();
+      const data = await getProfiles(activeSemester.key);
       const mappedData: User[] = data.map((item: any) => ({
-        id: item.id,
+        id: item.user_id,
         name: item.full_name,
         email: "",
         role: item.role as any,
@@ -116,7 +117,7 @@ export const ProfileBoard = memo(function ProfileBoard() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [activeSemester.key]);
 
   useEffect(() => {
     fetchUsers();
@@ -131,7 +132,12 @@ export const ProfileBoard = memo(function ProfileBoard() {
         tech_stack: newUser.techStack,
         github_url: newUser.githubUrl,
         portfolio_url: newUser.blogUrl,
-        role: newUser.role
+        role: newUser.role,
+        status: newUser.status,
+        semester_key: activeSemester.key,
+        academic_year: activeSemester.year,
+        academic_term: activeSemester.term,
+        course_track: activeSemester.courseTrack,
       };
       await createProfile(dbUser);
       await fetchUsers(); // Refresh the list
@@ -140,7 +146,7 @@ export const ProfileBoard = memo(function ProfileBoard() {
       console.error("Error uploading profile:", error);
       alert("업로드 중 오류가 발생했습니다.");
     }
-  }, [fetchUsers]);
+  }, [activeSemester, fetchUsers]);
 
   const openModal = useCallback(() => setIsModalOpen(true), []);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
@@ -159,10 +165,17 @@ export const ProfileBoard = memo(function ProfileBoard() {
       <ProfileUploadModal 
         isOpen={isModalOpen} 
         onClose={closeModal} 
-        onSubmit={handleUploadProfile} 
+        onSubmit={handleUploadProfile}
+        activeSemester={activeSemester}
       />
 
-      <div className="flex justify-end mb-2">
+      <div className="mb-2 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+          <p className="text-[10px] font-black uppercase tracking-[0.24em] text-slate-400">Active Semester</p>
+          <p className="mt-1 text-sm font-black text-slate-900 dark:text-slate-50">
+            {activeSemester.label} · {activeSemester.courseLabel}
+          </p>
+        </div>
         <button 
           onClick={openModal}
           className="flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-xl font-bold text-sm hover:bg-primary dark:hover:bg-blue-400 hover:text-white premium-transition shadow-md hover:shadow-lg hover:-translate-y-0.5"

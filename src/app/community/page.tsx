@@ -11,6 +11,7 @@ import { TeamBuildingPost } from "@/types";
 import { RecruitmentUploadModal } from "@/components/dashboard/RecruitmentUploadModal";
 import { getRecruitmentPosts, createRecruitmentPost } from "@/lib/services/BoardServices";
 import { RecruitmentPostDetailModal } from "@/components/community/RecruitmentPostDetailModal";
+import { getCurrentSemesterOption } from "@/lib/semester";
 
 const TABS = ['ALL', 'IDEA', 'MVP'] as const;
 type ActiveTab = typeof TABS[number];
@@ -92,6 +93,7 @@ const CommunityCard = memo(({
 CommunityCard.displayName = "CommunityCard";
 
 export default function CommunityPage() {
+    const activeSemester = getCurrentSemesterOption();
     const [activeTab, setActiveTab] = useState<ActiveTab>('ALL');
     const [posts, setPosts] = useState<TeamBuildingPost[]>([]);
     const [loading, setLoading] = useState(true);
@@ -101,7 +103,7 @@ export default function CommunityPage() {
     const fetchPosts = useCallback(async () => {
       try {
         setLoading(true);
-        const data = await getRecruitmentPosts();
+        const data = await getRecruitmentPosts(activeSemester.key);
         const mappedData: TeamBuildingPost[] = data.map((item: any) => ({
           id: item.id,
           title: item.title,
@@ -120,7 +122,7 @@ export default function CommunityPage() {
       } finally {
         setLoading(false);
       }
-    }, []);
+    }, [activeSemester.key]);
 
     useEffect(() => {
       fetchPosts();
@@ -135,7 +137,11 @@ export default function CommunityPage() {
           recruiting_roles: newPost.recruitingRoles,
           project_phase: newPost.projectPhase,
           course_badge: newPost.courseBadge,
-          status: 'Recruiting'
+          status: 'Recruiting',
+          semester_key: activeSemester.key,
+          academic_year: activeSemester.year,
+          academic_term: activeSemester.term,
+          course_track: activeSemester.courseTrack,
         };
         await createRecruitmentPost(dbPost);
         await fetchPosts();
@@ -144,7 +150,7 @@ export default function CommunityPage() {
         console.error("Error uploading post:", error);
         alert("모집글 업로드 중 오류가 발생했습니다.");
       }
-    }, [fetchPosts]);
+    }, [activeSemester, fetchPosts]);
 
     const filteredPosts = activeTab === 'ALL'
         ? posts
@@ -155,7 +161,8 @@ export default function CommunityPage() {
             <RecruitmentUploadModal 
                 isOpen={isModalOpen} 
                 onClose={() => setIsModalOpen(false)} 
-                onSubmit={handleUploadPost} 
+                onSubmit={handleUploadPost}
+                activeSemester={activeSemester}
             />
             <RecruitmentPostDetailModal
                 isOpen={!!selectedPost}

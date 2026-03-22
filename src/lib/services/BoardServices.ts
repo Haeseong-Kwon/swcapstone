@@ -1,5 +1,10 @@
 import { supabase } from '../supabase';
 
+const applySemesterFilter = (query: any, semesterKey?: string) => {
+  if (!semesterKey) return query;
+  return query.or(`semester_key.eq.${semesterKey},semester_key.is.null`);
+};
+
 const getAuthenticatedUserId = async () => {
   if (!supabase) return null;
 
@@ -17,12 +22,16 @@ const getAuthenticatedUserId = async () => {
  * Each function checks if the Supabase client is initialized.
  */
 
-export const getProfiles = async () => {
+export const getProfiles = async (semesterKey?: string) => {
   if (!supabase) return [];
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .order('created_at', { ascending: false });
+  const query = applySemesterFilter(
+    supabase
+      .from('semester_profiles')
+      .select('*')
+      .order('created_at', { ascending: false }),
+    semesterKey
+  );
+  const { data, error } = await query;
   
   if (error) throw error;
   return data || [];
@@ -33,21 +42,40 @@ export const createProfile = async (profileData: any) => {
     console.warn('Cannot create profile: Supabase is not configured.');
     return null;
   }
+
+  const userId = await getAuthenticatedUserId();
+  if (!userId) {
+    throw new Error('로그인이 필요합니다.');
+  }
+
   const { data, error } = await supabase
-    .from('profiles')
-    .insert([profileData])
-    .select();
+    .from('semester_profiles')
+    .upsert(
+      [
+        {
+          ...profileData,
+          user_id: userId,
+        },
+      ],
+      { onConflict: 'user_id,semester_key' }
+    )
+    .select()
+    .single();
   
   if (error) throw error;
-  return data?.[0];
+  return data;
 };
 
-export const getRecruitmentPosts = async () => {
+export const getRecruitmentPosts = async (semesterKey?: string) => {
   if (!supabase) return [];
-  const { data, error } = await supabase
-    .from('recruitment_posts')
-    .select('*, author:profiles(full_name)')
-    .order('created_at', { ascending: false });
+  const query = applySemesterFilter(
+    supabase
+      .from('recruitment_posts')
+      .select('*, author:profiles(full_name)')
+      .order('created_at', { ascending: false }),
+    semesterKey
+  );
+  const { data, error } = await query;
   
   if (error) throw error;
   return data || [];
@@ -178,12 +206,16 @@ export const markNotificationsAsRead = async (notificationIds: string[]) => {
   if (error) throw error;
 };
 
-export const getTeamRegistrations = async () => {
+export const getTeamRegistrations = async (semesterKey?: string) => {
   if (!supabase) return [];
-  const { data, error } = await supabase
-    .from('team_registrations')
-    .select('*, leader:profiles(full_name, email)')
-    .order('created_at', { ascending: false });
+  const query = applySemesterFilter(
+    supabase
+      .from('team_registrations')
+      .select('*, leader:profiles(full_name, email)')
+      .order('created_at', { ascending: false }),
+    semesterKey
+  );
+  const { data, error } = await query;
   
   if (error) throw error;
   return data || [];
@@ -207,12 +239,16 @@ export const registerTeam = async (teamData: any) => {
   return data?.[0];
 };
 
-export const getCorporateProposals = async () => {
+export const getCorporateProposals = async (semesterKey?: string) => {
   if (!supabase) return [];
-  const { data, error } = await supabase
-    .from('corporate_proposals')
-    .select('*')
-    .order('created_at', { ascending: false });
+  const query = applySemesterFilter(
+    supabase
+      .from('corporate_proposals')
+      .select('*')
+      .order('created_at', { ascending: false }),
+    semesterKey
+  );
+  const { data, error } = await query;
   
   if (error) throw error;
   return data || [];

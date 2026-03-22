@@ -2,14 +2,16 @@ import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { X, Plus, Trash2 } from "lucide-react";
 import { TeamBuildingPost } from "@/types";
+import { SemesterOption } from "@/lib/semester";
 
 interface RecruitmentUploadModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (newPost: TeamBuildingPost) => void;
+  activeSemester: SemesterOption;
 }
 
-export function RecruitmentUploadModal({ isOpen, onClose, onSubmit }: RecruitmentUploadModalProps) {
+export function RecruitmentUploadModal({ isOpen, onClose, onSubmit, activeSemester }: RecruitmentUploadModalProps) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [projectPhase, setProjectPhase] = useState<'IDEA' | 'MVP' | 'SCALE'>('IDEA');
@@ -103,7 +105,9 @@ export function RecruitmentUploadModal({ isOpen, onClose, onSubmit }: Recruitmen
               <div className="w-2 h-6 bg-primary dark:bg-blue-500 rounded-full"></div>
               <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-50 tracking-tight uppercase">팀원 모집글 올리기</h2>
             </div>
-            <p className="text-xs font-bold text-slate-400 tracking-widest uppercase">Dashboard / Team Recruitment</p>
+            <p className="text-xs font-bold text-slate-400 tracking-widest uppercase">
+              {activeSemester.label} / {activeSemester.courseLabel}
+            </p>
           </div>
           <button onClick={onClose} className="p-3 bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 rounded-2xl" style={{ transition: 'color 0.15s, background-color 0.15s' }}>
             <X size={24} />
