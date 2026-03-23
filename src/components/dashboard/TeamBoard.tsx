@@ -88,7 +88,15 @@ const TeamCard = memo(({
 
 TeamCard.displayName = "TeamCard";
 
-export const TeamBoard = memo(function TeamBoard({ activeSemester }: { activeSemester: SemesterOption }) {
+export const TeamBoard = memo(function TeamBoard({
+  activeSemester,
+  isAuthenticated,
+  onRequireLogin,
+}: {
+  activeSemester: SemesterOption;
+  isAuthenticated: boolean;
+  onRequireLogin: () => void;
+}) {
   const [posts, setPosts] = useState<TeamBuildingPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -146,7 +154,13 @@ export const TeamBoard = memo(function TeamBoard({ activeSemester }: { activeSem
     }
   }, [activeSemester, fetchPosts]);
 
-  const openModal = useCallback(() => setIsModalOpen(true), []);
+  const openModal = useCallback(() => {
+    if (!isAuthenticated) {
+      onRequireLogin();
+      return;
+    }
+    setIsModalOpen(true);
+  }, [isAuthenticated, onRequireLogin]);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
 
   if (loading && posts.length === 0) {

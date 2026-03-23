@@ -89,7 +89,15 @@ const ProfileCard = memo(({ user, index }: { user: User; index: number }) => (
 
 ProfileCard.displayName = "ProfileCard";
 
-export const ProfileBoard = memo(function ProfileBoard({ activeSemester }: { activeSemester: SemesterOption }) {
+export const ProfileBoard = memo(function ProfileBoard({
+  activeSemester,
+  isAuthenticated,
+  onRequireLogin,
+}: {
+  activeSemester: SemesterOption;
+  isAuthenticated: boolean;
+  onRequireLogin: () => void;
+}) {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -148,7 +156,13 @@ export const ProfileBoard = memo(function ProfileBoard({ activeSemester }: { act
     }
   }, [activeSemester, fetchUsers]);
 
-  const openModal = useCallback(() => setIsModalOpen(true), []);
+  const openModal = useCallback(() => {
+    if (!isAuthenticated) {
+      onRequireLogin();
+      return;
+    }
+    setIsModalOpen(true);
+  }, [isAuthenticated, onRequireLogin]);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
 
   if (loading && users.length === 0) {

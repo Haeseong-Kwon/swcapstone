@@ -67,7 +67,15 @@ const ProposalListItem = memo(({ proposal, index }: { proposal: Proposal; index:
 
 ProposalListItem.displayName = "ProposalListItem";
 
-export const CorporateBoard = memo(function CorporateBoard({ activeSemester }: { activeSemester: SemesterOption }) {
+export const CorporateBoard = memo(function CorporateBoard({
+  activeSemester,
+  isAuthenticated,
+  onRequireLogin,
+}: {
+  activeSemester: SemesterOption;
+  isAuthenticated: boolean;
+  onRequireLogin: () => void;
+}) {
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -151,7 +159,13 @@ export const CorporateBoard = memo(function CorporateBoard({ activeSemester }: {
           </p>
         </div>
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            if (!isAuthenticated) {
+              onRequireLogin();
+              return;
+            }
+            setIsModalOpen(true);
+          }}
           className="flex items-center gap-2 rounded-xl bg-slate-900 px-6 py-3 text-sm font-bold text-white shadow-md premium-transition hover:-translate-y-0.5 hover:bg-primary hover:shadow-lg dark:bg-white dark:text-slate-900 dark:hover:bg-blue-400 dark:hover:text-white"
         >
           <PlusCircle size={18} />

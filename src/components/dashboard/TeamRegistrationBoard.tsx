@@ -60,7 +60,15 @@ const RegisteredTeamItem = memo(({ team, index }: { team: RegisteredTeam; index:
 
 RegisteredTeamItem.displayName = "RegisteredTeamItem";
 
-export const TeamRegistrationBoard = memo(function TeamRegistrationBoard({ activeSemester }: { activeSemester: SemesterOption }) {
+export const TeamRegistrationBoard = memo(function TeamRegistrationBoard({
+  activeSemester,
+  isAuthenticated,
+  onRequireLogin,
+}: {
+  activeSemester: SemesterOption;
+  isAuthenticated: boolean;
+  onRequireLogin: () => void;
+}) {
   const [teams, setTeams] = useState<RegisteredTeam[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -111,7 +119,13 @@ export const TeamRegistrationBoard = memo(function TeamRegistrationBoard({ activ
     }
   }, [activeSemester, fetchTeams]);
 
-  const openModal = useCallback(() => setIsModalOpen(true), []);
+  const openModal = useCallback(() => {
+    if (!isAuthenticated) {
+      onRequireLogin();
+      return;
+    }
+    setIsModalOpen(true);
+  }, [isAuthenticated, onRequireLogin]);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
 
   if (loading && teams.length === 0) {

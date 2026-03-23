@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, memo } from "react";
+import { useState, useCallback, memo, useEffect } from "react";
 import { LazyMotion, domAnimation, m } from "framer-motion";
 import { ProfileBoard } from "./ProfileBoard";
 import { TeamBoard } from "./TeamBoard";
@@ -9,6 +9,9 @@ import { VideoBoard } from "./VideoBoard";
 import { TeamRegistrationBoard } from "./TeamRegistrationBoard";
 import { cn } from "@/lib/utils";
 import { getCurrentSemesterOption, getSemesterOptions, SemesterOption } from "@/lib/semester";
+import { getCurrentUser, onAuthStateChange } from "@/lib/services/AuthService";
+import { useRouter } from "next/navigation";
+import { AuthRequiredModal } from "./AuthRequiredModal";
 
 type TabType = 'SELF_INTRO' | 'TEAM_BUILDING' | 'TEAM_REGISTRATION' | 'CORPORATE' | 'EDUCATIONAL_VIDEO';
 
@@ -21,10 +24,13 @@ const TABS: { id: TabType; label: string }[] = [
 ];
 
 export const MainDashboard = memo(function MainDashboard() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>('SELF_INTRO');
   const semesterOptions = getSemesterOptions();
   const currentSemester = getCurrentSemesterOption();
   const [activeSemesterKey, setActiveSemesterKey] = useState<string>(currentSemester.key);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const activeSemester =
     semesterOptions.find((semester) => semester.key === activeSemesterKey) ?? currentSemester;
@@ -37,9 +43,32 @@ export const MainDashboard = memo(function MainDashboard() {
     setActiveSemesterKey(semester.key);
   }, []);
 
+  useEffect(() => {
+    getCurrentUser().then((user) => setIsAuthenticated(!!user));
+    const unsubscribe = onAuthStateChange((user) => {
+      setIsAuthenticated(!!user);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleRequireLogin = useCallback(() => {
+    setIsAuthModalOpen(true);
+  }, []);
+
+  const handleMoveToLogin = useCallback(() => {
+    setIsAuthModalOpen(false);
+    router.push("/login");
+  }, [router]);
+
   return (
     <LazyMotion features={domAnimation}>
       <div className="w-full transform-gpu">
+        <AuthRequiredModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+          onLogin={handleMoveToLogin}
+        />
+
         <div className="mb-8 overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6 lg:mb-10 lg:p-8">
           <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
@@ -111,11 +140,11 @@ export const MainDashboard = memo(function MainDashboard() {
             transition={{ duration: 0.16, ease: "easeOut" }}
             className="transform-gpu"
           >
-            {activeTab === 'SELF_INTRO' && <ProfileBoard activeSemester={activeSemester} />}
-            {activeTab === 'TEAM_BUILDING' && <TeamBoard activeSemester={activeSemester} />}
-            {activeTab === 'TEAM_REGISTRATION' && <TeamRegistrationBoard activeSemester={activeSemester} />}
-            {activeTab === 'CORPORATE' && <CorporateBoard activeSemester={activeSemester} />}
-            {activeTab === 'EDUCATIONAL_VIDEO' && <VideoBoard />}
+            {activeTab === 'SELF_INTRO' && <ProfileBoard activeSemester={activeSemester} isAuthenticated={isAuthenticated} onRequireLogin={handleRequireLogin} />}
+            {activeTab === 'TEAM_BUILDING' && <TeamBoard activeSemester={activeSemester} isAuthenticated={isAuthenticated} onRequireLogin={handleRequireLogin} />}
+            {activeTab === 'TEAM_REGISTRATION' && <TeamRegistrationBoard activeSemester={activeSemester} isAuthenticated={isAuthenticated} onRequireLogin={handleRequireLogin} />}
+            {activeTab === 'CORPORATE' && <CorporateBoard activeSemester={activeSemester} isAuthenticated={isAuthenticated} onRequireLogin={handleRequireLogin} />}
+            {activeTab === 'EDUCATIONAL_VIDEO' && <VideoBoard isAuthenticated={isAuthenticated} onRequireLogin={handleRequireLogin} />}
           </m.div>
         </div>
       </div>
