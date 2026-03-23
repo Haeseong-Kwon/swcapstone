@@ -35,6 +35,12 @@ export function Navbar() {
     const notificationRef = useRef<HTMLDivElement | null>(null);
 
     const unreadNotifications = notifications.filter((item) => !item.isRead);
+    const actionButtonClass = cn(
+        "flex h-10 w-10 items-center justify-center rounded-full premium-transition hover:scale-105",
+        isScrolled
+            ? "text-muted-foreground hover:bg-slate-100 hover:text-foreground dark:hover:bg-slate-800"
+            : "text-white/80 hover:bg-white/10 hover:text-white"
+    );
 
     const fetchNotifications = useCallback(async () => {
         if (!user) {
@@ -195,45 +201,35 @@ export function Navbar() {
                             type="button"
                             onClick={toggleTheme}
                             aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
-                            className={cn(
-                                "p-2 rounded-full premium-transition",
-                                isScrolled ? "text-muted-foreground hover:bg-muted/10 hover:text-foreground" : "text-white/80 hover:bg-white/10 hover:text-white"
-                            )}
+                            className={actionButtonClass}
                         >
-                            {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+                            {theme === "light" ? <Moon size={19} /> : <Sun size={19} />}
                         </button>
                         <div className={cn(
-                            "hidden md:flex items-center gap-3 border-r pr-5 mr-2 premium-transition lg:pr-7 lg:mr-3",
+                            "hidden md:flex items-center gap-2.5 border-r pr-4 mr-1 premium-transition lg:pr-6 lg:mr-2",
                             isScrolled ? "border-border" : "border-white/20"
                         )}>
                             <button 
                                 type="button"
                                 onClick={() => setIsSearchOpen(true)}
                                 aria-label="Search"
-                                className={cn(
-                                    "premium-transition hover:scale-110",
-                                    isScrolled ? "text-muted-foreground hover:text-foreground" : "text-white/80 hover:text-white"
-                                )}
+                                className={actionButtonClass}
                             >
-                                <Search size={22} />
+                                <Search size={19} />
                             </button>
                             <div className="relative" ref={notificationRef}>
                                 <button 
                                     type="button"
                                     onClick={handleNotificationToggle}
                                     aria-label="Notifications"
-                                    className={cn(
-                                        "premium-transition hover:scale-110 relative",
-                                        isScrolled ? "text-muted-foreground hover:text-foreground" : "text-white/80 hover:text-white"
-                                    )}
+                                    className={cn(actionButtonClass, "relative")}
                                 >
-                                    <Bell size={22} />
+                                    <Bell size={19} />
                                     {unreadNotifications.length > 0 && (
                                         <>
-                                            <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-white">
+                                            <span className="absolute right-0 top-0 flex h-4 min-w-4 translate-x-[18%] -translate-y-[10%] items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-white">
                                                 {Math.min(unreadNotifications.length, 9)}
                                             </span>
-                                            <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-primary"></span>
                                         </>
                                     )}
                                 </button>
