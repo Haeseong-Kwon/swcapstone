@@ -121,7 +121,7 @@ export const CorporateBoard = memo(function CorporateBoard({ activeSemester }: {
       setIsModalOpen(false);
     } catch (error) {
       console.error("Error uploading corporate proposal:", error);
-      alert("기업제안 프로젝트 등록 중 오류가 발생했습니다.");
+      alert(error instanceof Error ? error.message : "기업제안 프로젝트 등록 중 오류가 발생했습니다.");
     }
   }, [activeSemester, fetchProposals]);
 

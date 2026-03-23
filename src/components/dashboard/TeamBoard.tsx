@@ -142,7 +142,7 @@ export const TeamBoard = memo(function TeamBoard({ activeSemester }: { activeSem
       setIsModalOpen(false);
     } catch (error) {
       console.error("Error uploading post:", error);
-      alert("모집글 업로드 중 오류가 발생했습니다.");
+      alert(error instanceof Error ? error.message : "모집글 업로드 중 오류가 발생했습니다.");
     }
   }, [activeSemester, fetchPosts]);
 

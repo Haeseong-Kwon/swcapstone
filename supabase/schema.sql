@@ -54,6 +54,8 @@ CREATE TABLE IF NOT EXISTS recruitment_posts (
   title TEXT NOT NULL,
   content TEXT NOT NULL,
   tags TEXT[],
+  project_phase TEXT DEFAULT 'IDEA',
+  course_badge TEXT DEFAULT 'CAPSTONE_1',
   recruiting_roles JSONB,
   status TEXT DEFAULT 'Recruiting',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
@@ -130,6 +132,8 @@ ALTER TABLE IF EXISTS recruitment_posts ADD COLUMN IF NOT EXISTS semester_key TE
 ALTER TABLE IF EXISTS recruitment_posts ADD COLUMN IF NOT EXISTS academic_year INTEGER;
 ALTER TABLE IF EXISTS recruitment_posts ADD COLUMN IF NOT EXISTS academic_term TEXT;
 ALTER TABLE IF EXISTS recruitment_posts ADD COLUMN IF NOT EXISTS course_track TEXT;
+ALTER TABLE IF EXISTS recruitment_posts ADD COLUMN IF NOT EXISTS project_phase TEXT DEFAULT 'IDEA';
+ALTER TABLE IF EXISTS recruitment_posts ADD COLUMN IF NOT EXISTS course_badge TEXT DEFAULT 'CAPSTONE_1';
 
 ALTER TABLE IF EXISTS team_registrations ADD COLUMN IF NOT EXISTS semester_key TEXT;
 ALTER TABLE IF EXISTS team_registrations ADD COLUMN IF NOT EXISTS academic_year INTEGER;

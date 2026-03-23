@@ -107,7 +107,7 @@ export const TeamRegistrationBoard = memo(function TeamRegistrationBoard({ activ
       setIsModalOpen(false);
     } catch (error) {
       console.error("Error registering team:", error);
-      alert("팀 등록 중 오류가 발생했습니다.");
+      alert(error instanceof Error ? error.message : "팀 등록 중 오류가 발생했습니다.");
     }
   }, [activeSemester, fetchTeams]);
 

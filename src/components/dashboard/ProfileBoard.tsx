@@ -144,7 +144,7 @@ export const ProfileBoard = memo(function ProfileBoard({ activeSemester }: { act
       setIsModalOpen(false);
     } catch (error) {
       console.error("Error uploading profile:", error);
-      alert("업로드 중 오류가 발생했습니다.");
+      alert(error instanceof Error ? error.message : "업로드 중 오류가 발생했습니다.");
     }
   }, [activeSemester, fetchUsers]);
 

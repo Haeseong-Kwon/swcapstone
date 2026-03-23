@@ -116,7 +116,7 @@ export const VideoBoard = memo(function VideoBoard() {
       setIsModalOpen(false);
     } catch (error) {
       console.error("Error uploading video:", error);
-      alert("교육 영상 등록 중 오류가 발생했습니다.");
+      alert(error instanceof Error ? error.message : "교육 영상 등록 중 오류가 발생했습니다.");
     }
   }, [fetchVideos]);
 
