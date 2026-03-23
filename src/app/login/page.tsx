@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/common/Button";
 import { Mail, Lock, ChevronRight, Loader2, Rocket, ArrowRight } from "lucide-react";
 import { m, LazyMotion, domAnimation } from "framer-motion";
-import { signIn } from "@/lib/services/AuthService";
-import { cn } from "@/lib/utils";
+import { getCurrentUser, signIn } from "@/lib/services/AuthService";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -15,6 +14,20 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [checkingSession, setCheckingSession] = useState(true);
+
+    useEffect(() => {
+        const checkSession = async () => {
+            const user = await getCurrentUser();
+            if (user) {
+                router.replace("/dashboard");
+                return;
+            }
+            setCheckingSession(false);
+        };
+
+        checkSession();
+    }, [router]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -29,6 +42,14 @@ export default function LoginPage() {
             setLoading(false);
         }
     };
+
+    if (checkingSession) {
+        return (
+            <main className="flex min-h-screen items-center justify-center bg-white dark:bg-slate-950">
+                <Loader2 className="animate-spin text-primary" size={32} />
+            </main>
+        );
+    }
 
     return (
         <main className="min-h-screen bg-white dark:bg-slate-950 flex relative overflow-hidden">

@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ChevronRight, Search, Bell, User as UserIcon, Menu, X, Sun, Moon, Loader2, MessageSquare } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
-import { onAuthStateChange, signOut } from "@/lib/services/AuthService";
+import { getCurrentUser, onAuthStateChange, signOut } from "@/lib/services/AuthService";
 import { getNotifications, markNotificationsAsRead } from "@/lib/services/BoardServices";
 import { Button } from "@/components/common/Button";
 import { useRouter } from "next/navigation";
@@ -66,6 +66,10 @@ export function Navbar() {
     }, [user]);
 
     useEffect(() => {
+        getCurrentUser().then((currentUser) => {
+            setUser(currentUser);
+        });
+
         const unsubscribe = onAuthStateChange((user) => {
             setUser(user);
         });
