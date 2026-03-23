@@ -34,6 +34,7 @@ export const MainDashboard = memo(function MainDashboard() {
 
   const activeSemester =
     semesterOptions.find((semester) => semester.key === activeSemesterKey) ?? currentSemester;
+  const isVideoTab = activeTab === 'EDUCATIONAL_VIDEO';
 
   const handleTabChange = useCallback((id: TabType) => {
     setActiveTab(id);
@@ -69,46 +70,76 @@ export const MainDashboard = memo(function MainDashboard() {
           onLogin={handleMoveToLogin}
         />
 
-        <div className="mb-8 overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6 lg:mb-10 lg:p-8">
-          <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-[11px] font-black uppercase tracking-[0.26em] text-primary dark:text-blue-400">
-                Semester Cohort
-              </p>
-              <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-900 dark:text-slate-50">
-                학기별 운영 단위로 과목관리를 분리합니다
-              </h2>
-              <p className="mt-2 text-sm font-medium text-slate-500 dark:text-slate-400">
-                자기소개, 팀 모집, 팀 등록, 기업제안 프로젝트는 선택한 학기 cohort 기준으로만 조회되고 등록됩니다.
-              </p>
+        {!isVideoTab ? (
+          <div className="mb-8 overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6 lg:mb-10 lg:p-8">
+            <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <p className="text-[11px] font-black uppercase tracking-[0.26em] text-primary dark:text-blue-400">
+                  Semester Cohort
+                </p>
+                <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-900 dark:text-slate-50">
+                  학기별 운영 단위로 과목관리를 분리합니다
+                </h2>
+                <p className="mt-2 text-sm font-medium text-slate-500 dark:text-slate-400">
+                  자기소개, 팀 모집, 팀 등록, 기업제안 프로젝트는 선택한 학기 cohort 기준으로만 조회되고 등록됩니다.
+                </p>
+              </div>
+              <div className="rounded-2xl bg-slate-950 px-5 py-4 text-white dark:bg-white dark:text-slate-900">
+                <p className="text-[10px] font-black uppercase tracking-[0.24em] opacity-60">Current Focus</p>
+                <p className="mt-1 text-lg font-black">{activeSemester.courseLabel}</p>
+                <p className="text-sm font-semibold opacity-80">{activeSemester.label}</p>
+              </div>
             </div>
-            <div className="rounded-2xl bg-slate-950 px-5 py-4 text-white dark:bg-white dark:text-slate-900">
-              <p className="text-[10px] font-black uppercase tracking-[0.24em] opacity-60">Current Focus</p>
-              <p className="mt-1 text-lg font-black">{activeSemester.courseLabel}</p>
-              <p className="text-sm font-semibold opacity-80">{activeSemester.label}</p>
-            </div>
-          </div>
 
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-            {semesterOptions.map((semester) => (
-              <button
-                key={semester.key}
-                type="button"
-                onClick={() => handleSemesterChange(semester)}
-                className={cn(
-                  "rounded-[1.5rem] border px-5 py-4 text-left premium-transition",
-                  activeSemester.key === semester.key
-                    ? "border-slate-900 bg-slate-900 text-white shadow-xl dark:border-white dark:bg-white dark:text-slate-900"
-                    : "border-slate-200 bg-slate-50/80 text-slate-900 hover:border-primary hover:bg-white dark:border-slate-800 dark:bg-slate-950/40 dark:text-slate-50 dark:hover:border-blue-400"
-                )}
-              >
-                <p className="text-[10px] font-black uppercase tracking-[0.24em] opacity-60">{semester.courseLabel}</p>
-                <p className="mt-2 text-lg font-black">{semester.label}</p>
-                <p className="mt-1 text-xs font-semibold opacity-80">{semester.description}</p>
-              </button>
-            ))}
+            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+              {semesterOptions.map((semester) => (
+                <button
+                  key={semester.key}
+                  type="button"
+                  onClick={() => handleSemesterChange(semester)}
+                  className={cn(
+                    "rounded-[1.5rem] border px-5 py-4 text-left premium-transition",
+                    activeSemester.key === semester.key
+                      ? "border-slate-900 bg-slate-900 text-white shadow-xl dark:border-white dark:bg-white dark:text-slate-900"
+                      : "border-slate-200 bg-slate-50/80 text-slate-900 hover:border-primary hover:bg-white dark:border-slate-800 dark:bg-slate-950/40 dark:text-slate-50 dark:hover:border-blue-400"
+                  )}
+                >
+                  <p className="text-[10px] font-black uppercase tracking-[0.24em] opacity-60">{semester.courseLabel}</p>
+                  <p className="mt-2 text-lg font-black">{semester.label}</p>
+                  <p className="mt-1 text-xs font-semibold opacity-80">{semester.description}</p>
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="mb-8 overflow-hidden rounded-[2rem] border border-slate-200 bg-[radial-gradient(circle_at_top_left,_rgba(15,23,42,0.06),_transparent_45%),linear-gradient(135deg,#ffffff_0%,#f8fafc_55%,#eef2ff_100%)] p-6 shadow-sm dark:border-slate-800 dark:bg-[radial-gradient(circle_at_top_left,_rgba(96,165,250,0.16),_transparent_38%),linear-gradient(135deg,#020617_0%,#0f172a_55%,#111827_100%)] lg:mb-10 lg:p-8">
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-3xl">
+                <p className="text-[11px] font-black uppercase tracking-[0.26em] text-primary dark:text-blue-400">
+                  Learning Archive
+                </p>
+                <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-900 dark:text-slate-50">
+                  교육 영상은 학기와 무관하게 계속 축적되는 공용 러닝 라이브러리입니다
+                </h2>
+                <p className="mt-3 text-sm font-medium leading-7 text-slate-600 dark:text-slate-300">
+                  SW창업캡스톤디자인 과목 탭 안에서 바로 탐색할 수 있지만, 학기 cohort 데이터와는 분리된 상시 아카이브로 동작합니다.
+                </p>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {[
+                  ["Always On", "누적형 콘텐츠"],
+                  ["Cross Semester", "전 학기 공통 자산"],
+                  ["Reusable", "반복 학습 가능한 강의"],
+                ].map(([label, value]) => (
+                  <div key={label} className="rounded-[1.5rem] border border-white/50 bg-white/80 px-5 py-4 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/5">
+                    <p className="text-[10px] font-black uppercase tracking-[0.24em] text-slate-400">{label}</p>
+                    <p className="mt-2 text-sm font-black text-slate-900 dark:text-slate-50">{value}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="mb-8 flex flex-wrap gap-2 rounded-[1.75rem] border border-border bg-background/88 p-2 shadow-sm backdrop-blur-md sm:mb-10 lg:mb-12">
           {TABS.map((tab) => (
