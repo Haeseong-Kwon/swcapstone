@@ -3,9 +3,10 @@ import Image from "next/image";
 import { Proposal } from "@/types";
 import { Badge } from "@/components/common/Badge";
 import { motion } from "framer-motion";
-import { Briefcase, ArrowRight, Loader2 } from "lucide-react";
-import { getCorporateProposals } from "@/lib/services/BoardServices";
+import { Briefcase, ArrowRight, Loader2, PlusCircle } from "lucide-react";
+import { createCorporateProposal, getCorporateProposals } from "@/lib/services/BoardServices";
 import { SemesterOption } from "@/lib/semester";
+import { CorporateProposalUploadModal } from "./CorporateProposalUploadModal";
 
 const ProposalListItem = memo(({ proposal, index }: { proposal: Proposal; index: number }) => (
   <motion.div
@@ -69,6 +70,7 @@ ProposalListItem.displayName = "ProposalListItem";
 export const CorporateBoard = memo(function CorporateBoard({ activeSemester }: { activeSemester: SemesterOption }) {
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchProposals = useCallback(async () => {
     try {
@@ -99,6 +101,30 @@ export const CorporateBoard = memo(function CorporateBoard({ activeSemester }: {
     fetchProposals();
   }, [fetchProposals]);
 
+  const handleUploadProposal = useCallback(async (proposal: Proposal) => {
+    try {
+      const dbProposal = {
+        company_name: proposal.companyName,
+        title: proposal.title,
+        content: proposal.description,
+        deadline: proposal.deadline || null,
+        thumbnail_url: proposal.companyLogo,
+        category: [proposal.category, ...(proposal.keywords || [])],
+        semester_key: activeSemester.key,
+        academic_year: activeSemester.year,
+        academic_term: activeSemester.term,
+        course_track: activeSemester.courseTrack,
+      };
+
+      await createCorporateProposal(dbProposal);
+      await fetchProposals();
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error uploading corporate proposal:", error);
+      alert("기업제안 프로젝트 등록 중 오류가 발생했습니다.");
+    }
+  }, [activeSemester, fetchProposals]);
+
   if (loading && proposals.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-4 text-slate-500">
@@ -110,11 +136,27 @@ export const CorporateBoard = memo(function CorporateBoard({ activeSemester }: {
 
   return (
     <div className="flex flex-col gap-4 transform-gpu">
-      <div className="mb-2">
-        <p className="text-[10px] font-black uppercase tracking-[0.24em] text-slate-400">Active Semester</p>
-        <p className="mt-1 text-sm font-black text-slate-900 dark:text-slate-50">
-          {activeSemester.label} · {activeSemester.courseLabel}
-        </p>
+      <CorporateProposalUploadModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleUploadProposal}
+        activeSemester={activeSemester}
+      />
+
+      <div className="mb-2 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+          <p className="text-[10px] font-black uppercase tracking-[0.24em] text-slate-400">Active Semester</p>
+          <p className="mt-1 text-sm font-black text-slate-900 dark:text-slate-50">
+            {activeSemester.label} · {activeSemester.courseLabel}
+          </p>
+        </div>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center gap-2 rounded-xl bg-slate-900 px-6 py-3 text-sm font-bold text-white shadow-md premium-transition hover:-translate-y-0.5 hover:bg-primary hover:shadow-lg dark:bg-white dark:text-slate-900 dark:hover:bg-blue-400 dark:hover:text-white"
+        >
+          <PlusCircle size={18} />
+          기업제안 등록
+        </button>
       </div>
 
       {proposals.map((proposal, index) => (

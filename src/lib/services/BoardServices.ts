@@ -17,6 +17,36 @@ const getAuthenticatedUserId = async () => {
   return user?.id ?? null;
 };
 
+const ensureProfileRecord = async () => {
+  if (!supabase) return null;
+
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError) throw userError;
+  if (!user) throw new Error('로그인이 필요합니다.');
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .upsert(
+      [
+        {
+          id: user.id,
+          full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
+          role: 'Student',
+        },
+      ],
+      { onConflict: 'id' }
+    )
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
 /**
  * Service to handle all dashboard data operations through Supabase.
  * Each function checks if the Supabase client is initialized.
@@ -47,6 +77,7 @@ export const createProfile = async (profileData: any) => {
   if (!userId) {
     throw new Error('로그인이 필요합니다.');
   }
+  await ensureProfileRecord();
 
   const { data, error } = await supabase
     .from('semester_profiles')
@@ -90,6 +121,7 @@ export const createRecruitmentPost = async (postData: any) => {
   if (!userId) {
     throw new Error('로그인이 필요합니다.');
   }
+  await ensureProfileRecord();
   const { data, error } = await supabase
     .from('recruitment_posts')
     .insert([{ ...postData, author_id: postData.author_id ?? userId }])
@@ -132,6 +164,7 @@ export const createRecruitmentPostComment = async ({
   if (!userId) {
     throw new Error('로그인이 필요합니다.');
   }
+  await ensureProfileRecord();
 
   const trimmedContent = content.trim();
   if (!trimmedContent) {
@@ -230,6 +263,7 @@ export const registerTeam = async (teamData: any) => {
   if (!userId) {
     throw new Error('로그인이 필요합니다.');
   }
+  await ensureProfileRecord();
   const { data, error } = await supabase
     .from('team_registrations')
     .insert([{ ...teamData, leader_id: teamData.leader_id ?? userId }])
@@ -254,6 +288,28 @@ export const getCorporateProposals = async (semesterKey?: string) => {
   return data || [];
 };
 
+export const createCorporateProposal = async (proposalData: any) => {
+  if (!supabase) {
+    console.warn('Cannot create corporate proposal: Supabase is not configured.');
+    return null;
+  }
+
+  const userId = await getAuthenticatedUserId();
+  if (!userId) {
+    throw new Error('로그인이 필요합니다.');
+  }
+  await ensureProfileRecord();
+
+  const { data, error } = await supabase
+    .from('corporate_proposals')
+    .insert([proposalData])
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
 export const getVideos = async () => {
   if (!supabase) return [];
   const { data, error } = await supabase
@@ -263,6 +319,28 @@ export const getVideos = async () => {
   
   if (error) throw error;
   return data || [];
+};
+
+export const createVideo = async (videoData: any) => {
+  if (!supabase) {
+    console.warn('Cannot create video: Supabase is not configured.');
+    return null;
+  }
+
+  const userId = await getAuthenticatedUserId();
+  if (!userId) {
+    throw new Error('로그인이 필요합니다.');
+  }
+  await ensureProfileRecord();
+
+  const { data, error } = await supabase
+    .from('videos')
+    .insert([videoData])
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
 };
 
 export const getProfileByUserId = async (userId: string) => {

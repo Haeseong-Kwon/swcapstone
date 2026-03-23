@@ -89,6 +89,7 @@ export interface VideoContent {
   id: string;
   title: string;
   description: string;
+  videoUrl?: string;
   instructor: string;
   duration: string;
   thumbnailUrl: string;

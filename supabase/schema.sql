@@ -119,6 +119,9 @@ CREATE TABLE IF NOT EXISTS videos (
   description TEXT,
   video_url TEXT NOT NULL,
   thumbnail_url TEXT,
+  instructor TEXT,
+  duration TEXT,
+  view_count INTEGER DEFAULT 0,
   category TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
@@ -137,8 +140,12 @@ ALTER TABLE IF EXISTS corporate_proposals ADD COLUMN IF NOT EXISTS semester_key 
 ALTER TABLE IF EXISTS corporate_proposals ADD COLUMN IF NOT EXISTS academic_year INTEGER;
 ALTER TABLE IF EXISTS corporate_proposals ADD COLUMN IF NOT EXISTS academic_term TEXT;
 ALTER TABLE IF EXISTS corporate_proposals ADD COLUMN IF NOT EXISTS course_track TEXT;
+ALTER TABLE IF EXISTS videos ADD COLUMN IF NOT EXISTS instructor TEXT;
+ALTER TABLE IF EXISTS videos ADD COLUMN IF NOT EXISTS duration TEXT;
+ALTER TABLE IF EXISTS videos ADD COLUMN IF NOT EXISTS view_count INTEGER DEFAULT 0;
 
 DROP POLICY IF EXISTS "Public Profiles are viewable by everyone" ON profiles;
+DROP POLICY IF EXISTS "Users can create their own profile" ON profiles;
 DROP POLICY IF EXISTS "Users can update their own profile" ON profiles;
 DROP POLICY IF EXISTS "Public Semester profiles are viewable by everyone" ON semester_profiles;
 DROP POLICY IF EXISTS "Authenticated users can create semester profiles" ON semester_profiles;
@@ -153,10 +160,13 @@ DROP POLICY IF EXISTS "Users can update their own notifications" ON notification
 DROP POLICY IF EXISTS "Public Team registrations are viewable by everyone" ON team_registrations;
 DROP POLICY IF EXISTS "Authenticated users can register teams" ON team_registrations;
 DROP POLICY IF EXISTS "Public Corporate proposals are viewable by everyone" ON corporate_proposals;
+DROP POLICY IF EXISTS "Authenticated users can create corporate proposals" ON corporate_proposals;
 DROP POLICY IF EXISTS "Public Videos are viewable by everyone" ON videos;
+DROP POLICY IF EXISTS "Authenticated users can create videos" ON videos;
 
 -- Basic RLS Policies (Public Read, Authenticated Write)
 CREATE POLICY "Public Profiles are viewable by everyone" ON profiles FOR SELECT USING (true);
+CREATE POLICY "Users can create their own profile" ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
 CREATE POLICY "Users can update their own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
 
 CREATE POLICY "Public Semester profiles are viewable by everyone" ON semester_profiles FOR SELECT USING (true);
@@ -177,4 +187,6 @@ CREATE POLICY "Public Team registrations are viewable by everyone" ON team_regis
 CREATE POLICY "Authenticated users can register teams" ON team_registrations FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 
 CREATE POLICY "Public Corporate proposals are viewable by everyone" ON corporate_proposals FOR SELECT USING (true);
+CREATE POLICY "Authenticated users can create corporate proposals" ON corporate_proposals FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 CREATE POLICY "Public Videos are viewable by everyone" ON videos FOR SELECT USING (true);
+CREATE POLICY "Authenticated users can create videos" ON videos FOR INSERT WITH CHECK (auth.role() = 'authenticated');
