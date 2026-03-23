@@ -36,18 +36,15 @@ export function Navbar() {
 
     const unreadNotifications = notifications.filter((item) => !item.isRead);
     const actionButtonClass = cn(
-        "flex h-10 w-10 items-center justify-center rounded-full premium-transition hover:scale-105",
+        "flex h-10 w-10 items-center justify-center rounded-full interactive",
+        "transition-colors duration-150",
         isScrolled
             ? "text-muted-foreground hover:bg-slate-100 hover:text-foreground dark:hover:bg-slate-800"
             : "text-white/80 hover:bg-white/10 hover:text-white"
     );
 
     const fetchNotifications = useCallback(async () => {
-        if (!user) {
-            setNotifications([]);
-            return;
-        }
-
+        if (!user) { setNotifications([]); return; }
         try {
             setIsNotificationLoading(true);
             const data = await getNotifications();
@@ -72,25 +69,15 @@ export function Navbar() {
     }, [user]);
 
     useEffect(() => {
-        getCurrentUser().then((currentUser) => {
-            setUser(currentUser);
-        });
-
-        const unsubscribe = onAuthStateChange((user) => {
-            setUser(user);
-        });
+        getCurrentUser().then((currentUser) => setUser(currentUser));
+        const unsubscribe = onAuthStateChange((user) => setUser(user));
         return () => unsubscribe();
     }, []);
 
-    useEffect(() => {
-        fetchNotifications();
-    }, [fetchNotifications]);
+    useEffect(() => { fetchNotifications(); }, [fetchNotifications]);
 
     useEffect(() => {
-        const handleRefresh = () => {
-            fetchNotifications();
-        };
-
+        const handleRefresh = () => fetchNotifications();
         window.addEventListener("notifications:refresh", handleRefresh);
         return () => window.removeEventListener("notifications:refresh", handleRefresh);
     }, [fetchNotifications]);
@@ -101,7 +88,6 @@ export function Navbar() {
                 setIsNotificationOpen(false);
             }
         };
-
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
@@ -130,12 +116,16 @@ export function Navbar() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
+    // Lock body scroll when mobile menu is open
+    useEffect(() => {
+        document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
+        return () => { document.body.style.overflow = ""; };
+    }, [isMobileMenuOpen]);
+
     const handleNotificationToggle = async () => {
         const nextOpen = !isNotificationOpen;
         setIsNotificationOpen(nextOpen);
-
         if (!nextOpen || unreadNotifications.length === 0) return;
-
         try {
             const unreadIds = unreadNotifications.map((item) => item.id);
             await markNotificationsAsRead(unreadIds);
@@ -152,24 +142,26 @@ export function Navbar() {
     return (
         <>
             <nav className={cn(
-                "fixed top-0 left-0 right-0 z-50 border-b premium-transition will-change-transform transform-gpu",
+                "fixed top-0 left-0 right-0 z-50 border-b will-change-transform transform-gpu",
+                "transition-[background-color,border-color,backdrop-filter,box-shadow] duration-200 ease-out",
                 isScrolled
-                    ? "glass-header shadow-[0_10px_30px_rgba(15,23,42,0.10)] border-white/5"
+                    ? "glass-header shadow-[0_6px_24px_rgba(15,23,42,0.08)] border-white/5"
                     : "bg-gradient-to-b from-black/72 via-black/24 to-transparent border-transparent"
             )}>
                 <div className="mx-auto flex h-[78px] items-center justify-between fluid-container">
                     <div className="flex items-center gap-6 xl:gap-12">
-                        <Link href="/" className="flex items-center gap-3 group">
+                        <Link href="/" className="flex items-center gap-3 group interactive">
                             <span className={cn(
-                                "text-2xl sm:text-3xl font-black tracking-tighter premium-transition",
+                                "text-2xl sm:text-3xl font-black tracking-tighter",
+                                "transition-colors duration-150",
                                 isScrolled ? "text-foreground" : "text-white"
                             )}>AOP</span>
                             <div className={cn(
-                                "hidden sm:block w-[1px] h-6 mx-2 premium-transition",
+                                "hidden sm:block w-[1px] h-6 mx-2 transition-colors duration-150",
                                 isScrolled ? "bg-border" : "bg-white/20"
                             )}></div>
                             <span className={cn(
-                                "hidden sm:block text-[11px] font-bold tracking-[0.3em] uppercase premium-transition",
+                                "hidden sm:block text-[11px] font-bold tracking-[0.3em] uppercase transition-colors duration-150",
                                 isScrolled ? "text-muted-foreground" : "text-white/70"
                             )}>Entrepreneurship</span>
                         </Link>
@@ -183,10 +175,11 @@ export function Navbar() {
                                         href={item.href}
                                         onClick={() => setIsMobileMenuOpen(false)}
                                         className={cn(
-                                            "relative flex h-[78px] items-center text-[13px] xl:text-[14px] font-black uppercase tracking-[0.18em] premium-transition",
+                                            "relative flex h-[78px] items-center text-[13px] xl:text-[14px] font-black uppercase tracking-[0.18em]",
+                                            "transition-colors duration-150",
                                             isScrolled
-                                                ? (isActive ? "text-primary dark:text-blue-400 border-b-4 border-primary dark:border-blue-400" : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-50")
-                                                : (isActive ? "text-white border-b-4 border-white" : "text-white/70 hover:text-white")
+                                                ? (isActive ? "text-primary dark:text-blue-400 border-b-[3px] border-primary dark:border-blue-400" : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-50")
+                                                : (isActive ? "text-white border-b-[3px] border-white" : "text-white/70 hover:text-white")
                                         )}
                                     >
                                         {item.name}
@@ -206,10 +199,11 @@ export function Navbar() {
                             {theme === "light" ? <Moon size={19} /> : <Sun size={19} />}
                         </button>
                         <div className={cn(
-                            "hidden md:flex items-center gap-2.5 border-r pr-4 mr-1 premium-transition lg:pr-6 lg:mr-2",
+                            "hidden md:flex items-center gap-2.5 border-r pr-4 mr-1 lg:pr-6 lg:mr-2",
+                            "transition-colors duration-150",
                             isScrolled ? "border-border" : "border-white/20"
                         )}>
-                            <button 
+                            <button
                                 type="button"
                                 onClick={() => setIsSearchOpen(true)}
                                 aria-label="Search"
@@ -218,7 +212,7 @@ export function Navbar() {
                                 <Search size={19} />
                             </button>
                             <div className="relative" ref={notificationRef}>
-                                <button 
+                                <button
                                     type="button"
                                     onClick={handleNotificationToggle}
                                     aria-label="Notifications"
@@ -226,22 +220,18 @@ export function Navbar() {
                                 >
                                     <Bell size={19} />
                                     {unreadNotifications.length > 0 && (
-                                        <>
-                                            <span className="absolute right-0 top-0 flex h-4 min-w-4 translate-x-[18%] -translate-y-[10%] items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-white">
-                                                {Math.min(unreadNotifications.length, 9)}
-                                            </span>
-                                        </>
+                                        <span className="absolute right-0 top-0 flex h-4 min-w-4 translate-x-[18%] -translate-y-[10%] items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-white">
+                                            {Math.min(unreadNotifications.length, 9)}
+                                        </span>
                                     )}
                                 </button>
 
                                 {isNotificationOpen && (
-                                    <div className="absolute right-0 top-12 z-[120] w-[360px] overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+                                    <div className="absolute right-0 top-12 z-[120] w-[360px] overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900 animate-drop-in">
                                         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4 dark:border-slate-800">
                                             <div>
                                                 <p className="text-sm font-black text-slate-900 dark:text-slate-50">알림</p>
-                                                <p className="text-[11px] font-semibold text-slate-400">
-                                                    새 댓글이 오면 여기 표시됩니다.
-                                                </p>
+                                                <p className="text-[11px] font-semibold text-slate-400">새 댓글이 오면 여기 표시됩니다.</p>
                                             </div>
                                             {isNotificationLoading && <Loader2 className="animate-spin text-primary" size={16} />}
                                         </div>
@@ -252,7 +242,7 @@ export function Navbar() {
                                                     <div
                                                         key={notification.id}
                                                         className={cn(
-                                                            "border-b border-slate-100 px-5 py-4 last:border-b-0 dark:border-slate-800",
+                                                            "border-b border-slate-100 px-5 py-4 last:border-b-0 dark:border-slate-800 transition-colors duration-150",
                                                             !notification.isRead && "bg-primary/[0.04] dark:bg-blue-500/10"
                                                         )}
                                                     >
@@ -290,28 +280,29 @@ export function Navbar() {
 
                         {user ? (
                             <div className="flex items-center gap-4 sm:gap-6">
-                                <Link href="/profile" className="flex items-center gap-4 group">
+                                <Link href="/profile" className="flex items-center gap-4 group interactive">
                                     <div className="text-right hidden md:block">
                                         <p className={cn(
-                                            "text-[10px] font-bold leading-none mb-1 uppercase tracking-widest",
+                                            "text-[10px] font-bold leading-none mb-1 uppercase tracking-widest transition-colors duration-150",
                                             isScrolled ? "text-muted-foreground" : "text-white/70"
                                         )}>Status: Active</p>
                                         <p className={cn(
-                                            "text-[14px] font-black leading-none uppercase",
+                                            "text-[14px] font-black leading-none uppercase transition-colors duration-150",
                                             isScrolled ? "text-foreground group-hover:text-primary" : "text-white group-hover:text-primary"
                                         )}>{user.user_metadata?.full_name || user.email?.split('@')[0] || 'User'}</p>
                                     </div>
                                     <div className={cn(
-                                        "flex h-9 w-9 items-center justify-center premium-transition group-hover:scale-105 sm:h-11 sm:w-11",
+                                        "flex h-9 w-9 items-center justify-center transition-[colors,transform] duration-150 group-hover:scale-105 sm:h-11 sm:w-11",
                                         isScrolled ? "bg-foreground text-background" : "bg-white text-black"
                                     )}>
                                         <UserIcon size={18} className="sm:size-[20px]" />
                                     </div>
                                 </Link>
-                                <button 
+                                <button
                                     onClick={handleLogout}
                                     className={cn(
-                                        "hidden sm:block text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-lg transition-all",
+                                        "hidden sm:block text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-lg interactive",
+                                        "transition-colors duration-150",
                                         isScrolled ? "bg-slate-100 text-slate-900 hover:bg-slate-200" : "bg-white/10 text-white hover:bg-white/20"
                                     )}
                                 >
@@ -320,9 +311,9 @@ export function Navbar() {
                             </div>
                         ) : (
                             <Link href="/login">
-                                <Button 
-                                    variant={isScrolled ? "black" : "outline"} 
-                                    size="sm" 
+                                <Button
+                                    variant={isScrolled ? "black" : "outline"}
+                                    size="sm"
                                     className={cn(
                                         "h-10 sm:h-11 px-6 sm:px-8",
                                         !isScrolled && "bg-white/10 text-white border-white/20 hover:bg-white hover:text-black"
@@ -338,7 +329,7 @@ export function Navbar() {
                             onClick={() => setIsMobileMenuOpen(true)}
                             aria-label="Open menu"
                             className={cn(
-                                "min-[1200px]:hidden premium-transition hover:scale-110",
+                                "min-[1200px]:hidden interactive transition-colors duration-150 p-1",
                                 isScrolled ? "text-foreground" : "text-white"
                             )}
                         >
@@ -349,16 +340,24 @@ export function Navbar() {
             </nav>
 
             {/* Premium Full-Screen Overlay Menu */}
-            <div className={cn(
-                "fixed inset-0 z-[100] flex flex-col overflow-hidden premium-transition will-change-transform",
-                "bg-black/98 dark:bg-black/98",
-                isMobileMenuOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
-            )}>
+            <div
+                className={cn(
+                    "fixed inset-0 z-[100] flex flex-col overflow-hidden",
+                    "bg-black/98 dark:bg-black/98",
+                    "will-change-transform transform-gpu",
+                    isMobileMenuOpen
+                        ? "opacity-100 translate-y-0 pointer-events-auto"
+                        : "opacity-0 -translate-y-full pointer-events-none"
+                )}
+                style={{
+                    transition: 'opacity 0.28s cubic-bezier(0.22,1,0.36,1), transform 0.32s cubic-bezier(0.22,1,0.36,1)',
+                }}
+            >
                 <div className="flex h-[78px] items-center justify-between border-b border-white/10 fluid-container">
                     <span className="text-3xl font-black text-white tracking-tighter">AOP</span>
                     <button
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="text-white hover:rotate-90 premium-transition p-2"
+                        className="text-white p-2 interactive transition-transform duration-200 hover:rotate-90"
                     >
                         <X size={40} />
                     </button>
@@ -370,17 +369,22 @@ export function Navbar() {
                             key={item.href}
                             href={item.href}
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className="group block"
+                            className="group block interactive"
+                            style={{
+                                opacity: isMobileMenuOpen ? 1 : 0,
+                                transform: isMobileMenuOpen ? 'translateY(0)' : 'translateY(16px)',
+                                transition: `opacity 0.3s ease ${(i * 50) + 120}ms, transform 0.3s cubic-bezier(0.22,1,0.36,1) ${(i * 50) + 120}ms`,
+                            }}
                         >
                             <span className="text-white/30 text-[12px] sm:text-[14px] font-black uppercase tracking-[0.3em] mb-3 block">0{i + 1}.</span>
                             <div className="flex items-center justify-between border-b border-white/10 pb-4 sm:pb-5">
                                 <div>
-                                    <h2 className="text-white text-[28px] sm:text-[42px] lg:text-[48px] font-black uppercase tracking-tight group-hover:text-primary premium-transition">
+                                    <h2 className="text-white text-[28px] sm:text-[42px] lg:text-[48px] font-black uppercase tracking-tight transition-colors duration-150 group-hover:text-primary">
                                         {item.name}
                                     </h2>
                                     <p className="mt-1 sm:mt-2 text-[10px] sm:text-[12px] text-white/40 font-bold uppercase tracking-[0.18em]">{item.desc}</p>
                                 </div>
-                                <ChevronRight size={28} className="text-white/10 group-hover:text-primary group-hover:translate-x-2 premium-transition sm:size-12" />
+                                <ChevronRight size={28} className="text-white/10 transition-[color,transform] duration-200 group-hover:text-primary group-hover:translate-x-2 sm:size-12" />
                             </div>
                         </Link>
                     ))}
@@ -393,9 +397,9 @@ export function Navbar() {
                     </div>
                 </div>
             </div>
-            <SearchModal 
-                isOpen={isSearchOpen} 
-                onClose={() => setIsSearchOpen(false)} 
+            <SearchModal
+                isOpen={isSearchOpen}
+                onClose={() => setIsSearchOpen(false)}
             />
         </>
     );

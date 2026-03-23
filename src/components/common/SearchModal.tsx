@@ -45,9 +45,16 @@ export function SearchModal({ isOpen, onClose, initialQuery = "" }: SearchModalP
     useEffect(() => {
         const timer = setTimeout(() => {
             if (query && query !== initialQuery) handleSearch(query);
-        }, 300);
+        }, 280);
         return () => clearTimeout(timer);
     }, [query, handleSearch, initialQuery]);
+
+    // Close on Escape
+    useEffect(() => {
+        const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+        if (isOpen) window.addEventListener('keydown', handleKey);
+        return () => window.removeEventListener('keydown', handleKey);
+    }, [isOpen, onClose]);
 
     const getTypeIcon = (type: string) => {
         if (type === 'post') return <Users size={18} className="text-primary" />;
@@ -65,26 +72,27 @@ export function SearchModal({ isOpen, onClose, initialQuery = "" }: SearchModalP
         <AnimatePresence>
             {isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-start justify-center pt-20 sm:pt-32 px-4 sm:px-6">
-                    {/* Solid overlay — no blur */}
+                    {/* Overlay — no blur for performance */}
                     <m.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.15 }}
+                        transition={{ duration: 0.14, ease: "easeOut" }}
                         onClick={onClose}
-                        className="absolute inset-0 bg-black/50"
+                        className="absolute inset-0 bg-black/55"
                     />
 
                     {/* Modal panel */}
                     <m.div
-                        initial={{ opacity: 0, y: -12, scale: 0.98 }}
+                        initial={{ opacity: 0, y: -10, scale: 0.97 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -12, scale: 0.98 }}
-                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        exit={{ opacity: 0, y: -10, scale: 0.97 }}
+                        transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
                         style={{ willChange: 'transform, opacity' }}
                         className="relative w-full max-w-2xl bg-background rounded-[2.5rem] border border-border shadow-2xl overflow-hidden"
                     >
                         <div className="p-6 sm:p-8 space-y-8">
+                            {/* Search Input */}
                             <div className="flex items-center gap-4 border-b border-border pb-6">
                                 <Search className="text-primary shrink-0" size={28} />
                                 <input
@@ -95,11 +103,16 @@ export function SearchModal({ isOpen, onClose, initialQuery = "" }: SearchModalP
                                     placeholder="무엇이든 검색해보세요..."
                                     className="flex-1 bg-transparent text-[18px] sm:text-[22px] font-black outline-none placeholder:text-muted uppercase tracking-tight"
                                 />
-                                <button onClick={onClose} className="p-2 rounded-full text-muted hover:text-foreground" style={{ transition: 'color 0.15s' }}>
+                                <button
+                                    onClick={onClose}
+                                    className="p-2 rounded-full text-muted hover:text-foreground interactive"
+                                    style={{ transition: 'color 0.15s' }}
+                                >
                                     <X size={24} />
                                 </button>
                             </div>
 
+                            {/* Results Area */}
                             <div className="max-h-[60vh] overflow-y-auto pr-2 space-y-6">
                                 {isLoading ? (
                                     <div className="flex flex-col items-center justify-center py-20 gap-4">
@@ -110,13 +123,24 @@ export function SearchModal({ isOpen, onClose, initialQuery = "" }: SearchModalP
                                     <div className="space-y-4">
                                         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-2">Search Results ({results.length})</p>
                                         <div className="grid gap-3">
-                                            {results.map((result) => (
+                                            {results.map((result, idx) => (
                                                 <Link
                                                     key={`${result.type}-${result.id}`}
                                                     href={result.url}
                                                     onClick={onClose}
-                                                    className="group flex items-center justify-between p-5 border border-border rounded-3xl"
-                                                    style={{ transition: 'border-color 0.15s, background-color 0.15s' }}
+                                                    className="group flex items-center justify-between p-5 border border-border rounded-3xl interactive search-result-item"
+                                                    style={{
+                                                        animationDelay: `${idx * 40}ms`,
+                                                        transition: 'border-color 0.15s, background-color 0.15s',
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                        (e.currentTarget as HTMLElement).style.borderColor = 'var(--primary)';
+                                                        (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(var(--primary-rgb, 26,54,93), 0.03)';
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        (e.currentTarget as HTMLElement).style.borderColor = '';
+                                                        (e.currentTarget as HTMLElement).style.backgroundColor = '';
+                                                    }}
                                                 >
                                                     <div className="flex items-center gap-5">
                                                         <div className="w-12 h-12 rounded-2xl bg-muted/5 flex items-center justify-center">
@@ -130,7 +154,7 @@ export function SearchModal({ isOpen, onClose, initialQuery = "" }: SearchModalP
                                                             <p className="text-[13px] text-muted font-medium line-clamp-1">{result.description}</p>
                                                         </div>
                                                     </div>
-                                                    <ChevronRight size={18} className="text-border" />
+                                                    <ChevronRight size={18} className="text-border shrink-0" style={{ transition: 'color 0.15s, transform 0.15s' }} />
                                                 </Link>
                                             ))}
                                         </div>
@@ -145,12 +169,23 @@ export function SearchModal({ isOpen, onClose, initialQuery = "" }: SearchModalP
                                         <div className="space-y-4">
                                             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-2">Recommended Tags</p>
                                             <div className="flex flex-wrap gap-2">
-                                                {["#AI", "#Platform", "#ESG", "#Student", "#Corporate"].map(tag => (
+                                                {["#AI", "#Platform", "#ESG", "#Student", "#Corporate"].map((tag, i) => (
                                                     <button
                                                         key={tag}
                                                         onClick={() => setQuery(tag.replace('#', ''))}
-                                                        className="px-5 py-2.5 bg-muted/5 border border-border rounded-full text-[13px] font-bold"
-                                                        style={{ transition: 'border-color 0.15s, color 0.15s' }}
+                                                        className="px-5 py-2.5 bg-muted/5 border border-border rounded-full text-[13px] font-bold interactive"
+                                                        style={{
+                                                            transition: 'border-color 0.15s, color 0.15s, background-color 0.15s',
+                                                            animationDelay: `${i * 30}ms`,
+                                                        }}
+                                                        onMouseEnter={(e) => {
+                                                            (e.currentTarget as HTMLElement).style.borderColor = 'var(--primary)';
+                                                            (e.currentTarget as HTMLElement).style.color = 'var(--primary)';
+                                                        }}
+                                                        onMouseLeave={(e) => {
+                                                            (e.currentTarget as HTMLElement).style.borderColor = '';
+                                                            (e.currentTarget as HTMLElement).style.color = '';
+                                                        }}
                                                     >
                                                         {tag}
                                                     </button>

@@ -23,7 +23,7 @@
   
   /* Cheil-inspired side padding (approx 3.846vw) */
   --inner-padding-desktop: 3.846vw;
-  --inner-padding-mobile: 5.333vw; /* Larger ratio for mobile */
+  --inner-padding-mobile: 5.333vw;
 
   --radius-none: 0px;
 }
@@ -37,8 +37,8 @@
   --accent: #1A365D;
   --primary: #1A365D;
   --border: #E2E8F0;
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(0, 0, 0, 0.05);
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(0, 0, 0, 0.06);
   --glass-text: #1E293B;
 }
 
@@ -51,8 +51,8 @@
   --accent: #60A5FA;
   --primary: #60A5FA;
   --border: #334155;
-  --glass-bg: rgba(15, 23, 42, 0.8);
-  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-bg: rgba(15, 23, 42, 0.88);
+  --glass-border: rgba(255, 255, 255, 0.07);
   --glass-text: #F8FAFC;
 }
 
@@ -75,34 +75,59 @@ body {
   color: #ffffff;
 }
 
-/* Base Transition - Highly specific to avoid triggering layout recalculations */
+/* ============================================================
+   PREMIUM TRANSITION — Only GPU-compositable properties
+   Never animates layout/paint properties (no `all`)
+   ============================================================ */
 .premium-transition {
-  transition-property: color, background-color, border-color, opacity, transform, box-shadow;
-  transition-duration: 400ms;
-  transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  transition-property: color, background-color, border-color, opacity, transform;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
+/* ============================================================
+   HOVER LIFT — GPU only (transform only, no shadow paint)
+   ============================================================ */
 .hover-lift {
-  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  transition-property: transform, opacity;
+  transition-duration: 240ms;
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
   will-change: transform;
+  transform: translateZ(0);
 }
 
 .hover-lift:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px) translateZ(0);
 }
 
-/* Institutional Sharp Card */
+.hover-lift:active {
+  transform: translateY(-1px) translateZ(0);
+  transition-duration: 100ms;
+}
+
+/* ============================================================
+   CARD STYLES
+   ============================================================ */
 .institutional-card, .sharp-card {
   background: var(--card);
   border: 1px solid var(--border);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  transition-property: background-color, border-color, box-shadow;
+  transition-duration: 180ms;
+  transition-timing-function: ease-out;
+}
+
+.institutional-card:hover, .sharp-card:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
 .dark .institutional-card, .dark .sharp-card {
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.dark .institutional-card:hover, .dark .sharp-card:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
 }
 
 /* Vertical Accent Bar (10px) */
@@ -111,21 +136,23 @@ body {
   padding-left: clamp(20px, 4vw, 40px);
 }
 
-/* Unified Translucent Styles (Theme-Aware) */
+/* ============================================================
+   GLASS STYLES — Refined blur values
+   ============================================================ */
 .glass-header {
   background-color: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
   border-bottom: 1px solid var(--glass-border);
   color: var(--glass-text);
 }
 
 .glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
 .glass-search {
@@ -135,49 +162,200 @@ body {
   border: 1px solid var(--glass-border);
 }
 
-/* Staggered Slide Up */
+/* ============================================================
+   SLIDE UP — hero 입장 애니메이션 (단축)
+   ============================================================ */
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(40px);
+    transform: translateY(28px) translateZ(0);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) translateZ(0);
   }
 }
 
 .animate-slide-up {
-  animation: slideUp 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  animation: slideUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   will-change: transform, opacity;
 }
 
-/* Reveal on Scroll Entry */
+/* ============================================================
+   SCROLL REVEAL — IntersectionObserver 기반 (JS 연동)
+   ============================================================ */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(24px) translateZ(0);
+  transition-property: opacity, transform;
+  transition-duration: 0.6s;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+}
+
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0) translateZ(0);
+}
+
+/* Stagger delays via CSS custom property */
+.scroll-reveal[data-delay="1"] { transition-delay: 80ms; }
+.scroll-reveal[data-delay="2"] { transition-delay: 160ms; }
+.scroll-reveal[data-delay="3"] { transition-delay: 240ms; }
+.scroll-reveal[data-delay="4"] { transition-delay: 320ms; }
+.scroll-reveal[data-delay="5"] { transition-delay: 400ms; }
+
+/* Legacy reveal-entry kept for backward compat */
 .reveal-entry {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  transform: translateY(20px) translateZ(0);
+  transition-property: opacity, transform;
+  transition-duration: 0.6s;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .reveal-entry.active {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) translateZ(0);
 }
 
+/* ============================================================
+   MOBILE MENU OVERLAY — GPU-only keyframe
+   ============================================================ */
+@keyframes menuSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-100%) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+}
+
+@keyframes menuSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-100%) translateZ(0);
+  }
+}
+
+/* ============================================================
+   NOTIFICATION DROPDOWN — subtle drop-in
+   ============================================================ */
+@keyframes dropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) translateZ(0);
+  }
+}
+
+.animate-drop-in {
+  animation: dropIn 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform, opacity;
+}
+
+/* ============================================================
+   INTERACTIVE UTILITY — touch-action + cursor
+   ============================================================ */
+.interactive {
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* ============================================================
+   NAV LINK UNDERLINE SLIDE-IN
+   ============================================================ */
+.nav-link-underline {
+  position: relative;
+}
+
+.nav-link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background-color: currentColor;
+  transition: width 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-link-underline:hover::after {
+  width: 100%;
+}
+
+/* ============================================================
+   ICON BOUNCE — card icon hover
+   ============================================================ */
+@keyframes iconBounce {
+  0%   { transform: scale(1) translateZ(0); }
+  40%  { transform: scale(1.18) translateZ(0); }
+  70%  { transform: scale(0.94) translateZ(0); }
+  100% { transform: scale(1) translateZ(0); }
+}
+
+.group:hover .icon-bounce {
+  animation: iconBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ============================================================
+   SEARCH INPUT FOCUS GLOW
+   ============================================================ */
+.search-glow-container:focus-within {
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25), 0 32px 80px rgba(0, 0, 0, 0.25);
+  transition: box-shadow 0.2s ease-out;
+}
+
+/* ============================================================
+   STAGGER SEARCH RESULTS
+   ============================================================ */
+.search-result-item {
+  opacity: 0;
+  transform: translateY(8px) translateZ(0);
+  animation: revealItem 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes revealItem {
+  to {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+}
+
+.search-result-item:nth-child(1) { animation-delay: 0ms; }
+.search-result-item:nth-child(2) { animation-delay: 40ms; }
+.search-result-item:nth-child(3) { animation-delay: 80ms; }
+.search-result-item:nth-child(4) { animation-delay: 120ms; }
+.search-result-item:nth-child(5) { animation-delay: 160ms; }
+.search-result-item:nth-child(n+6) { animation-delay: 200ms; }
+
+/* ============================================================
+   LAYOUT UTILITIES
+   ============================================================ */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 
-  /* Fluid Max Width */
   .max-w-8xl {
     max-width: 1600px;
     margin-left: auto;
     margin-right: auto;
   }
 
-  /* Cheil Style Fluid Container */
   .fluid-container {
     padding-left: var(--inner-padding-desktop);
     padding-right: var(--inner-padding-desktop);
@@ -190,7 +368,6 @@ body {
     }
   }
 
-  /* Responsive Section Padding */
   .section-padding {
     padding-top: clamp(60px, 10vw, 160px);
     padding-bottom: clamp(60px, 10vw, 160px);
@@ -215,25 +392,16 @@ body {
     line-height: 1.6;
   }
 
-  @keyframes slow-zoom {
-    from { transform: scale(1.0) translateZ(0); }
-    to   { transform: scale(1.15) translateZ(0); }
-  }
-
-  /* slow-zoom kept for reference but not applied to hero background */
-  .animate-slow-zoom {
-    animation: slow-zoom 30s ease-out infinite alternate;
-    will-change: transform;
-  }
-
   .gpu-accelerated {
     transform: translateZ(0);
     backface-visibility: hidden;
   }
 
-  /* animate-blob removed — replaced with static CSS gradient in hero */
-  .animate-blob {
-    display: none;
+  /* Blob / slow-zoom — disabled for performance */
+  .animate-blob,
+  .animate-slow-zoom {
+    animation: none !important;
+    transform: none !important;
   }
 
   .contain-layout-paint {
@@ -241,6 +409,9 @@ body {
   }
 }
 
+/* ============================================================
+   SCROLL BEHAVIOUR
+   ============================================================ */
 html {
   scroll-behavior: smooth;
 }
@@ -260,6 +431,9 @@ img {
   }
 }
 
+/* ============================================================
+   REDUCED MOTION — Full override
+   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -274,9 +448,12 @@ img {
     scroll-behavior: auto !important;
   }
 
-  .animate-slow-zoom,
-  .animate-slide-up {
+  .animate-slide-up,
+  .scroll-reveal,
+  .hover-lift {
     animation: none !important;
     transform: none !important;
+    opacity: 1 !important;
+    transition: none !important;
   }
 }

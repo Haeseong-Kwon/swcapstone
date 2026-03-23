@@ -19,6 +19,7 @@ export function SubPageHero({
 }: SubPageHeroProps) {
     return (
         <section className={cn("relative flex min-h-[72svh] items-center overflow-hidden bg-black pt-20 sm:min-h-[78svh]", className)}>
+            {/* Static background — no zoom animation for performance */}
             <div className="absolute inset-0 z-0 gpu-accelerated">
                 <Image
                     src={backgroundImage}
@@ -26,14 +27,14 @@ export function SubPageHero({
                     fill
                     priority
                     quality={76}
-                    className="object-cover opacity-56 animate-slow-zoom transform-gpu"
+                    className="object-cover opacity-50 scale-[1.04]"
                     sizes="(max-width: 1024px) 100vw, 100vw"
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,23,0.28)_0%,rgba(2,6,23,0.58)_42%,rgba(2,6,23,0.92)_100%)]"></div>
             </div>
 
-            <div className="relative z-10 mx-auto w-full max-w-8xl px-5 py-12 animate-slide-up sm:px-6 sm:py-18 lg:px-8 lg:py-24">
-                <div className="max-w-4xl">
+            <div className="relative z-10 mx-auto w-full max-w-8xl px-5 py-12 sm:px-6 sm:py-18 lg:px-8 lg:py-24">
+                <div className="max-w-4xl animate-slide-up">
                     <div className="mb-6 flex items-center gap-4 sm:mb-8">
                         <div className="h-[2px] w-10 bg-primary sm:w-12"></div>
                         <span className="text-[11px] font-black uppercase tracking-[0.32em] text-white/68 sm:text-[12px] sm:tracking-[0.4em]">Institutional Platform</span>

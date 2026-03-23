@@ -18,18 +18,18 @@ export function Footer() {
                     <div>
                         <h3 className="text-[12px] font-black text-primary tracking-[0.2em] uppercase mb-8">Services</h3>
                         <ul className="space-y-4 text-[16px] font-bold text-gray-500">
-                            <li><Link href="/dashboard" className="hover:text-white transition-colors">LMS Dashboard</Link></li>
-                            <li><Link href="/community" className="hover:text-white transition-colors">Team Matching</Link></li>
-                            <li><Link href="/proposals" className="hover:text-white transition-colors">Opportunities</Link></li>
+                            <li><Link href="/dashboard" className="hover:text-white" style={{ transition: 'color 0.15s ease-out' }}>LMS Dashboard</Link></li>
+                            <li><Link href="/community" className="hover:text-white" style={{ transition: 'color 0.15s ease-out' }}>Team Matching</Link></li>
+                            <li><Link href="/proposals" className="hover:text-white" style={{ transition: 'color 0.15s ease-out' }}>Opportunities</Link></li>
                         </ul>
                     </div>
 
                     <div>
                         <h3 className="text-[12px] font-black text-primary tracking-[0.2em] uppercase mb-8">Support</h3>
                         <ul className="space-y-4 text-[16px] font-bold text-gray-500">
-                            <li><Link href="#" className="hover:text-white transition-colors">Service Guide</Link></li>
-                            <li><Link href="#" className="hover:text-white transition-colors">Contact Us</Link></li>
-                            <li><Link href="#" className="hover:text-white transition-colors">System Status</Link></li>
+                            <li><Link href="#" className="hover:text-white" style={{ transition: 'color 0.15s ease-out' }}>Service Guide</Link></li>
+                            <li><Link href="#" className="hover:text-white" style={{ transition: 'color 0.15s ease-out' }}>Contact Us</Link></li>
+                            <li><Link href="#" className="hover:text-white" style={{ transition: 'color 0.15s ease-out' }}>System Status</Link></li>
                         </ul>
                     </div>
                 </div>
@@ -39,8 +39,8 @@ export function Footer() {
                         © 2024 Hanyang University ERICA. All rights reserved.
                     </p>
                     <div className="flex items-center gap-6 text-[12px] font-bold uppercase tracking-widest text-gray-600 sm:gap-10">
-                        <Link href="#" className="hover:text-white transition-colors">Terms</Link>
-                        <Link href="#" className="hover:text-white transition-colors">Privacy</Link>
+                        <Link href="#" className="hover:text-white" style={{ transition: 'color 0.15s ease-out' }}>Terms</Link>
+                        <Link href="#" className="hover:text-white" style={{ transition: 'color 0.15s ease-out' }}>Privacy</Link>
                     </div>
                 </div>
             </div>

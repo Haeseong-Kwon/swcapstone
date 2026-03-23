@@ -15,11 +15,11 @@ export function Button({
     ...props
 }: ButtonProps) {
     const variants = {
-        primary: 'bg-primary text-white hover:opacity-90',
+        primary: 'bg-primary text-white hover:brightness-110',
         secondary: 'bg-muted/10 text-foreground border border-border hover:bg-muted/20',
         outline: 'border border-border text-foreground hover:bg-muted/10',
         ghost: 'hover:bg-muted/10 text-muted-foreground hover:text-foreground',
-        black: 'bg-foreground text-background hover:opacity-90',
+        black: 'bg-foreground text-background hover:brightness-110',
     };
 
     const sizes = {
@@ -31,7 +31,12 @@ export function Button({
     return (
         <button
             className={cn(
-                'inline-flex items-center justify-center rounded-full premium-transition disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-[0.1em] active:scale-95 hover:shadow-lg hover:-translate-y-0.5',
+                'inline-flex items-center justify-center rounded-full interactive',
+                // Only GPU-compositable properties
+                'transition-[color,background-color,opacity,transform,filter] duration-150 ease-out',
+                'disabled:opacity-50 disabled:cursor-not-allowed',
+                'uppercase tracking-[0.1em]',
+                'active:scale-95 hover:-translate-y-0.5',
                 variants[variant],
                 sizes[size],
                 className
